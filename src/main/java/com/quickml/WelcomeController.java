@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,12 +25,20 @@ import com.quickml.pojos.Student;
 @Controller
 public class WelcomeController {
 
+	public WelcomeController(StudentRepository studRepo) {
+		super();
+		this.studRepo = studRepo;
+	}
+
 	// inject via application.properties
 	@Value("${app.welcome.message}")
 	private String MESSAGE = "";
 
 	@Value("${app.welcome.title}")
 	private String TITLE = "";
+	
+	@Autowired
+	public final StudentRepository studRepo;
 
 	@RequestMapping("/")
 	public String welcome(Map<String, Object> model) {
@@ -76,6 +85,7 @@ public class WelcomeController {
     	
     	model.put("firstName", student.firstName);
     	model.put("lastName", student.lastName);
+    	studRepo.save(student);
     	return "desc";
     }
 	
