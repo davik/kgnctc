@@ -1,0 +1,194 @@
+{{>layout/header}}
+<body>
+	<div class="wrapper">
+		<div class="container">
+			<div class="row">
+				{{>layout/navbar}}
+			</div>
+			<div class="row">
+				{{>layout/sidebar}}
+				<div class="col-md-10">
+					<legend>Student Registration Form</legend>
+					<form id="studentDetails">
+						<fieldset class="form-group">
+							<div class="row">
+								<legend class="col-form-label col-sm-2 pt-0">Course</legend>
+								<div class="col-sm-10">
+									<div class="form-check">
+										<input class="form-check-input" type="radio" name="courseRadio" id="courseBed" value="B.Ed" checked>
+										<label class="form-check-label" for="courseBed">
+											B.Ed
+										</label>
+									</div>
+									<div class="form-check">
+										<input class="form-check-input" type="radio" name="courseRadio" id="courseDed" value="D.El.Ed">
+										<label class="form-check-label" for="courseDed">
+											D.El.Ed
+										</label>
+									</div>
+								</div>
+							</div>
+						</fieldset>
+						<div class="form-group">
+							<label for="name">Name</label>
+							<input type="text" class="form-control" id="name" placeholder="Name">
+						</div>
+						<div class="form-row">
+							<div class="form-group col-md-6">
+								<label for="father">Father's Name</label>
+								<input type="text" class="form-control" id="father" placeholder="Father's Name">
+							</div>
+							<div class="form-group col-md-6">
+								<label for="mother">Mother's Name</label>
+								<input type="text" class="form-control" id="mother" placeholder="Mother's Name">
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="form-group col-md-4">
+								<label for="dob">Date of Birth</label>
+								<input type="date" class="form-control" id="dob" placeholder="DD/MM/YYYY">
+							</div>
+							<div class="form-group col-md-2">
+								<label for="gender">Gender</label>
+								<select id="gender" class="form-control">
+									<option>Male</option>
+									<option>Female</option>
+								</select>
+							</div>
+							<div class="form-group col-md-3">
+								<label for="religion">Religion</label>
+								<input type="text" class="form-control" id="religion" placeholder="Religion">
+							</div>
+							<div class="form-group col-md-3">
+								<label for="caste">Caste</label>
+								<input type="text" class="form-control" id="caste" placeholder="Caste">
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="form-group col-md-4">
+								<label for="mobile">Mobile Number</label>
+								<input type="text" class="form-control" id="mobile" placeholder="Mobile Number">
+							</div>
+							<div class="form-group col-md-4">
+								<label for="email">Email Address</label>
+								<input type="email" class="form-control" id="email" placeholder="username@domain">
+							</div>
+							<div class="form-group col-md-4">
+								<label for="guardianContact">Guardian Contact Number</label>
+								<input type="text" class="form-control" id="guardianContact" placeholder="Mobile Number">
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="form-group col-md-4">
+								<label for="blood">Blood Group</label>
+								<select id="blood" class="form-control">
+									<option>O-</option>
+									<option>O+</option>
+									<option>A-</option>
+									<option>A+</option>
+									<option>B-</option>
+									<option>B+</option>
+									<option>AB-</option>
+									<option>AB+</option>
+								</select>
+							</div>
+							<div class="form-group col-md-4">
+								<label for="language">Language</label>
+								<input type="text" class="form-control" id="language" placeholder="Language">
+							</div>
+							<div class="form-group col-md-4">
+								<label for="nationality">Nationality</label>
+								<input type="text" class="form-control" id="nationality" placeholder="Nationality">
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="form-group col-md-6">
+								<label for="type">Application Type</label>
+								<select id="type" class="form-control">
+									<option>Fresher</option>
+									<option>Deputed</option>
+								</select>
+							</div>
+							<div class="form-group col-md-6">
+								<label for="aadhaar">Aadhaar</label>
+								<input type="text" class="form-control" id="aadhaar" placeholder="Aadhhar">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="address1">Address</label>
+							<textarea class="form-control" id="address1" placeholder="Permanent Address"></textarea>
+						</div>
+						<div class="form-group">
+							<label for="address2">Alternate Address</label>
+							<textarea class="form-control" id="address2" placeholder="Alternate Address"></textarea>
+						</div>
+						<legend>Academic Information</legend>
+						<table class="table table-striped">
+							<thead class="thead-light">
+								<tr>
+									<th scope="col">Name</th>
+									<th scope="col">Board/ University</th>
+									<th scope="col">Year</th>
+									<th scope="col">Total Marks</th>
+									<th scope="col">Marks Obtained</th>
+									<th scope="col">Percentage</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<th scope="row">M.P or 10th</th>
+									<td><input type="text" class="form-control" id="mpboard"></td>
+									<td><input type="text" class="form-control" id="mpyear"></td>
+									<td><input type="text" class="form-control" id="mptotal"></td>
+									<td><input type="text" class="form-control" id="mpmarks"></td>
+									<td><input type="text" class="form-control" id="mppercent"></td>
+								</tr>
+								<tr>
+									<th scope="row">H.S or 12th</th>
+									<td><input type="text" class="form-control" id="hsboard"></td>
+									<td><input type="text" class="form-control" id="hsyear"></td>
+									<td><input type="text" class="form-control" id="hstotal"></td>
+									<td><input type="text" class="form-control" id="hsmarks"></td>
+									<td><input type="text" class="form-control" id="hspercent"></td>
+								</tr>
+								<tr>
+									<th scope="row">Graduation</th>
+									<td><input type="text" class="form-control" id="gradboard"></td>
+									<td><input type="text" class="form-control" id="gradyear"></td>
+									<td><input type="text" class="form-control" id="gradtotal"></td>
+									<td><input type="text" class="form-control" id="gradmarks"></td>
+									<td><input type="text" class="form-control" id="gradpercent"></td>
+								</tr>
+								<tr>
+									<th scope="row">Post Graduation</th>
+									<td><input type="text" class="form-control" id="pgboard"></td>
+									<td><input type="text" class="form-control" id="pgyear"></td>
+									<td><input type="text" class="form-control" id="pgtotal"></td>
+									<td><input type="text" class="form-control" id="pgmarks"></td>
+									<td><input type="text" class="form-control" id="pgpercent"></td>
+								</tr>
+							</tbody>
+						</table>
+						<div class="form-row">
+							<div class="form-group col-md-6">
+								<label for="regLast">Registration No. from the University Last Attended</label>
+								<input type="text" class="form-control" id="regLast">
+							</div>
+							<div class="form-group col-md-6">
+								<label for="subject">Subject</label>
+								<input type="text" class="form-control" id="subject">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="schoolName">Last School Name</label>
+							<input type="text" class="form-control" id="schoolName">
+						</div>
+						<button type="submit" class="btn btn-primary" id="button">Submit</button>
+					</form>
+				</div>	
+			</div>
+		</div>
+	</div>
+	<!-- /.container -->
+</body>
+{{>layout/footer}}

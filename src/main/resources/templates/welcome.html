@@ -1,18 +1,45 @@
 {{>layout/header}}
 <body>
-<div id="wrapper">
-	{{>layout/navbar}}
-
-	<div class="container">
-		<div class="row">
-			{{>layout/sidebar}}
-			<div id="main_portion">
-				{{>statistics}}
+	<div class="wrapper">
+		<div class="container">
+			<div class="row">
+				{{>layout/navbar}}
+			</div>
+			<div class="row">
+				{{>layout/sidebar}}
+				
+				<!-- responsive equal width cols, can be sm, md, lg, or xl -->
+				
+				<div class="col-md-5">
+					<div class="card">
+						<h5 class="card-header">
+							Total Unpaid Amount
+						</h5>
+						<div class="card-body">
+							<p class="card-text">
+								0.0
+							</p>
+						</div>
+						
+					</div>
+				</div>
+				<div class="col-md-5">
+					<div class="card">
+						<h5 class="card-header">
+							Total Paid amount
+						</h5>
+						<div class="card-body">
+							<p class="card-text">
+								0.0
+							</p>
+						</div>
+						
+					</div>
+				</div>
+				
 			</div>
 		</div>
 	</div>
-
 	<!-- /.container -->
-</div>
 </body>
 {{>layout/footer}}

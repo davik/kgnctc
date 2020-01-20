@@ -54,65 +54,24 @@ public class WelcomeController {
 		throw new RuntimeException("ABC");
 	}
 	
-	@RequestMapping(value = "/ml/average", method=RequestMethod.POST, consumes = "application/json")
-    public Map<String, Object> getAverageML(@RequestBody Numbers numbers) {
-    	Map<String, Object> statMap = new HashMap<>();
-    	DescriptiveStatistics stats = new DescriptiveStatistics();
-    	
-    	List<Double> numbersz =  numbers.getNumbers();
-    	    	
-    	for(Double val: numbersz) {
-    		stats.addValue(val);
-    	}
-    	
-    	statMap.put("mean", stats.getMean());
-    	statMap.put("geomean", stats.getGeometricMean());
-    	statMap.put("max", stats.getMax());
-    	statMap.put("min", stats.getMin());
-    	statMap.put("skewness", stats.getSkewness());
-    	statMap.put("kurtosis", stats.getKurtosis());
-    	statMap.put("sd", stats.getStandardDeviation());
-    	statMap.put("sum", stats.getSum());
-    	statMap.put("var", stats.getVariance());
-    	return statMap;
-    }
 	
-	@RequestMapping(value = "/desc", method=RequestMethod.POST)
+	@RequestMapping(value = "/create", method=RequestMethod.POST)
     String getDescStat(Map<String, Object> model,
     		@RequestBody Student student) throws IOException{
 		System.out.println("Rest received");
-		System.out.println(student.firstName);	
-    	
-    	model.put("firstName", student.firstName);
-    	model.put("lastName", student.lastName);
+		System.out.println(student.name);	
+
     	studRepo.save(student);
-    	return "desc";
+    	return "create";
     }
 	
-	@RequestMapping(value = "/summary", method=RequestMethod.GET)
-    String getSummaryStat(Map<String, Object> model) throws IOException{
-		System.out.println("Rest received");
-		String numbers = "1, 2,4";
-		System.out.println(numbers);
-		
-		numbers = numbers.replace(" ", "");
-		Pattern pattern = Pattern.compile(",");
-		List<Double> values = pattern.splitAsStream(numbers)
-		                            .map(Double::valueOf)
-		                            .collect(Collectors.toList());
-		SummaryStatistics stats = new SummaryStatistics();
-		for(Double val: values) {
-    		stats.addValue(val);
-    	}
-    	
-    	model.put("pop_var", stats.getPopulationVariance());
-    	model.put("quadratic_mean", stats.getQuadraticMean());
-    	model.put("second_moment", stats.getSecondMoment());
-    	model.put("sum_log", stats.getSumOfLogs());
-    	model.put("sum_square", stats.getSumsq());
-    	return "summary";
-    	
+	@RequestMapping(value = "/registration", method=RequestMethod.GET)
+    String registration(Map<String, Object> model) throws IOException{
+		model.put("title", TITLE);
+		model.put("message", MESSAGE);
+		return "registration";
     }
+	
 	
 	@RequestMapping(value = "/contact", method=RequestMethod.GET)
 	String getContactPage(Map<String, Object> model) throws IOException {
