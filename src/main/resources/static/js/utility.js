@@ -12,6 +12,7 @@ function call(e, path) {
 $(document).ready(function () {
   // Listen to click event on the submit button
 	console.log("heelo");
+	$('#msg').hide();
   $('#button').click(function (e) {
 
     e.preventDefault();
@@ -82,7 +83,7 @@ $(document).ready(function () {
 		  url: "/create",
 		  data: JSON.stringify(student),
 		  // success: function(rsp){$("#msg").append(rsp)},
-		  success: $("#msg").append('<p>hello ghgjhg</p>'),
+		  success: $('#msg').show(),
 		  dataType: "json",
 		  contentType: "application/json"
 		});
