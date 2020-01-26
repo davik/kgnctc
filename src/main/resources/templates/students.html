@@ -1,0 +1,39 @@
+{{>layout/header}}
+<body>
+	<div class="wrapper">
+		<div class="container">
+			<div class="row">
+				{{>layout/navbar}}
+			</div>
+			<div class="row">
+				{{>layout/sidebar}}
+				
+				<!-- responsive equal width cols, can be sm, md, lg, or xl -->
+				
+				<div class="col-md-10">
+					<table class="table table-striped">
+						<tr>
+							<th>Id</th>
+							<th>Name</th>
+							<th>Course</th>
+							<th>Session</th>
+							<th>Mobile</th>
+						</tr>
+						{{#students}}
+						<tr>
+							<td>{{id}}</td>
+							<td>{{name}}</td>
+							<td>{{course}}</td>
+							<td>{{session}}</td>
+							<td>{{mobile}}</td>
+						</tr>
+						{{/students}}
+					</table>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+	<!-- /.container -->
+</body>
+{{>layout/footer}}

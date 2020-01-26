@@ -74,7 +74,11 @@ $(document).ready(function () {
     		aadhaar: $("#aadhaar").val(),
     		address1: $("#address1").val(),
     		address2: $("#address2").val(),
-    		academics: academics
+    		academics: academics,
+    		session: $('#session').val(),
+            lastRegNo: $('#regLast').val(),
+            subject: $('#subject').val(),
+            lastSchoolName: $('#schoolName').val()
     		};
     console.log(student);
 
@@ -83,8 +87,12 @@ $(document).ready(function () {
 		  url: "/create",
 		  data: JSON.stringify(student),
 		  success: function(data) {
+			  $("#msg").show();
 			  $('#msg').html(data);
 			  $('html,body').animate({scrollTop: $("#msg").offset().top},'slow');
+			  setTimeout(function() {
+			        $("#msg").hide();
+			    }, 3000);
 		  },
 		  contentType: "application/json"
 		});

@@ -1,6 +1,7 @@
 package com.quickml;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.quickml.pojos.Counter;
 import com.quickml.pojos.Student;
 
 
@@ -17,9 +19,11 @@ import com.quickml.pojos.Student;
 @Controller
 public class WelcomeController {
 
-	public WelcomeController(StudentRepository studRepo) {
+	public WelcomeController(StudentRepository studRepo,
+			CounterRepo counterRepo) {
 		super();
 		this.studRepo = studRepo;
+		this.counterRepo = counterRepo;
 	}
 
 	// inject via application.properties
@@ -31,6 +35,8 @@ public class WelcomeController {
 	
 	@Autowired
 	public final StudentRepository studRepo;
+	@Autowired
+	public final CounterRepo counterRepo;
 
 	@RequestMapping("/")
 	public String welcome(Map<String, Object> model) {
@@ -51,6 +57,7 @@ public class WelcomeController {
     String create(Map<String, Object> model,
     		@RequestBody Student student) throws IOException{
 		System.out.println("Rest received");
+
 		if (student.name.isEmpty() ||
 				student.father.isEmpty() ||
 				student.mother.isEmpty() ||
@@ -61,9 +68,23 @@ public class WelcomeController {
 			model.put("result", "Please fill the mandatory fields!");
 			return "create";
 		}
-		System.out.println(student.name);	
+		System.out.println(student.name);
+		String id = student.session.substring(0, 4);
+		Counter ct = null;
+		if (student.course.equalsIgnoreCase("b.ed")) {
+			id = id + "01";
+			ct = counterRepo.findOne("bed");
+		} else {
+			id = id + "02";
+			ct = counterRepo.findOne("ded");
+		}
+		id = id + String.format("%05d", ct.nextId);
+		ct.nextId++;
+		counterRepo.save(ct);
 
+		student.id = id;
     	studRepo.save(student);
+    	
     	model.put("alert", "alert alert-success");
     	model.put("result", "Student Registered Successfully!");
     	return "create";
@@ -84,11 +105,13 @@ public class WelcomeController {
 		model.put("message", MESSAGE);
 		return "contact";
 	}
-		
-	@RequestMapping(value = "/team", method=RequestMethod.GET)
-	String getTeamPage(Map<String, Object> model) throws IOException {
+	
+	@RequestMapping(value = "/students", method=RequestMethod.GET)
+	String getStudentsPage(Map<String, Object> model) throws IOException {
 		model.put("title", TITLE);
 		model.put("message", MESSAGE);
-		return "team";
+		List<Student> students = studRepo.findAll();
+		model.put("students", students);
+		return "students";
 	}
 }
