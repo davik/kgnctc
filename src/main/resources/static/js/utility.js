@@ -12,10 +12,10 @@ function call(e, path) {
 $(document).ready(function () {
   // Listen to click event on the submit button
 	console.log("heelo");
-	$('#msg').hide();
+	// $('#msg').hide();
   $('#button').click(function (e) {
 
-    e.preventDefault();
+     e.preventDefault();
 
     var coursen = $("#courseBed").is(":checked") ? 
     		$("#courseBed").val() : $("#courseDed").val();
@@ -82,9 +82,10 @@ $(document).ready(function () {
 		  type: "POST",
 		  url: "/create",
 		  data: JSON.stringify(student),
-		  // success: function(rsp){$("#msg").append(rsp)},
-		  success: $('#msg').show(),
-		  dataType: "json",
+		  success: function(data) {
+			  $('#msg').html(data);
+			  $('html,body').animate({scrollTop: $("#msg").offset().top},'slow');
+		  },
 		  contentType: "application/json"
 		});
   }); 

@@ -9,7 +9,7 @@
 				{{>layout/sidebar}}
 				<div class="col-md-10">
 					<legend>Student Registration Form</legend>
-					<form id="studentDetails">
+					<form>
 						<fieldset class="form-group">
 							<div class="row">
 								<legend class="col-form-label col-sm-2 pt-0">Course</legend>
@@ -30,22 +30,22 @@
 							</div>
 						</fieldset>
 						<div class="form-group">
-							<label for="name">Name</label>
-							<input type="text" class="form-control" id="name" placeholder="Name">
+							<label for="name">Name*</label>
+							<input type="text" class="form-control" id="name">
 						</div>
 						<div class="form-row">
 							<div class="form-group col-md-6">
 								<label for="father">Father's Name</label>
-								<input type="text" class="form-control" id="father" placeholder="Father's Name">
+								<input type="text" class="form-control" id="father">
 							</div>
 							<div class="form-group col-md-6">
 								<label for="mother">Mother's Name</label>
-								<input type="text" class="form-control" id="mother" placeholder="Mother's Name">
+								<input type="text" class="form-control" id="mother">
 							</div>
 						</div>
 						<div class="form-row">
 							<div class="form-group col-md-4">
-								<label for="dob">Date of Birth</label>
+								<label for="dob">Date of Birth*</label>
 								<input type="date" class="form-control" id="dob" placeholder="DD/MM/YYYY">
 							</div>
 							<div class="form-group col-md-2">
@@ -75,22 +75,22 @@
 									<option>ST</option>
 									<option>OBC-A</option>
 									<option>OBC-B</option>
-									<option>PD</option>
+									<option>PH</option>
 								</select>
 							</div>
 						</div>
 						<div class="form-row">
 							<div class="form-group col-md-4">
-								<label for="mobile">Mobile Number</label>
-								<input type="text" class="form-control" id="mobile" placeholder="Mobile Number">
+								<label for="mobile">Mobile Number*</label>
+								<input type="text" class="form-control" id="mobile">
 							</div>
 							<div class="form-group col-md-4">
-								<label for="email">Email Address</label>
+								<label for="email">Email Address*</label>
 								<input type="email" class="form-control" id="email" placeholder="username@domain">
 							</div>
 							<div class="form-group col-md-4">
 								<label for="guardianContact">Guardian Contact Number</label>
-								<input type="text" class="form-control" id="guardianContact" placeholder="Mobile Number">
+								<input type="text" class="form-control" id="guardianContact">
 							</div>
 						</div>
 						<div class="form-row">
@@ -117,31 +117,39 @@
 							</div>
 						</div>
 						<div class="form-row">
-							<div class="form-group col-md-6">
+							<div class="form-group col-md-4">
 								<label for="type">Application Type</label>
 								<select id="type" class="form-control">
 									<option>Fresher</option>
 									<option>Deputed</option>
 								</select>
 							</div>
-							<div class="form-group col-md-6">
-								<label for="aadhaar">Aadhaar</label>
-								<input type="text" class="form-control" id="aadhaar" placeholder="Aadhhar">
+							<div class="form-group col-md-4">
+								<label for="session">Academic Session</label>
+								<select id="session" class="form-control">
+									<option>2018-20</option>
+									<option>2019-21</option>
+									<option>2020-22</option>
+								</select>
+							</div>
+							<div class="form-group col-md-4">
+								<label for="aadhaar">Aadhaar*</label>
+								<input type="text" class="form-control" id="aadhaar">
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="address1">Address</label>
-							<textarea class="form-control" id="address1" placeholder="Permanent Address"></textarea>
+							<textarea class="form-control" id="address1"></textarea>
 						</div>
 						<div class="form-group">
 							<label for="address2">Alternate Address</label>
-							<textarea class="form-control" id="address2" placeholder="Alternate Address"></textarea>
+							<textarea class="form-control" id="address2"></textarea>
 						</div>
 						<legend>Academic Information</legend>
 						<table class="table table-striped">
 							<thead class="thead-light">
 								<tr>
-									<th scope="col">Name</th>
+									<th scope="col">Examination</th>
 									<th scope="col">Board/ University</th>
 									<th scope="col">Year</th>
 									<th scope="col">Total Marks</th>
@@ -151,7 +159,7 @@
 							</thead>
 							<tbody>
 								<tr>
-									<th scope="row">M.P or 10th</th>
+									<th scope="row">M.P or 10th*</th>
 									<td><input type="text" class="form-control" id="mpboard"></td>
 									<td><input type="text" class="form-control" id="mpyear"></td>
 									<td><input type="text" class="form-control" id="mptotal"></td>
@@ -159,7 +167,7 @@
 									<td><input type="text" class="form-control" id="mppercent"></td>
 								</tr>
 								<tr>
-									<th scope="row">H.S or 12th</th>
+									<th scope="row">H.S or 12th*</th>
 									<td><input type="text" class="form-control" id="hsboard"></td>
 									<td><input type="text" class="form-control" id="hsyear"></td>
 									<td><input type="text" class="form-control" id="hstotal"></td>
@@ -200,8 +208,7 @@
 						</div>
 						<button type="submit" class="btn btn-primary" id="button">Submit</button>
 					</form>
-					<div id="msg" class="alert alert-success" role="alert">
-  						Student Registered Successfully!
+					<div id="msg" class="py-4">
 					</div>
 				</div>	
 			</div>

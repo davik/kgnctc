@@ -5,10 +5,7 @@ import java.util.Date;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 @Document(collection = "students")
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Student {
 	public String course;
 	public String name;

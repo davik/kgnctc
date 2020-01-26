@@ -1,23 +1,15 @@
 package com.quickml;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
-import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
-import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import com.quickml.pojos.Numbers;
 import com.quickml.pojos.Student;
 
 
@@ -56,12 +48,24 @@ public class WelcomeController {
 	
 	
 	@RequestMapping(value = "/create", method=RequestMethod.POST)
-    String getDescStat(Map<String, Object> model,
+    String create(Map<String, Object> model,
     		@RequestBody Student student) throws IOException{
 		System.out.println("Rest received");
+		if (student.name.isEmpty() ||
+				student.father.isEmpty() ||
+				student.mother.isEmpty() ||
+				student.mobile.isEmpty() ||
+				student.email.isEmpty()	 ||
+				student.aadhaar.isEmpty()) {
+			model.put("alert", "alert alert-danger");
+			model.put("result", "Please fill the mandatory fields!");
+			return "create";
+		}
 		System.out.println(student.name);	
 
     	studRepo.save(student);
+    	model.put("alert", "alert alert-success");
+    	model.put("result", "Student Registered Successfully!");
     	return "create";
     }
 	
@@ -69,6 +73,7 @@ public class WelcomeController {
     String registration(Map<String, Object> model) throws IOException{
 		model.put("title", TITLE);
 		model.put("message", MESSAGE);
+		model.put("result", "Result will be displayed here!");
 		return "registration";
     }
 	
@@ -79,32 +84,11 @@ public class WelcomeController {
 		model.put("message", MESSAGE);
 		return "contact";
 	}
-	
-	@RequestMapping(value = "/linear_algebra", method=RequestMethod.GET)
-	String getLinearAlgebraPage(Map<String, Object> model) throws IOException {
-		model.put("title", TITLE);
-		model.put("message", MESSAGE);
-		return "linear_algebra";
-	}
-	
-	@RequestMapping(value = "/machine_learning", method=RequestMethod.GET)
-	String getMachineLearningPage(Map<String, Object> model) throws IOException {
-		model.put("title", TITLE);
-		model.put("message", MESSAGE);
-		return "machine_learning";
-	}
-	
+		
 	@RequestMapping(value = "/team", method=RequestMethod.GET)
 	String getTeamPage(Map<String, Object> model) throws IOException {
 		model.put("title", TITLE);
 		model.put("message", MESSAGE);
 		return "team";
 	}
-	
-	@RequestMapping(value = "/statistics", method=RequestMethod.GET)
-	String getStatisticsPage(Map<String, Object> model) throws IOException {
-		model.put("message", MESSAGE);
-		return "statistics";
-	}
-
 }
