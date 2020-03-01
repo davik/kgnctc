@@ -1,0 +1,31 @@
+{{>layout/header}}
+<body>
+	<div class="wrapper">
+		<div class="container">
+			<div class="row">
+				{{>layout/navbar}}
+			</div>
+			<div class="row">
+				{{>layout/sidebar}}
+				
+				<!-- responsive equal width cols, can be sm, md, lg, or xl -->
+				
+				<div class="col-md-10">
+					<div class="col-md-5">
+						<div class="input-group">
+							<input type="text" class="form-control" placeholder="Student Id" id="id">
+							<span class="input-group-btn">
+								<button class="btn btn-secondary" type="button" id="idSearch">Go!</button>
+							</span>
+						</div>
+					</div>
+					<div class="col-md-10" id="paymentDetail"  class="py-4">
+					</div>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+	<!-- /.container -->
+</body>
+{{>layout/footer}}

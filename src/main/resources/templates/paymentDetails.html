@@ -1,0 +1,68 @@
+{{#alert}}
+<div class="{{alert}}" role="alert">
+	{{result}}
+</div>
+{{/alert}}
+{{#student}}
+<div class="card my-4">
+	<h5 class="card-header">{{name}}</h5>
+	<div class="card-body">
+		<h5 class="card-title">
+		<span class="badge badge-warning">Due Amount - {{due}}</span>
+		<span class="badge badge-primary">Course Fee - {{courseFee}}</span>
+		</h5>
+		<p class="card-text">Course - {{course}}, Session - {{session}}, Contact - {{mobile}}</p>
+		<a href="javascript:showPaymentForm();" class="btn btn-primary" id="addPayment">Add Payment</a>
+	</div>
+</div>
+<table class="table table-striped">
+	<tr>
+		<th>Date</th>
+		<th>Purpose</th>
+		<th>Mode</th>
+		<th>Amount</th>
+	</tr>
+	{{#payments}}
+	<tr>
+		<td>{{transactionDate}}</td>
+		<td>{{purpose}}</td>
+		<td>{{mode}}</td>
+		<td>{{amount}}</td>
+	</tr>
+	{{/payments}}
+</table>
+<div class="col-md-12 border border-dark py-3 my-3" id="paymentForm">
+	<legend>Payment Form</legend>
+	<div class="form-row">
+		<div class="form-group col-md-3">
+			<label for="purpose">Purpose</label>
+			<select id="purpose" class="form-control">
+				<option>Admission Fee</option>
+				<option>Course Fee</option>
+				<option>Examination Fee</option>
+			</select>
+		</div>
+		<div class="form-group col-md-3">
+			<label for="mode">Mode</label>
+			<select id="mode" class="form-control">
+				<option>Cash</option>
+				<option>DD</option>
+				<option>Cheque</option>
+				<option>Net Banking</option>
+			</select>
+		</div>
+		<div class="form-group col-md-3">
+			<label for="transactionId">Transaction ID</label>
+			<input type="text" class="form-control" id="transactionId" placeholder="Cheque Number/ Invoice Number">
+		</div>
+		<div class="form-group col-md-3">
+			<label for="amount">Amount</label>
+			<input type="text" class="form-control" id="amount" placeholder="0.00">
+		</div>
+		<button type="submit" class="btn btn-primary" id="paymentButton" onclick="createPayment();">Submit</button>
+	</div>
+<form></form>
+<div id="msg" class="py-4">
+					</div>
+</div>
+{{/student}}
