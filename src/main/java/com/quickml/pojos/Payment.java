@@ -3,6 +3,7 @@ package com.quickml.pojos;
 import java.util.Date;
 
 public class Payment {
+	public String paymentId;
 	public Date transactionDate;
 	public String transactionId;
 	public double amount;

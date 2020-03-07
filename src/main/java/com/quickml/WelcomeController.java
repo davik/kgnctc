@@ -1,17 +1,30 @@
 package com.quickml;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PipedOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,6 +33,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.quickml.pojos.Counter;
 import com.quickml.pojos.Payment;
 import com.quickml.pojos.Student;
+
+import net.sf.jasperreports.engine.JREmptyDataSource;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.JasperReportsContext;
+import net.sf.jasperreports.engine.SimpleJasperReportsContext;
+import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.xml.JRXmlLoader;
 
 
 
@@ -186,13 +211,109 @@ public class WelcomeController {
 				return "create";
 			}
 			ArrayList<Payment> payments = student.payments;
+			if (null == payments) {
+				payments = new ArrayList<Payment>();
+			}
 			Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("IST"));
+			// Fetch the Payment or Money Receipt ID counter
+			int year = getFiscalYear(calendar);
+			Counter ct = counterRepo.findOne(year + "-" + String.valueOf(year+1).substring(2));
+			if (null == ct) {
+				ct = new Counter();
+				ct.id = year + "-" + String.valueOf(year+1).substring(2);
+				ct.nextId++;
+			}
+			
+			payment.paymentId = ct.id + "/" + String.format("%05d", ct.nextId);
 			payment.transactionDate = calendar.getTime();
 			payments.add(payment);
+			
+			ct.nextId++;
+			counterRepo.save(ct);
 			studRepo.save(student);
 		}
 		model.put("alert", "alert alert-success");
     	model.put("result", "Payment Information Recorded Successfully!");
 		return "paymentDetails";
 	}
+	
+	@RequestMapping(value = "/invoice", method=RequestMethod.GET)
+	void downloadInvoice(Map<String, Object> model,
+			@RequestParam(name = "id") String studentId,
+			@RequestParam(name = "paymentId") String paymentId,
+			HttpServletResponse response) throws IOException {
+		model.put("title", TITLE);
+		model.put("message", MESSAGE);
+		Student student = studRepo.findOne(studentId);
+		if (null == student) {
+			model.put("alert", "alert alert-danger");
+			model.put("result", "Student not found!");
+			return;
+		}
+		Payment pt = null;
+		for(Payment p : student.payments) {
+			if (paymentId.equals(p.paymentId)) {
+				pt = p;
+			}
+		}
+		
+		Resource resource = new ClassPathResource("Blank_A4.jrxml");
+		InputStream input = resource.getInputStream();
+		JasperDesign design = null;
+		try {
+			design = JRXmlLoader.load(input);
+		} catch (JRException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		JasperReport jasperReport = null;
+		try {
+			jasperReport = JasperCompileManager.compileReport(design);
+		} catch (JRException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String outputFile = "C:\\Users\\polaris2\\" + "JasperReportExample.pdf";
+//		OutputStream outputStream = new PipedOutputStream();
+		OutputStream outputStream = new FileOutputStream(new File(outputFile));
+		try {
+			Map<String, Object> paramMap = new HashMap<String, Object>();
+			paramMap.put("name", student.name);
+			paramMap.put("id", student.id);
+			paramMap.put("course", student.course);
+			paramMap.put("session", student.session);
+			paramMap.put("paymentId", pt.paymentId);
+			paramMap.put("purpose", pt.purpose);
+			paramMap.put("amount", pt.amount);
+			paramMap.put("inWords", "Rupees Only");
+			paramMap.put("date", pt.transactionDate);
+			JasperPrint jasperPrint = JasperFillManager.fillReport(
+					jasperReport,
+					paramMap,
+					new JREmptyDataSource());
+			JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
+		} catch (JRException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		outputStream.flush();
+		outputStream.close();
+		// Download section
+		File invoiceFile = new File(outputFile);
+		String mimeType = "application/pdf";
+		response.setContentType(mimeType);
+//		String invoiceFileName = student.id+"_"+pt.paymentId.substring(8)+".pdf";
+		response.setHeader("Content-Disposition", String.format("inline; filename=\"invoice.pdf\""));
+		response.setContentLength((int) invoiceFile.length());
+		InputStream inputStream = new BufferedInputStream(new FileInputStream(invoiceFile));
+
+		FileCopyUtils.copy(inputStream, response.getOutputStream());
+		response.flushBuffer();
+	}
+	
+	public int getFiscalYear(Calendar calendar) {
+        int month = calendar.get(Calendar.MONTH);
+        int year = calendar.get(Calendar.YEAR);
+        return (month > Calendar.MARCH) ? year : year - 1;
+    }
 }

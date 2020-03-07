@@ -18,6 +18,16 @@ function showPaymentForm() {
     }, 'slow');
 }
 
+function downloadInvoice(paymentid) {
+    $.ajax({
+            type: "POST",
+            url: '/invoice?' + $.param({
+                id: $('#id').val(),
+                paymentId: paymentid
+            })
+        });
+}
+
 function createPayment() {
     console.log("hello");
     var payment = {

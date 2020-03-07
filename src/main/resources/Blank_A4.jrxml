@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.11.0.final using JasperReports Library version 6.11.0-0c4056ccaa4d25a5a8c45672d2f764ea3498bebb  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_A4" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="2b929fea-3fe9-44b0-9229-ce67fa05c0e7">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<parameter name="name" class="java.lang.String"/>
+	<parameter name="id" class="java.lang.String"/>
+	<parameter name="course" class="java.lang.String"/>
+	<parameter name="session" class="java.lang.String"/>
+	<parameter name="paymentId" class="java.lang.String"/>
+	<parameter name="purpose" class="java.lang.String"/>
+	<parameter name="amount" class="java.lang.Double"/>
+	<parameter name="inWords" class="java.lang.String"/>
+	<parameter name="date" class="java.util.Date"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="82" splitType="Stretch">
+			<staticText>
+				<reportElement x="95" y="0" width="285" height="25" uuid="615e32fa-760e-430f-aa57-fea912da57b4">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="19" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Kaviguru N.C.T. College]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="95" y="55" width="205" height="15" uuid="348a744d-4115-45e9-bd6f-1541a0e20760"/>
+				<text><![CDATA[8900100700, www.kabigurunctc.org]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="95" y="25" width="205" height="15" uuid="36658aba-f64f-4358-8d48-2defd3b15d47"/>
+				<text><![CDATA[Kalitala]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="95" y="40" width="205" height="15" uuid="fe755e61-3b0f-418f-bd41-b709473075d6"/>
+				<text><![CDATA[Beldanga, Murshidabad, 742133]]></text>
+			</staticText>
+			<image hAlign="Center">
+				<reportElement x="10" y="10" width="65" height="60" uuid="ac56915e-104f-4916-8b92-788c38fc54e4"/>
+				<imageExpression><![CDATA["invoice_logo.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="95" y="67" width="205" height="15" uuid="8b0c9c65-6fed-4afb-8e0d-59e115cf826c"/>
+				<text><![CDATA[seckabiguru@yahoo.com]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="380" y="60" width="36" height="15" uuid="41b9c695-cfcf-42e8-b511-3da39f0bcd25"/>
+				<text><![CDATA[Date]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="420" y="60" width="120" height="14" uuid="7b520f71-1108-4f07-b8e8-50e5c9bd862f"/>
+				<textFieldExpression><![CDATA[$P{date}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="41" splitType="Stretch">
+			<staticText>
+				<reportElement x="240" y="11" width="100" height="30" uuid="c071cd7d-3549-44f1-96d4-3f931ab3b620"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Money Receipt]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="0" width="556" height="1" uuid="0872b33e-5365-4350-baf1-3964fd31ea7f"/>
+			</line>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="87" splitType="Stretch">
+			<textField>
+				<reportElement x="111" y="0" width="100" height="20" uuid="2fe3e398-07a7-4d64-99dd-e6086e5aa5ec"/>
+				<textFieldExpression><![CDATA[$P{name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="11" y="0" width="100" height="20" uuid="3c0a77f7-932f-4c4e-ad6d-0aa750bd2afc"/>
+				<text><![CDATA[Student Name]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="0" width="556" height="1" uuid="90908edb-feb2-4a02-8ca9-943f66cfaa88"/>
+			</line>
+			<textField>
+				<reportElement x="111" y="20" width="100" height="20" uuid="fe3a7324-c281-466e-bb2b-5f4fa0f20cc8"/>
+				<textFieldExpression><![CDATA[$P{id}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="11" y="20" width="100" height="20" uuid="089f6113-d9cc-46c3-b5a5-212ba36dcf2b"/>
+				<text><![CDATA[Student ID]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="111" y="40" width="100" height="20" uuid="5ffa7ff4-ef84-4c7d-a7b4-ddde789b6dbd"/>
+				<textFieldExpression><![CDATA[$P{course}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="11" y="40" width="100" height="20" uuid="dab2416e-2ee3-4f15-a13b-44cedecbc055"/>
+				<text><![CDATA[Course]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="111" y="60" width="100" height="20" uuid="0d227ea8-ebe9-4db1-95c5-10ec022ce5d2"/>
+				<textFieldExpression><![CDATA[$P{session}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="11" y="60" width="100" height="20" uuid="fa594514-9402-438d-b13e-1568046b960e"/>
+				<text><![CDATA[Session]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="78" width="556" height="1" uuid="ca95cc31-ae7a-46d7-ac20-1291f4082fc4"/>
+			</line>
+			<line>
+				<reportElement x="280" y="0" width="1" height="78" uuid="f6ad7f60-b09d-4c9a-93a5-8fe0d59aa166"/>
+			</line>
+			<textField>
+				<reportElement x="473" y="3" width="100" height="20" uuid="b06f010a-174f-457a-a920-0fb3c7a89171"/>
+				<textFieldExpression><![CDATA[$P{paymentId}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="420" y="3" width="53" height="20" uuid="66a88bfe-ac9f-420e-90df-f984efd5ed2d"/>
+				<text><![CDATA[MR No]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="127" splitType="Stretch">
+			<line>
+				<reportElement x="0" y="14" width="556" height="1" uuid="a49999ba-e2a4-4527-acc8-c2084ae182f8"/>
+			</line>
+			<staticText>
+				<reportElement x="110" y="-4" width="100" height="16" uuid="38e2087f-5d1d-45db-acf4-88a9653db54c"/>
+				<text><![CDATA[Particulars]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="70" width="556" height="1" uuid="9b8059e2-b01b-48ca-8ed3-e5d6185df3a8"/>
+			</line>
+			<line>
+				<reportElement x="0" y="90" width="556" height="1" uuid="8d7e6bca-88d0-49a0-8b7a-e5add16a7069"/>
+			</line>
+			<line>
+				<reportElement x="430" y="-9" width="1" height="99" uuid="9d7ec7fd-8e2a-4a6f-b5c4-b0fca79e2987"/>
+			</line>
+			<staticText>
+				<reportElement x="471" y="-4" width="82" height="14" uuid="535688ea-a5e9-4698-862d-cdf4f0137703"/>
+				<text><![CDATA[Amount]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="110" y="20" width="100" height="30" uuid="b28585f0-3772-4405-b1b4-a3444974b598"/>
+				<textFieldExpression><![CDATA[$P{purpose}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="80" y="-9" width="1" height="99" uuid="6dff408f-cfa8-48dc-8c1f-78f2b83537c1"/>
+			</line>
+			<staticText>
+				<reportElement x="16" y="-4" width="54" height="16" uuid="2af0b3a3-334b-4d7f-96f8-62d8bdb2e715"/>
+				<text><![CDATA[Sl. No]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="16" y="20" width="34" height="22" uuid="7bbc5cb6-bf6e-459a-9016-4e702453ab17"/>
+				<text><![CDATA[1.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="441" y="20" width="100" height="22" uuid="986c64a6-3657-4982-a5f7-143e726122b5"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$P{amount}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="363" y="73" width="50" height="13" uuid="583835c5-6bd4-41c0-af9a-fadd4d27a287"/>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="461" y="72" width="80" height="16" uuid="2f032c00-e555-4f36-99ce-983c3af51b6e"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$P{amount}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="97" width="545" height="13" uuid="cae6134b-3427-4e9e-bc6c-04cce6ea2f97"/>
+				<textFieldExpression><![CDATA[$P{inWords}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="53" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="80" splitType="Stretch">
+			<staticText>
+				<reportElement x="30" y="59" width="470" height="20" uuid="0cbbb72e-3e71-406c-accb-15cad7577c37"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[This is a computer generated invoice]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="59" width="556" height="1" uuid="c5abf898-bea2-4acc-b6fe-e2fdd0b74adf"/>
+			</line>
+			<rectangle>
+				<reportElement x="305" y="-1" width="250" height="60" uuid="7369731d-cdb0-4ece-8875-1113681c9e27"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="482" y="-1" width="74" height="20" uuid="4d560b74-3891-4456-88c9-1501d2694dbd"/>
+				<text><![CDATA[For KGNCTC]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="450" y="44" width="103" height="15" uuid="9840d0c7-6f98-4f3d-b665-a3df70bc31cb"/>
+				<text><![CDATA[Authorised Signatory]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

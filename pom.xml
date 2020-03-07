@@ -62,6 +62,13 @@
 			<artifactId>bootstrap</artifactId>
 			<version>3.3.7</version>
 		</dependency>
+		
+		<!-- For Jasper Reports -->
+		<dependency>
+    		<groupId>net.sf.jasperreports</groupId>
+    		<artifactId>jasperreports</artifactId>
+    		<version>6.4.0</version>
+		</dependency>
 
 	</dependencies>
 

@@ -21,6 +21,7 @@
 		<th>Purpose</th>
 		<th>Mode</th>
 		<th>Amount</th>
+		<th>Invoice</th>
 	</tr>
 	{{#payments}}
 	<tr>
@@ -28,6 +29,7 @@
 		<td>{{purpose}}</td>
 		<td>{{mode}}</td>
 		<td>{{amount}}</td>
+		<td><a href="/invoice?id={{id}}&paymentId={{paymentId}}" class="btn btn-primary" id="addPayment" target="_blank">Invoice</a></td>
 	</tr>
 	{{/payments}}
 </table>
