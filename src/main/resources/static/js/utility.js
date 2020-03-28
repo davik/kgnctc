@@ -1,3 +1,11 @@
+
+$.ajaxSetup({
+    beforeSend: function(xhr) {
+        var token = $("meta[name='_csrf']").attr("content");
+        xhr.setRequestHeader('X-CSRF-TOKEN', token);
+    }
+});
+
 function call(e, path) {
     e.preventDefault();
     $.ajax({
@@ -128,7 +136,9 @@ $(document).ready(function() {
             session: $('#session').val(),
             lastRegNo: $('#regLast').val(),
             subject: $('#subject').val(),
-            lastSchoolName: $('#schoolName').val()
+            lastSchoolName: $('#schoolName').val(),
+            courseFee: $('#courseFee').val(),
+            familyIncome: $('#familyIncome').val()
         };
         console.log(student);
 

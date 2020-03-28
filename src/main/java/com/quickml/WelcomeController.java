@@ -7,16 +7,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PipedOutputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +39,6 @@ import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.JasperReportsContext;
-import net.sf.jasperreports.engine.SimpleJasperReportsContext;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
 
@@ -71,9 +67,8 @@ public class WelcomeController {
 	public final CounterRepo counterRepo;
 
 	@RequestMapping("/")
-	public String welcome(Map<String, Object> model) {
-		model.put("title", TITLE);
-		model.put("message", MESSAGE);
+	public String welcome(Map<String, Object> model, HttpServletRequest request) {
+		populateCommonPageFields(model, request);
 		
 		return "welcome";
 	}
@@ -87,15 +82,17 @@ public class WelcomeController {
 	
 	@RequestMapping(value = "/create", method=RequestMethod.POST)
     String create(Map<String, Object> model,
-    		@RequestBody Student student) throws IOException{
-		System.out.println("Rest received");
+    		@RequestBody Student student,
+    		HttpServletRequest request) throws IOException{
+		populateCommonPageFields(model, request);
 
 		if (student.name.isEmpty() ||
 				student.father.isEmpty() ||
 				student.mother.isEmpty() ||
 				student.mobile.isEmpty() ||
 				student.email.isEmpty()	 ||
-				student.aadhaar.isEmpty()) {
+				student.aadhaar.isEmpty() ||
+				student.courseFee == 0) {
 			model.put("alert", "alert alert-danger");
 			model.put("result", "Please fill the mandatory fields!");
 			return "create";
@@ -123,15 +120,6 @@ public class WelcomeController {
 		counterRepo.save(ct);
 
 		student.id = id_prefix;
-		// Temporary code here
-		Payment payment = new Payment();
-		payment.transactionDate = new Date();
-		payment.amount = 20000;
-		payment.mode = "Cash";
-		payment.purpose = "Course Fee";
-		student.payments = new ArrayList<Payment>();
-		student.payments.add(payment);
-		// Temporary ends
     	studRepo.save(student);
     	
     	model.put("alert", "alert alert-success");
@@ -140,42 +128,44 @@ public class WelcomeController {
     }
 	
 	@RequestMapping(value = "/registration", method=RequestMethod.GET)
-    String registration(Map<String, Object> model) throws IOException{
-		model.put("title", TITLE);
-		model.put("message", MESSAGE);
+    String registration(Map<String, Object> model,
+    		HttpServletRequest request) throws IOException{
+		populateCommonPageFields(model, request);
 		model.put("result", "Result will be displayed here!");
 		return "registration";
     }
 	
 	
 	@RequestMapping(value = "/contact", method=RequestMethod.GET)
-	String getContactPage(Map<String, Object> model) throws IOException {
-		model.put("title", TITLE);
-		model.put("message", MESSAGE);
+	String getContactPage(Map<String, Object> model,
+			HttpServletRequest request) throws IOException {
+		populateCommonPageFields(model, request);
 		return "contact";
 	}
 	
 	@RequestMapping(value = "/students", method=RequestMethod.GET)
-	String getStudentsPage(Map<String, Object> model) throws IOException {
-		model.put("title", TITLE);
-		model.put("message", MESSAGE);
+	String getStudentsPage(Map<String, Object> model,
+			HttpServletRequest request) throws IOException {
+		populateCommonPageFields(model, request);
+		
 		List<Student> students = studRepo.findAll();
 		model.put("students", students);
 		return "students";
 	}
 	
 	@RequestMapping(value = "/payment", method=RequestMethod.GET)
-	String getPaymentPage(Map<String, Object> model) throws IOException {
-		model.put("title", TITLE);
-		model.put("message", MESSAGE);
+	String getPaymentPage(Map<String, Object> model,
+			HttpServletRequest request) throws IOException {
+		populateCommonPageFields(model, request);
 		return "payment";
 	}
 
 	@RequestMapping(value = "/paymentDetails", method=RequestMethod.POST)
 	String getPaymentDetailsSec(Map<String, Object> model,
-			@RequestParam(name = "id") String studentId) throws IOException {
-		model.put("title", TITLE);
-		model.put("message", MESSAGE);
+			@RequestParam(name = "id") String studentId,
+			HttpServletRequest request) throws IOException {
+		populateCommonPageFields(model, request);
+
 		Student student = studRepo.findOne(studentId);
 		if (null == student) {
 			model.put("alert", "alert alert-danger");
@@ -183,8 +173,10 @@ public class WelcomeController {
 		} else {
 			ArrayList<Payment> payments = student.payments;
 			double paid = 0;
-			for (Payment payment : payments) {
-				paid += payment.amount;
+			if (null != payments) {
+				for (Payment payment : payments) {
+					paid += payment.amount;
+				}
 			}
 			model.put("due", student.courseFee - paid);
 			model.put("student", student);
@@ -195,9 +187,10 @@ public class WelcomeController {
 	@RequestMapping(value = "/createPayment", method=RequestMethod.POST)
 	String setPaymentDetails(Map<String, Object> model,
 			@RequestParam(name = "id") String studentId,
-			@RequestBody Payment payment) throws IOException {
-		model.put("title", TITLE);
-		model.put("message", MESSAGE);
+			@RequestBody Payment payment,
+			HttpServletRequest request) throws IOException {
+		populateCommonPageFields(model, request);
+		
 		Student student = studRepo.findOne(studentId);
 		if (null == student) {
 			model.put("alert", "alert alert-danger");
@@ -241,9 +234,9 @@ public class WelcomeController {
 	void downloadInvoice(Map<String, Object> model,
 			@RequestParam(name = "id") String studentId,
 			@RequestParam(name = "paymentId") String paymentId,
-			HttpServletResponse response) throws IOException {
-		model.put("title", TITLE);
-		model.put("message", MESSAGE);
+			HttpServletResponse response,
+			HttpServletRequest request) throws IOException {
+		populateCommonPageFields(model, request);
 		Student student = studRepo.findOne(studentId);
 		if (null == student) {
 			model.put("alert", "alert alert-danger");
@@ -274,7 +267,6 @@ public class WelcomeController {
 			e.printStackTrace();
 		}
 		String outputFile = "C:\\Users\\polaris2\\" + "JasperReportExample.pdf";
-//		OutputStream outputStream = new PipedOutputStream();
 		OutputStream outputStream = new FileOutputStream(new File(outputFile));
 		try {
 			Map<String, Object> paramMap = new HashMap<String, Object>();
@@ -285,7 +277,7 @@ public class WelcomeController {
 			paramMap.put("paymentId", pt.paymentId);
 			paramMap.put("purpose", pt.purpose);
 			paramMap.put("amount", pt.amount);
-			paramMap.put("inWords", "Rupees Only");
+			paramMap.put("inWords", Currency.convertToIndianCurrency(pt.amount));
 			paramMap.put("date", pt.transactionDate);
 			JasperPrint jasperPrint = JasperFillManager.fillReport(
 					jasperReport,
@@ -302,8 +294,8 @@ public class WelcomeController {
 		File invoiceFile = new File(outputFile);
 		String mimeType = "application/pdf";
 		response.setContentType(mimeType);
-//		String invoiceFileName = student.id+"_"+pt.paymentId.substring(8)+".pdf";
-		response.setHeader("Content-Disposition", String.format("inline; filename=\"invoice.pdf\""));
+		String invoiceFileName = student.id+"_"+pt.paymentId.substring(8)+".pdf";
+		response.setHeader("Content-Disposition", String.format("inline; filename=\""+invoiceFileName+"\""));
 		response.setContentLength((int) invoiceFile.length());
 		InputStream inputStream = new BufferedInputStream(new FileInputStream(invoiceFile));
 
@@ -316,4 +308,10 @@ public class WelcomeController {
         int year = calendar.get(Calendar.YEAR);
         return (month > Calendar.MARCH) ? year : year - 1;
     }
+	
+	public void populateCommonPageFields(Map<String, Object> model, HttpServletRequest request) {
+		model.put("title", TITLE);
+		model.put("message", MESSAGE);
+		model.put("user", request.getRemoteUser());
+	}
 }

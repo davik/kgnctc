@@ -1,5 +1,23 @@
-<div class="col-md-12 bg-primary text-white mb-5">
-  <div class="navbar-brand">
+<!-- <div class="col-md-12 bg-primary text-white mb-5">
+  <div class="navbar-brand col-md-10">
   	<h2>Kaviguru Nobel Centenary Training College</h2>
   </div>
+  <div class="col-md-2">
+	  <form class="form-inline">
+	    <button class="btn my-2 my-sm-0" type="submit" action="/logout" method="post">Logout</button>
+	  </form>
+  </div>
 </div>
+ -->
+
+ <nav class="navbar navbar-light bg-light col-md-12 mb-5">
+  <a class="navbar-brand"><h2>Kaviguru Nobel Centenary Training College</h2></a>
+  <!-- <form class="form-inline" action="/logout" method="post">
+    <span class="badge badge-info mx-2"><h5>{{user}}</h5></span>
+    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Log out</button>
+  </form> -->
+  <div class="navbar-right">
+  <span class="badge badge-info"><h5>{{user}}</h5></span>
+  <a href="/logout"><span class="badge badge-info"><h5>Log out</h5></span></a>
+</div>
+</nav>
