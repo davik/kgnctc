@@ -1,4 +1,4 @@
-package com.quickml;
+package com.quickml.controller;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -31,6 +31,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.quickml.pojos.Counter;
 import com.quickml.pojos.Payment;
 import com.quickml.pojos.Student;
+import com.quickml.repository.CounterRepository;
+import com.quickml.repository.StudentRepository;
+import com.quickml.utils.Currency;
 
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRException;
@@ -48,7 +51,7 @@ import net.sf.jasperreports.engine.xml.JRXmlLoader;
 public class WelcomeController {
 
 	public WelcomeController(StudentRepository studRepo,
-			CounterRepo counterRepo) {
+			CounterRepository counterRepo) {
 		super();
 		this.studRepo = studRepo;
 		this.counterRepo = counterRepo;
@@ -64,7 +67,7 @@ public class WelcomeController {
 	@Autowired
 	public final StudentRepository studRepo;
 	@Autowired
-	public final CounterRepo counterRepo;
+	public final CounterRepository counterRepo;
 
 	@RequestMapping("/")
 	public String welcome(Map<String, Object> model, HttpServletRequest request) {

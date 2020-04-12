@@ -1,4 +1,4 @@
-package com.quickml;
+package com.quickml.repository;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import com.quickml.pojos.Counter;
 
 @Repository
-public interface CounterRepo extends MongoRepository<Counter, String> {
+public interface CounterRepository extends MongoRepository<Counter, String> {
 }

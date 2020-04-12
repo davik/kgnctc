@@ -1,4 +1,4 @@
-package com.quickml;
+package com.quickml.utils;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -1,4 +1,4 @@
-package com.quickml;
+package com.quickml.controller;
 
 import java.util.Map;
 
