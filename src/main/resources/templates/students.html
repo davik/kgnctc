@@ -11,7 +11,13 @@
 				<!-- responsive equal width cols, can be sm, md, lg, or xl -->
 				
 				<div class="col-md-10">
+					<div class="col-md-5 pb-4">
+						<div class="input-group">
+							<input type="text" class="form-control" placeholder="Search.." id="studentSearch">
+						</div>
+					</div>
 					<table class="table table-striped">
+						<thead>
 						<tr>
 							<th>Id</th>
 							<th>Name</th>
@@ -19,6 +25,8 @@
 							<th>Session</th>
 							<th>Mobile</th>
 						</tr>
+						</thead>
+						<tbody id ="studentTable">
 						{{#students}}
 						<tr>
 							<td>{{id}}</td>
@@ -28,6 +36,7 @@
 							<td>{{mobile}}</td>
 						</tr>
 						{{/students}}
+						</tbody>
 					</table>
 				</div>
 				

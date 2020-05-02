@@ -163,7 +163,7 @@ public class WelcomeController {
 		return "payment";
 	}
 
-	@RequestMapping(value = "/paymentDetails", method=RequestMethod.POST)
+	@RequestMapping(value = "/paymentDetails", method=RequestMethod.GET)
 	String getPaymentDetailsSec(Map<String, Object> model,
 			@RequestParam(name = "id") String studentId,
 			HttpServletRequest request) throws IOException {

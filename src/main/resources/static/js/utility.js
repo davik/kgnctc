@@ -163,7 +163,7 @@ $(document).ready(function() {
     $('#idSearch').click(function(e) {
         e.preventDefault();
         $.ajax({
-            type: "POST",
+            type: "GET",
             url: '/paymentDetails?' + $.param({
                 id: $('#id').val()
             }),
@@ -174,4 +174,11 @@ $(document).ready(function() {
             contentType: "application/json"
         });
     });
+    
+    $("#studentSearch").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#studentTable tr").filter(function() {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+      });
 });
