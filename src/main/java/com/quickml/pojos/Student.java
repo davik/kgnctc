@@ -33,6 +33,6 @@ public class Student {
 	public String subject = "";
 	public String lastSchoolName = "";
 	public String session = "";
-	public ArrayList<Payment> payments;
+	public ArrayList<Payment> payments = new ArrayList<Payment>();
 	public double courseFee;
 }
