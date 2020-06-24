@@ -178,6 +178,10 @@ public class WelcomeController {
 			double paid = 0;
 			if (null != payments) {
 				for (Payment payment : payments) {
+					if (payment.purpose.equals("Examination Fee") ||
+						payment.purpose.equals("Registration Fee")) {
+						continue;
+					}
 					paid += payment.amount;
 				}
 			}
