@@ -44,7 +44,7 @@
 				<imageExpression><![CDATA["kgnctc_logo.jpeg"]]></imageExpression>
 			</image>
 			<staticText>
-				<reportElement x="95" y="0" width="405" height="25" uuid="fe40622b-12e9-4ebd-b14a-ccfdde8abee4">
+				<reportElement x="95" y="0" width="459" height="25" uuid="fe40622b-12e9-4ebd-b14a-ccfdde8abee4">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -70,7 +70,7 @@
 				<text><![CDATA[seckabiguru@yahoo.com]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="95" y="408" width="395" height="25" uuid="96ecb8ca-160e-4061-829b-24a21f6fdd3e">
+				<reportElement x="95" y="408" width="454" height="25" uuid="96ecb8ca-160e-4061-829b-24a21f6fdd3e">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -118,11 +118,11 @@
 				<reportElement x="0" y="491" width="556" height="1" uuid="9baaae35-28da-4049-b3c1-7fb023ee3889"/>
 			</line>
 			<staticText>
-				<reportElement x="382" y="37" width="106" height="20" uuid="7e26ae0d-eba2-4cc9-bf2f-954888775295"/>
+				<reportElement x="380" y="37" width="106" height="20" uuid="7e26ae0d-eba2-4cc9-bf2f-954888775295"/>
 				<text><![CDATA[Office Copy]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="382" y="446" width="106" height="20" uuid="de384941-ed03-45fc-91df-ea839b04fb6e"/>
+				<reportElement x="380" y="446" width="106" height="20" uuid="de384941-ed03-45fc-91df-ea839b04fb6e"/>
 				<text><![CDATA[Student Copy]]></text>
 			</staticText>
 			<staticText>
@@ -343,7 +343,7 @@
 				<reportElement x="303" y="318" width="250" height="60" uuid="ae088747-c97b-4024-9ee0-3a4392cdc47b"/>
 			</rectangle>
 			<staticText>
-				<reportElement x="450" y="363" width="103" height="15" uuid="36863b0e-6ec8-4860-8454-39fb1c9729fd"/>
+				<reportElement x="420" y="363" width="133" height="15" uuid="36863b0e-6ec8-4860-8454-39fb1c9729fd"/>
 				<text><![CDATA[Authorised Signatory]]></text>
 			</staticText>
 			<staticText>
@@ -358,7 +358,7 @@
 				<text><![CDATA[For KGNCTC]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="447" y="774" width="103" height="15" uuid="74ad2795-d13e-4ab3-8a4a-b5c04bc23f09"/>
+				<reportElement x="420" y="774" width="130" height="15" uuid="74ad2795-d13e-4ab3-8a4a-b5c04bc23f09"/>
 				<text><![CDATA[Authorised Signatory]]></text>
 			</staticText>
 			<textField>
