@@ -168,7 +168,7 @@ public class WelcomeController {
 	@RequestMapping(value = "/paymentDetails", method=RequestMethod.GET)
 	String getPaymentDetailsSec(Map<String, Object> model,
 			@RequestParam(name = "id") String studentId,
-			HttpServletRequest request) throws IOException {
+			HttpServletRequest request) throws IOException, ParseException {
 		populateCommonPageFields(model, request);
 
 		Student student = studRepo.findOne(studentId);
