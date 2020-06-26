@@ -183,6 +183,10 @@ public class WelcomeController {
 						continue;
 					}
 					paid += payment.amount;
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+					sdf.setTimeZone(TimeZone.getTimeZone("IST"));
+					payment.transactionDate = 
+							sdf.parse(sdf.format(payment.transactionDate));
 				}
 			}
 			model.put("due", student.courseFee - paid);
