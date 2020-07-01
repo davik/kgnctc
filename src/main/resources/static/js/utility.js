@@ -37,7 +37,6 @@ function downloadInvoice(paymentid) {
 }
 
 function createPayment() {
-    console.log("hello");
     var payment = {
         transactionId: $("#transactionId").val(),
         amount: $("#amount").val(),
@@ -60,6 +59,7 @@ function createPayment() {
             }, 'slow');
             setTimeout(function() {
                 $("#msg").hide();
+                $('#idSearch').click();
             }, 3000);
             $("#transactionId").val(''),
                 $("#amount").val('');
