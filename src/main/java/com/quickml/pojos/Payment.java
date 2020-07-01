@@ -1,10 +1,11 @@
 package com.quickml.pojos;
 
-import java.util.Date;
+
+import org.joda.time.DateTime;
 
 public class Payment {
 	public String paymentId;
-	public Date transactionDate;
+	public DateTime transactionDate;
 	public String transactionId;
 	public double amount;
 	public String mode; // Cash, Cheque, DD etc

@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -19,6 +18,10 @@ import java.util.TimeZone;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
@@ -185,10 +188,6 @@ public class WelcomeController {
 						continue;
 					}
 					paid += payment.amount;
-					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
-					sdf.setTimeZone(TimeZone.getTimeZone("IST"));
-					payment.transactionDate = 
-							sdf.parse(sdf.format(payment.transactionDate));
 				}
 			}
 			model.put("due", student.courseFee - paid);
@@ -231,7 +230,7 @@ public class WelcomeController {
 			}
 			
 			payment.paymentId = ct.id + "/" + String.format("%05d", ct.nextId);
-			payment.transactionDate = calendar.getTime();
+			payment.transactionDate = (DateTime) DateTime.now().withZone(DateTimeZone.forID("Asia/Kolkata"));
 			payments.add(payment);
 			
 			ct.nextId++;
@@ -291,7 +290,7 @@ public class WelcomeController {
 			paramMap.put("purpose", pt.purpose);
 			paramMap.put("amount", pt.amount);
 			paramMap.put("inWords", Currency.convertToIndianCurrency(pt.amount));
-			paramMap.put("date", pt.transactionDate);
+			paramMap.put("date", pt.transactionDate.toDate());
 			JasperPrint jasperPrint = JasperFillManager.fillReport(
 					jasperReport,
 					paramMap,
