@@ -68,6 +68,14 @@ function createPayment() {
     });
 }
 
+function changeAncAttSess() {
+    var url = '/payDueReport?' + $.param({
+                course: $('#course').val(),
+                session: $('#session').val()
+            });
+    $('#paydue').attr({target: '_blank', href: url});
+}
+
 $(document).ready(function() {
     // Listen to click event on the submit button
     $('#button').click(function(e) {

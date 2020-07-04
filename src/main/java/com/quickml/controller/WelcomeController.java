@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -26,6 +27,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Example;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,6 +37,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.opencsv.CSVWriter;
 import com.quickml.pojos.Counter;
 import com.quickml.pojos.Payment;
 import com.quickml.pojos.Student;
@@ -168,6 +173,13 @@ public class WelcomeController {
 		return "payment";
 	}
 
+	@RequestMapping(value = "/report", method=RequestMethod.GET)
+	String getReportPage(Map<String, Object> model,
+			HttpServletRequest request) throws IOException {
+		populateCommonPageFields(model, request);
+		return "report";
+	}
+	
 	@RequestMapping(value = "/paymentDetails", method=RequestMethod.GET)
 	String getPaymentDetailsSec(Map<String, Object> model,
 			@RequestParam(name = "id") String studentId,
@@ -325,5 +337,71 @@ public class WelcomeController {
 		model.put("title", TITLE);
 		model.put("message", MESSAGE);
 		model.put("user", request.getRemoteUser());
+	}
+	
+	@RequestMapping(value = "/payDueReport", method=RequestMethod.GET)
+	void generatePayDueReport(Map<String, Object> model,
+			@RequestParam(name = "session") String session,
+			@RequestParam(name = "course") String course,
+			HttpServletResponse response,
+			HttpServletRequest request) throws IOException {
+		populateCommonPageFields(model, request);
+
+		List<Student> students = studRepo.findByCourseAndSession(course, session);
+		
+		String outputFileName = "C:\\Users\\polaris2\\" + "paydue.csv";
+		File reportFile = new File(outputFileName);
+		  
+	    try { 
+	        // create FileWriter object with file as parameter 
+	        FileWriter outputfile = new FileWriter(reportFile); 
+	  
+	        // create CSVWriter object filewriter object as parameter 
+	        CSVWriter writer = new CSVWriter(outputfile); 
+	  
+	        // create a List which contains String array 
+	        List<String[]> data = new ArrayList<String[]>(); 
+	        data.add(new String[] { "StudentID", "Name", "Mobile", "CourseFee", "Due" });
+	        for (Student st : students) {
+				ArrayList<Payment> payments = st.payments;
+				double paid = 0;
+				if (null != payments) {
+					for (Payment payment : payments) {
+						if (payment.purpose.equals("Examination Fee") ||
+							payment.purpose.equals("Registration Fee")) {
+							continue;
+						}
+						paid += payment.amount;
+					}
+				}
+				// Add Student Details
+				data.add(new String[] {st.id,
+						st.name,
+						st.mobile,
+						Double.toString(st.courseFee),
+						Double.toString(st.courseFee-paid)});
+			}
+	        writer.writeAll(data); 
+	  
+	        // closing writer connection 
+	        writer.close(); 
+	    } 
+	    catch (IOException e) { 
+	        // TODO Auto-generated catch block 
+	        e.printStackTrace(); 
+	    } 
+		// Download section
+		String mimeType = "text/csv";
+		response.setContentType(mimeType);
+		String reportFileName = "DueList"+"_"+course+"_"+session.substring(0, 4)+".csv";
+		response.setHeader("Content-Disposition", String.format("attachment; filename=\""+reportFileName+"\""));
+		response.setContentLength((int) reportFile.length());
+		InputStream inputStream = new BufferedInputStream(new FileInputStream(reportFile));
+
+		FileCopyUtils.copy(inputStream, response.getOutputStream());
+		response.flushBuffer();
+
+		model.put("alert", "alert alert-success");
+    	model.put("result", "Report Generated Successfully!");
 	}
 }
