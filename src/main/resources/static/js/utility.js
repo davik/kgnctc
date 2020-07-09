@@ -6,6 +6,12 @@ $.ajaxSetup({
     }
 });
 
+function fetchPaymentDetail(id) {
+    $('#nav-profile-tab').trigger('click');
+    $('#id').val(id);
+    $('#idSearch').click();
+}
+
 function call(e, path) {
     e.preventDefault();
     $.ajax({
