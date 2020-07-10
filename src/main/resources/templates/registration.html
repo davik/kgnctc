@@ -9,7 +9,7 @@
 				{{>layout/sidebar}}
 				<div class="col-md-10">
 					<legend>Student Registration Form</legend>
-					<form>
+					<form id="studRegForm">
 						<fieldset class="form-group">
 							<div class="row">
 								<legend class="col-form-label col-sm-2 pt-0">Course</legend>
@@ -31,32 +31,32 @@
 						</fieldset>
 						<div class="form-group">
 							<label for="name">Name*</label>
-							<input type="text" class="form-control" id="name">
+							<input type="text" class="form-control clearit" id="name">
 						</div>
 						<div class="form-row">
 							<div class="form-group col-md-6">
 								<label for="father">Father's Name</label>
-								<input type="text" class="form-control" id="father">
+								<input type="text" class="form-control clearit" id="father">
 							</div>
 							<div class="form-group col-md-6">
 								<label for="mother">Mother's Name</label>
-								<input type="text" class="form-control" id="mother">
+								<input type="text" class="form-control clearit" id="mother">
 							</div>
 						</div>
 						<div class="form-row">
 							<div class="form-group col-md-6">
 								<label for="courseFee">Course Fee*</label>
-								<input type="text" class="form-control" id="courseFee">
+								<input type="text" class="form-control clearit" id="courseFee">
 							</div>
 							<div class="form-group col-md-6">
 								<label for="familyIncome">Family Income</label>
-								<input type="text" class="form-control" id="familyIncome" placeholder="Yearly Income">
+								<input type="text" class="form-control clearit" id="familyIncome" placeholder="Yearly Income">
 							</div>
 						</div>
 						<div class="form-row">
 							<div class="form-group col-md-4">
 								<label for="dob">Date of Birth*</label>
-								<input type="date" class="form-control" id="dob" placeholder="DD/MM/YYYY">
+								<input type="date" class="form-control clearit" id="dob" placeholder="DD/MM/YYYY">
 							</div>
 							<div class="form-group col-md-2">
 								<label for="gender">Gender</label>
@@ -92,15 +92,15 @@
 						<div class="form-row">
 							<div class="form-group col-md-4">
 								<label for="mobile">Mobile Number*</label>
-								<input type="text" class="form-control" id="mobile">
+								<input type="text" class="form-control clearit" id="mobile">
 							</div>
 							<div class="form-group col-md-4">
 								<label for="email">Email Address*</label>
-								<input type="email" class="form-control" id="email" placeholder="username@domain">
+								<input type="email" class="form-control clearit" id="email" placeholder="username@domain">
 							</div>
 							<div class="form-group col-md-4">
 								<label for="guardianContact">Guardian Contact Number</label>
-								<input type="text" class="form-control" id="guardianContact">
+								<input type="text" class="form-control clearit" id="guardianContact">
 							</div>
 						</div>
 						<div class="form-row">
@@ -145,16 +145,16 @@
 							</div>
 							<div class="form-group col-md-4">
 								<label for="aadhaar">Aadhaar*</label>
-								<input type="text" class="form-control" id="aadhaar">
+								<input type="text" class="form-control clearit" id="aadhaar">
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="address1">Address</label>
-							<textarea class="form-control" id="address1"></textarea>
+							<textarea class="form-control clearit" id="address1"></textarea>
 						</div>
 						<div class="form-group">
 							<label for="address2">Alternate Address</label>
-							<textarea class="form-control" id="address2"></textarea>
+							<textarea class="form-control clearit" id="address2"></textarea>
 						</div>
 						<legend>Academic Information</legend>
 						<table class="table table-striped">
@@ -165,57 +165,52 @@
 									<th scope="col">Year</th>
 									<th scope="col">Total Marks</th>
 									<th scope="col">Marks Obtained</th>
-									<th scope="col">Percentage</th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr>
 									<th scope="row">M.P or 10th*</th>
-									<td><input type="text" class="form-control" id="mpboard"></td>
-									<td><input type="text" class="form-control" id="mpyear"></td>
-									<td><input type="text" class="form-control" id="mptotal"></td>
-									<td><input type="text" class="form-control" id="mpmarks"></td>
-									<td><input type="text" class="form-control" id="mppercent"></td>
+									<td><input type="text" class="form-control clearit" id="mpboard"></td>
+									<td><input type="text" class="form-control clearit" id="mpyear"></td>
+									<td><input type="text" class="form-control clearit" id="mptotal"></td>
+									<td><input type="text" class="form-control clearit" id="mpmarks"></td>
 								</tr>
 								<tr>
 									<th scope="row">H.S or 12th*</th>
-									<td><input type="text" class="form-control" id="hsboard"></td>
-									<td><input type="text" class="form-control" id="hsyear"></td>
-									<td><input type="text" class="form-control" id="hstotal"></td>
-									<td><input type="text" class="form-control" id="hsmarks"></td>
-									<td><input type="text" class="form-control" id="hspercent"></td>
+									<td><input type="text" class="form-control clearit" id="hsboard"></td>
+									<td><input type="text" class="form-control clearit" id="hsyear"></td>
+									<td><input type="text" class="form-control clearit" id="hstotal"></td>
+									<td><input type="text" class="form-control clearit" id="hsmarks"></td>
 								</tr>
 								<tr>
 									<th scope="row">Graduation</th>
-									<td><input type="text" class="form-control" id="gradboard"></td>
-									<td><input type="text" class="form-control" id="gradyear"></td>
-									<td><input type="text" class="form-control" id="gradtotal"></td>
-									<td><input type="text" class="form-control" id="gradmarks"></td>
-									<td><input type="text" class="form-control" id="gradpercent"></td>
+									<td><input type="text" class="form-control clearit" id="gradboard"></td>
+									<td><input type="text" class="form-control clearit" id="gradyear"></td>
+									<td><input type="text" class="form-control clearit" id="gradtotal"></td>
+									<td><input type="text" class="form-control clearit" id="gradmarks"></td>
 								</tr>
 								<tr>
 									<th scope="row">Post Graduation</th>
-									<td><input type="text" class="form-control" id="pgboard"></td>
-									<td><input type="text" class="form-control" id="pgyear"></td>
-									<td><input type="text" class="form-control" id="pgtotal"></td>
-									<td><input type="text" class="form-control" id="pgmarks"></td>
-									<td><input type="text" class="form-control" id="pgpercent"></td>
+									<td><input type="text" class="form-control clearit" id="pgboard"></td>
+									<td><input type="text" class="form-control clearit" id="pgyear"></td>
+									<td><input type="text" class="form-control clearit" id="pgtotal"></td>
+									<td><input type="text" class="form-control clearit" id="pgmarks"></td>
 								</tr>
 							</tbody>
 						</table>
 						<div class="form-row">
 							<div class="form-group col-md-6">
 								<label for="regLast">Registration No. from the University Last Attended</label>
-								<input type="text" class="form-control" id="regLast">
+								<input type="text" class="form-control clearit" id="regLast">
 							</div>
 							<div class="form-group col-md-6">
 								<label for="subject">Subject</label>
-								<input type="text" class="form-control" id="subject">
+								<input type="text" class="form-control clearit" id="subject">
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="schoolName">Last School Name</label>
-							<input type="text" class="form-control" id="schoolName">
+							<input type="text" class="form-control clearit" id="schoolName">
 						</div>
 						<button type="submit" class="btn btn-primary" id="button">Submit</button>
 					</form>
