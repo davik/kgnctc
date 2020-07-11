@@ -362,7 +362,7 @@ public class WelcomeController {
 	  
 	        // create a List which contains String array 
 	        List<String[]> data = new ArrayList<String[]>(); 
-	        data.add(new String[] { "StudentID", "Name", "Mobile", "CourseFee", "Due" });
+	        data.add(new String[] { "StudentID", "Name", "Mobile", "CourseFee", "Paid", "Due" });
 	        for (Student st : students) {
 				ArrayList<Payment> payments = st.payments;
 				double paid = 0;
@@ -380,6 +380,7 @@ public class WelcomeController {
 						st.name,
 						st.mobile,
 						Double.toString(st.courseFee),
+						Double.toString(paid),
 						Double.toString(st.courseFee-paid)});
 			}
 	        writer.writeAll(data); 
