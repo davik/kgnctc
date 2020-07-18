@@ -8,8 +8,8 @@
 	<h5 class="card-header">{{name}}</h5>
 	<div class="card-body">
 		<h5 class="card-title">
-		<span class="badge badge-warning">Due Amount - {{due}}</span>
-		<span class="badge badge-primary">Course Fee - {{courseFee}}</span>
+		<span class="badge badge-warning">Due Amount - &#x20b9; {{due}}</span>
+		<span class="badge badge-primary">Course Fee - &#x20b9; {{courseFee}}</span>
 		</h5>
 		<p class="card-text">Course - {{course}}, Session - {{session}}, Contact - {{mobile}}</p>
 		<a href="javascript:showPaymentForm();" class="btn btn-primary" id="addPayment">Add Payment</a>
@@ -28,7 +28,7 @@
 		<td>{{transactionDate}}</td>
 		<td>{{purpose}}</td>
 		<td>{{mode}}</td>
-		<td>{{amount}}</td>
+		<td>&#x20b9; {{amount}}</td>
 		<td><a href="/invoice?id={{id}}&paymentId={{paymentId}}" class="btn btn-primary" id="addPayment" target="_blank">Invoice</a></td>
 	</tr>
 	{{/payments}}

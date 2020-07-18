@@ -82,6 +82,43 @@ public class WelcomeController {
 	@RequestMapping("/")
 	public String welcome(Map<String, Object> model, HttpServletRequest request) {
 		populateCommonPageFields(model, request);
+		// TODO : Delete the nest section
+		DateTime from = DateTime.now().withTimeAtStartOfDay();
+		DateTime to = DateTime.now().withTimeAtStartOfDay().plusHours(24);
+		List<Student> students = studRepo.findByPaymentsTransactionDateBetween(from, to);
+		System.out.println("From = " + from.toString());
+		System.out.println("To = " + to.toString());
+		System.out.println("Size " + students.size());
+		int bedInvoiceCount = 0, dedInvoiceCount = 0;
+		double bedAmount = 0, dedAmount = 0;
+		for (Student st : students) {
+			boolean bed = false, ded = false; 
+			
+			for (Payment pt : st.payments) {
+				System.out.println("PaymentId " + pt.paymentId + " Amount " + pt.amount + " Date " + pt.transactionDate);
+				if (pt.transactionDate.getDayOfMonth() == from.getDayOfMonth()) {
+					if (st.course.equalsIgnoreCase("B.Ed")) {
+						bedInvoiceCount++;
+						bed = true;
+					} else if (st.course.equalsIgnoreCase("D.El.Ed")){
+						dedInvoiceCount++;
+						ded = true;
+					}
+					if (bed) {
+						bedAmount =  bedAmount + pt.amount;
+					} else if (ded) {
+						dedAmount =  dedAmount + pt.amount;
+					}
+				}
+			}
+		}
+		System.out.println("Total " + Double.toString(bedAmount + dedAmount));
+		model.put("bedAmount", bedAmount);
+		model.put("dedAmount", dedAmount);
+		model.put("totalAmount", bedAmount + dedAmount);
+		model.put("bedInvoiceCount", bedInvoiceCount);
+		model.put("dedInvoiceCount", dedInvoiceCount);
+		model.put("totalInvoiceCount", bedInvoiceCount + dedInvoiceCount);
 		
 		return "welcome";
 	}
