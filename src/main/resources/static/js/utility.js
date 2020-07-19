@@ -6,6 +6,12 @@ $.ajaxSetup({
     }
 });
 
+function fetchPaymentDetail(id) {
+    $('#nav-profile-tab').trigger('click');
+    $('#id').val(id);
+    $('#idSearch').click();
+}
+
 function call(e, path) {
     e.preventDefault();
     $.ajax({
@@ -90,8 +96,7 @@ $(document).ready(function() {
             board: $("#mpboard").val(),
             year: $("#mpyear").val(),
             total: $("#mptotal").val(),
-            marks: $("#mpmarks").val(),
-            percentage: $("#mppercent").val()
+            marks: $("#mpmarks").val()
         };
         academics[0] = mp;
         var hs = {
@@ -99,8 +104,7 @@ $(document).ready(function() {
             board: $("#hsboard").val(),
             year: $("#hsyear").val(),
             total: $("#hstotal").val(),
-            marks: $("#hsmarks").val(),
-            percentage: $("#hspercent").val()
+            marks: $("#hsmarks").val()
         };
         academics[1] = hs;
         var gr = {
@@ -108,8 +112,7 @@ $(document).ready(function() {
             board: $("#gradboard").val(),
             year: $("#gradyear").val(),
             total: $("#gradtotal").val(),
-            marks: $("#gradmarks").val(),
-            percentage: $("#gradpercent").val()
+            marks: $("#gradmarks").val()
         };
         academics[2] = gr;
         var pg = {
@@ -117,8 +120,7 @@ $(document).ready(function() {
             board: $("#pgboard").val(),
             year: $("#pgyear").val(),
             total: $("#pgtotal").val(),
-            marks: $("#pgmarks").val(),
-            percentage: $("#pgpercent").val()
+            marks: $("#pgmarks").val()
         };
         academics[3] = pg;
         var student = {
@@ -160,6 +162,7 @@ $(document).ready(function() {
                 $('html,body').animate({
                     scrollTop: $("#msg").offset().top
                 }, 'slow');
+                $('.clearit').val('');
                 setTimeout(function() {
                     $("#msg").hide();
                 }, 3000);

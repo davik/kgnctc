@@ -11,33 +11,58 @@
 				<!-- responsive equal width cols, can be sm, md, lg, or xl -->
 				
 				<div class="col-md-10">
-					<div class="col-md-5 pb-4">
-						<div class="input-group">
-							<input type="text" class="form-control" placeholder="Search.." id="studentSearch">
+					<nav>
+						<div class="nav nav-tabs" id="nav-tab" role="tablist">
+							<a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Student List</a>
+							<a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Payment Info</a>
+						</div>
+					</nav>
+					<div class="tab-content" id="nav-tabContent">
+						<div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+							<div class="col-md-5 pb-4 pt-4">
+								<div class="input-group">
+									<input type="text" class="form-control" placeholder="Search.." id="studentSearch">
+								</div>
+							</div>
+							<table class="table table-striped">
+								<thead>
+									<tr>
+										<th>Id</th>
+										<th>Name</th>
+										<th>Course</th>
+										<th>Session</th>
+										<th>Mobile</th>
+										<th>Course Fee</th>
+									</tr>
+								</thead>
+								<tbody id ="studentTable">
+									{{#students}}
+									<tr>
+										<td><a href="#" id="{{id}}" onclick="fetchPaymentDetail(this.id);">{{id}}</a></td>
+										<td>{{name}}</td>
+										<td>{{course}}</td>
+										<td>{{session}}</td>
+										<td>{{mobile}}</td>
+										<td>{{courseFee}}</td>
+									</tr>
+									{{/students}}
+								</tbody>
+							</table>
+						</div>
+						<div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+							<div class="col-md-5 pt-4">
+								<div class="input-group">
+									<input type="text" class="form-control" placeholder="Student Id" id="id">
+									<span class="input-group-btn">
+										<button class="btn btn-secondary" type="button" id="idSearch">Go!</button>
+									</span>
+								</div>
+							</div>
+							<div class="col-md-10" id="paymentDetail"  class="py-4">
+							</div>
 						</div>
 					</div>
-					<table class="table table-striped">
-						<thead>
-						<tr>
-							<th>Id</th>
-							<th>Name</th>
-							<th>Course</th>
-							<th>Session</th>
-							<th>Mobile</th>
-						</tr>
-						</thead>
-						<tbody id ="studentTable">
-						{{#students}}
-						<tr>
-							<td>{{id}}</td>
-							<td>{{name}}</td>
-							<td>{{course}}</td>
-							<td>{{session}}</td>
-							<td>{{mobile}}</td>
-						</tr>
-						{{/students}}
-						</tbody>
-					</table>
+					
 				</div>
 				
 			</div>
