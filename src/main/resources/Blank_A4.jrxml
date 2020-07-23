@@ -12,6 +12,7 @@
 	<parameter name="inWords" class="java.lang.String"/>
 	<parameter name="paymentId" class="java.lang.String"/>
 	<parameter name="transactionId" class="java.lang.String"/>
+	<parameter name="transactionMode" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -20,7 +21,7 @@
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<property name="com.jaspersoft.studio.layout"/>
 			<subreport>
-				<reportElement x="0" y="0" width="555" height="400" uuid="f7c286ca-9408-4255-a340-6b8137db3384">
+				<reportElement x="0" y="-2" width="555" height="400" uuid="f7c286ca-9408-4255-a340-6b8137db3384">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
@@ -399,6 +400,22 @@
 				<reportElement x="11" y="277" width="54" height="16" uuid="ad0138ef-2a61-4b85-a11e-5e30813a6518"/>
 				<text><![CDATA[In Words]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="290" y="144" width="100" height="20" uuid="a98f7f12-0be4-4dfa-9c26-d3f44aea40d6"/>
+				<text><![CDATA[Transaction Mode]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="390" y="144" width="100" height="20" uuid="4904c0c6-9b10-47ca-866f-e4474c518394"/>
+				<textFieldExpression><![CDATA[$P{transactionMode}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="291" y="552" width="100" height="20" uuid="d06dce61-932f-42e3-9069-584f6bbe8142"/>
+				<text><![CDATA[Transaction Mode]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="391" y="552" width="100" height="20" uuid="3af7db13-3e03-49fb-b8ba-bc7cf3bf0dd4"/>
+				<textFieldExpression><![CDATA[$P{transactionMode}]]></textFieldExpression>
+			</textField>
 		</band>
 	</background>
 </jasperReport>
