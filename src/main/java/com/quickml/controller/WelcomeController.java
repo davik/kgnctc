@@ -336,6 +336,7 @@ public class WelcomeController {
 			paramMap.put("course", student.course);
 			paramMap.put("session", student.session);
 			paramMap.put("paymentId", pt.paymentId);
+			paramMap.put("transactionMode", pt.mode);
 			paramMap.put("transactionId", pt.transactionId);
 			paramMap.put("purpose", pt.purpose);
 			paramMap.put("amount", pt.amount);
