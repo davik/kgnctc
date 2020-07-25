@@ -41,8 +41,10 @@ import com.opencsv.CSVWriter;
 import com.quickml.pojos.Counter;
 import com.quickml.pojos.Payment;
 import com.quickml.pojos.Student;
+import com.quickml.pojos.User;
 import com.quickml.repository.CounterRepository;
 import com.quickml.repository.StudentRepository;
+import com.quickml.repository.UserRepository;
 import com.quickml.utils.Currency;
 
 import net.sf.jasperreports.engine.JREmptyDataSource;
@@ -61,10 +63,12 @@ import net.sf.jasperreports.engine.xml.JRXmlLoader;
 public class WelcomeController {
 
 	public WelcomeController(StudentRepository studRepo,
-			CounterRepository counterRepo) {
+			CounterRepository counterRepo,
+			UserRepository userRepo) {
 		super();
 		this.studRepo = studRepo;
 		this.counterRepo = counterRepo;
+		this.userRepo = userRepo;
 	}
 
 	// inject via application.properties
@@ -78,6 +82,8 @@ public class WelcomeController {
 	public final StudentRepository studRepo;
 	@Autowired
 	public final CounterRepository counterRepo;
+	@Autowired
+	public final UserRepository userRepo;
 
 	@RequestMapping("/")
 	public String welcome(Map<String, Object> model, HttpServletRequest request) {
@@ -280,6 +286,7 @@ public class WelcomeController {
 			
 			payment.paymentId = ct.id + "/" + String.format("%05d", ct.nextId);
 			payment.transactionDate = (DateTime) DateTime.now().withZone(DateTimeZone.forID("Asia/Kolkata"));
+			payment.acceptedBy = request.getRemoteUser();
 			payments.add(payment);
 			
 			ct.nextId++;
@@ -341,6 +348,8 @@ public class WelcomeController {
 			paramMap.put("amount", pt.amount);
 			paramMap.put("inWords", Currency.convertToIndianCurrency(pt.amount));
 			paramMap.put("date", pt.transactionDate.toDate());
+			User user = userRepo.findByUsername(pt.acceptedBy);
+			paramMap.put("user", user.fullname);
 			JasperPrint jasperPrint = JasperFillManager.fillReport(
 					jasperReport,
 					paramMap,
@@ -395,7 +404,7 @@ public class WelcomeController {
 	        FileWriter outputfile = new FileWriter(reportFile); 
 	  
 	        // create CSVWriter object filewriter object as parameter 
-	        CSVWriter writer = new CSVWriter(outputfile); 
+	        CSVWriter writer = new CSVWriter(outputfile);
 	  
 	        // create a List which contains String array 
 	        List<String[]> data = new ArrayList<String[]>(); 
