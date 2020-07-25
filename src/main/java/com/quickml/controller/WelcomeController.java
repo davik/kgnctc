@@ -21,15 +21,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.data.domain.Example;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -92,16 +87,13 @@ public class WelcomeController {
 		DateTime from = DateTime.now().withTimeAtStartOfDay();
 		DateTime to = DateTime.now().withTimeAtStartOfDay().plusHours(24);
 		List<Student> students = studRepo.findByPaymentsTransactionDateBetween(from, to);
-		System.out.println("From = " + from.toString());
-		System.out.println("To = " + to.toString());
-		System.out.println("Size " + students.size());
+
 		int bedInvoiceCount = 0, dedInvoiceCount = 0;
 		double bedAmount = 0, dedAmount = 0;
 		for (Student st : students) {
 			boolean bed = false, ded = false; 
 			
 			for (Payment pt : st.payments) {
-				System.out.println("PaymentId " + pt.paymentId + " Amount " + pt.amount + " Date " + pt.transactionDate);
 				if (pt.transactionDate.getDayOfMonth() == from.getDayOfMonth()) {
 					if (st.course.equalsIgnoreCase("B.Ed")) {
 						bedInvoiceCount++;
@@ -118,7 +110,6 @@ public class WelcomeController {
 				}
 			}
 		}
-		System.out.println("Total " + Double.toString(bedAmount + dedAmount));
 		model.put("bedAmount", bedAmount);
 		model.put("dedAmount", dedAmount);
 		model.put("totalAmount", bedAmount + dedAmount);
@@ -153,7 +144,7 @@ public class WelcomeController {
 			model.put("result", "Please fill the mandatory fields!");
 			return "create";
 		}
-		System.out.println(student.name);
+
 		String id_prefix = student.session.substring(0, 4);
 		// Counter is used to get the next id to be assigned for a new student based on session and course
 		Counter ct = null;
