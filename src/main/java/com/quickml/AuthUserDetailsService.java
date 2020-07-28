@@ -21,10 +21,8 @@ public class AuthUserDetailsService implements UserDetailsService {
 		User user = userRepository.findByUsername(username);
 		
         if(user == null){
-        	System.out.println("UserDetails not found");
             throw new UsernameNotFoundException(username);
         }else{
-        	System.out.println("UserDetails " + user.fullname);
             UserDetails details = new AuthUserDetails(user);
             return details;
         }

@@ -21,15 +21,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.data.domain.Example;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,8 +36,10 @@ import com.opencsv.CSVWriter;
 import com.quickml.pojos.Counter;
 import com.quickml.pojos.Payment;
 import com.quickml.pojos.Student;
+import com.quickml.pojos.User;
 import com.quickml.repository.CounterRepository;
 import com.quickml.repository.StudentRepository;
+import com.quickml.repository.UserRepository;
 import com.quickml.utils.Currency;
 
 import net.sf.jasperreports.engine.JREmptyDataSource;
@@ -61,10 +58,12 @@ import net.sf.jasperreports.engine.xml.JRXmlLoader;
 public class WelcomeController {
 
 	public WelcomeController(StudentRepository studRepo,
-			CounterRepository counterRepo) {
+			CounterRepository counterRepo,
+			UserRepository userRepo) {
 		super();
 		this.studRepo = studRepo;
 		this.counterRepo = counterRepo;
+		this.userRepo = userRepo;
 	}
 
 	// inject via application.properties
@@ -78,6 +77,8 @@ public class WelcomeController {
 	public final StudentRepository studRepo;
 	@Autowired
 	public final CounterRepository counterRepo;
+	@Autowired
+	public final UserRepository userRepo;
 
 	@RequestMapping("/")
 	public String welcome(Map<String, Object> model, HttpServletRequest request) {
@@ -86,16 +87,13 @@ public class WelcomeController {
 		DateTime from = DateTime.now().withTimeAtStartOfDay();
 		DateTime to = DateTime.now().withTimeAtStartOfDay().plusHours(24);
 		List<Student> students = studRepo.findByPaymentsTransactionDateBetween(from, to);
-		System.out.println("From = " + from.toString());
-		System.out.println("To = " + to.toString());
-		System.out.println("Size " + students.size());
+
 		int bedInvoiceCount = 0, dedInvoiceCount = 0;
 		double bedAmount = 0, dedAmount = 0;
 		for (Student st : students) {
 			boolean bed = false, ded = false; 
 			
 			for (Payment pt : st.payments) {
-				System.out.println("PaymentId " + pt.paymentId + " Amount " + pt.amount + " Date " + pt.transactionDate);
 				if (pt.transactionDate.getDayOfMonth() == from.getDayOfMonth()) {
 					if (st.course.equalsIgnoreCase("B.Ed")) {
 						bedInvoiceCount++;
@@ -112,7 +110,6 @@ public class WelcomeController {
 				}
 			}
 		}
-		System.out.println("Total " + Double.toString(bedAmount + dedAmount));
 		model.put("bedAmount", bedAmount);
 		model.put("dedAmount", dedAmount);
 		model.put("totalAmount", bedAmount + dedAmount);
@@ -147,7 +144,7 @@ public class WelcomeController {
 			model.put("result", "Please fill the mandatory fields!");
 			return "create";
 		}
-		System.out.println(student.name);
+
 		String id_prefix = student.session.substring(0, 4);
 		// Counter is used to get the next id to be assigned for a new student based on session and course
 		Counter ct = null;
@@ -280,6 +277,7 @@ public class WelcomeController {
 			
 			payment.paymentId = ct.id + "/" + String.format("%05d", ct.nextId);
 			payment.transactionDate = (DateTime) DateTime.now().withZone(DateTimeZone.forID("Asia/Kolkata"));
+			payment.acceptedBy = request.getRemoteUser();
 			payments.add(payment);
 			
 			ct.nextId++;
@@ -342,6 +340,8 @@ public class WelcomeController {
 			paramMap.put("amount", pt.amount);
 			paramMap.put("inWords", Currency.convertToIndianCurrency(pt.amount));
 			paramMap.put("date", pt.transactionDate.toDate());
+			User user = userRepo.findByUsername(pt.acceptedBy);
+			paramMap.put("user", user.fullname);
 			JasperPrint jasperPrint = JasperFillManager.fillReport(
 					jasperReport,
 					paramMap,
@@ -396,7 +396,7 @@ public class WelcomeController {
 	        FileWriter outputfile = new FileWriter(reportFile); 
 	  
 	        // create CSVWriter object filewriter object as parameter 
-	        CSVWriter writer = new CSVWriter(outputfile); 
+	        CSVWriter writer = new CSVWriter(outputfile);
 	  
 	        // create a List which contains String array 
 	        List<String[]> data = new ArrayList<String[]>(); 

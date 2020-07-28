@@ -180,6 +180,14 @@ $(document).ready(function() {
             }),
             success: function(data) {
                 $('#paymentDetail').html(data);
+                $(".convertTime").each(function() {
+                    var utcDate = $(this).text();
+                    var localDate = new Date(utcDate);
+                    var x = localDate.toLocaleDateString('en-GB', {
+                        day: '2-digit', month: 'short', year: 'numeric'
+                      }).replace(/ /g, '-');
+                    $(this).text(x);
+                });
                 $('#paymentForm').hide();
             },
             contentType: "application/json"
