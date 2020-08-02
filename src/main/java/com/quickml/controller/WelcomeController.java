@@ -411,13 +411,13 @@ public class WelcomeController {
 		String outputFileName = "C:\\Users\\polaris2\\" + "paydue.csv";
 		File reportFile = new File(outputFileName);
 		  
-	    try { 
-	        // create FileWriter object with file as parameter 
-	        FileWriter outputfile = new FileWriter(reportFile); 
-	  
-	        // create CSVWriter object filewriter object as parameter 
+	    try {
+	        // create FileWriter object with file as parameter
+	        FileWriter outputfile = new FileWriter(reportFile);
+
+	        // create CSVWriter object filewriter object as parameter
 	        CSVWriter writer = new CSVWriter(outputfile);
-	  
+
 	        // create a List which contains String array 
 	        List<String[]> data = new ArrayList<String[]>(); 
 	        data.add(new String[] { "StudentID", "Name", "Mobile", "CourseFee", "Paid", "Due" });
@@ -463,5 +463,61 @@ public class WelcomeController {
 
 		model.put("alert", "alert alert-success");
     	model.put("result", "Report Generated Successfully!");
+	}
+
+	@RequestMapping(value = "/allStudents", method=RequestMethod.GET)
+	void downloadAllStudents(Map<String, Object> model,
+			HttpServletResponse response,
+			HttpServletRequest request) throws IOException {
+		populateCommonPageFields(model, request);
+
+		List<Student> students = studRepo.findAll();
+
+		String outputFileName = "C:\\Users\\polaris2\\" + "allStudents.csv";
+		File reportFile = new File(outputFileName);
+
+	    try {
+	        // create FileWriter object with file as parameter
+	        FileWriter outputfile = new FileWriter(reportFile);
+	        // create CSVWriter object filewriter object as parameter
+	        CSVWriter writer = new CSVWriter(outputfile);
+	        // create a List which contains String array
+	        List<String[]> data = new ArrayList<String[]>();
+	        data.add(new String[] { "StudentID", "Course", "Name", "Father's Name",
+	        		"Mother's Name", "Date of Birth", "Gender", "Religion", "Category",
+	        		"Mobile", "Email Address", "Guardian Contact", "Blood Group", "Language",
+	        		"Nationality", "Application Type", "Aadhaar Number", "Address",
+	        		"Alternate Address", "Last Registration Number", "Subject",
+	        		"Last School Name", "Session", "Course Fee",
+	        		"Degree", "Board", "Year", "Total Marks", "Marks Obtained",
+	        		"Degree", "Board", "Year", "Total Marks", "Marks Obtained",
+	        		"Degree", "Board", "Year", "Total Marks", "Marks Obtained",
+	        		"Degree", "Board", "Year", "Total Marks", "Marks Obtained"});
+	        for (Student st : students) {
+				// Add Student Details
+				data.add(st.ToStringArray());
+			}
+	        writer.writeAll(data);
+
+	        // closing writer connection
+	        writer.close();
+	    }
+	    catch (IOException e) {
+	        // TODO Auto-generated catch block
+	        e.printStackTrace();
+	    }
+		// Download section
+		String mimeType = "text/csv";
+		response.setContentType(mimeType);
+		String reportFileName = "All_Students"+".csv";
+		response.setHeader("Content-Disposition", String.format("attachment; filename=\""+reportFileName+"\""));
+		response.setContentLength((int) reportFile.length());
+		InputStream inputStream = new BufferedInputStream(new FileInputStream(reportFile));
+
+		FileCopyUtils.copy(inputStream, response.getOutputStream());
+		response.flushBuffer();
+
+		model.put("alert", "alert alert-success");
+		model.put("result", "Report Generated Successfully!");
 	}
 }

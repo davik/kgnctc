@@ -1,6 +1,7 @@
 package com.quickml.pojos;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 import org.springframework.data.annotation.Id;
@@ -35,4 +36,17 @@ public class Student {
 	public String session = "";
 	public ArrayList<Payment> payments = new ArrayList<Payment>();
 	public double courseFee;
+
+	public String[] ToStringArray() {
+		ArrayList<String> arrayList = new ArrayList<> (Arrays.asList(id, course, name, father, mother,
+				dob.toString(), gender, religion, category, mobile,
+				email, guardianContact, blood, language, nationality,
+				applicationType, aadhaar, address1, address2,
+				lastRegNo, subject, lastSchoolName, session, Double.toString(courseFee)));
+		for (Academic ac : academics) {
+			arrayList.addAll(Arrays.asList(ac.name, ac.board, ac.year, ac.total, ac.marks));
+		}
+
+		return arrayList.toArray(new String[arrayList.size()]);
+	}
 }
