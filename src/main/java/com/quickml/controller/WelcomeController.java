@@ -394,6 +394,7 @@ public class WelcomeController {
 	public void populateCommonPageFields(Map<String, Object> model, HttpServletRequest request) {
 		model.put("title", collegeShortName);
 		model.put("message", collegeLongName);
+		model.put("collegeLongName", collegeLongName);
 		model.put("user", request.getRemoteUser());
 	}
 	
