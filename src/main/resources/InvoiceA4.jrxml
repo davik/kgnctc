@@ -14,6 +14,13 @@
 	<parameter name="transactionId" class="java.lang.String"/>
 	<parameter name="transactionMode" class="java.lang.String"/>
 	<parameter name="user" class="java.lang.String"/>
+	<parameter name="collegeLongName" class="java.lang.String"/>
+	<parameter name="collegeShortName" class="java.lang.String"/>
+	<parameter name="collegeAddress1" class="java.lang.String"/>
+	<parameter name="collegeAddress2" class="java.lang.String"/>
+	<parameter name="collegeContact" class="java.lang.String"/>
+	<parameter name="collegeEmail" class="java.lang.String"/>
+	<parameter name="logoFile" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -39,65 +46,13 @@
 				<reportElement x="0" y="400" width="555" height="1" uuid="9394cf1b-97e6-46ec-9fb4-ecbce125c127"/>
 			</line>
 			<image hAlign="Center">
-				<reportElement x="10" y="10" width="65" height="60" uuid="368cad07-201e-4ae7-900b-079d2a502522"/>
-				<imageExpression><![CDATA["kgnctc_logo.jpeg"]]></imageExpression>
+				<reportElement x="14" y="10" width="65" height="60" uuid="368cad07-201e-4ae7-900b-079d2a502522"/>
+				<imageExpression><![CDATA[$P{logoFile}]]></imageExpression>
 			</image>
 			<image hAlign="Center">
-				<reportElement x="10" y="410" width="65" height="60" uuid="9c78285b-2b53-451a-8f94-c6fea6da8cc5"/>
-				<imageExpression><![CDATA["kgnctc_logo.jpeg"]]></imageExpression>
+				<reportElement x="14" y="420" width="65" height="60" uuid="9c78285b-2b53-451a-8f94-c6fea6da8cc5"/>
+				<imageExpression><![CDATA[$P{logoFile}]]></imageExpression>
 			</image>
-			<staticText>
-				<reportElement x="95" y="0" width="478" height="30" uuid="fe40622b-12e9-4ebd-b14a-ccfdde8abee4">
-					<property name="local_mesure_unitheight" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<textElement>
-					<font size="19" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Kaviguru Nobel Centenary Training College]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="95" y="25" width="205" height="15" uuid="ffd48e80-2686-42b3-acd2-2b38cb3140ae"/>
-				<text><![CDATA[Kalitala]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="95" y="40" width="205" height="15" uuid="35ea56c1-15ce-473f-a253-7dcecb3ad259"/>
-				<text><![CDATA[Beldanga, Murshidabad, 742133]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="95" y="55" width="205" height="15" uuid="54778fef-cb97-4a6b-81e6-c65a21464dc3"/>
-				<text><![CDATA[8900100700, www.kabigurunctc.org]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="95" y="67" width="205" height="15" uuid="d0e0a8ad-80ac-450d-bb2e-37210fcd5560"/>
-				<text><![CDATA[seckabiguru@yahoo.com]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="95" y="408" width="478" height="32" uuid="96ecb8ca-160e-4061-829b-24a21f6fdd3e">
-					<property name="local_mesure_unitheight" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<textElement>
-					<font size="19" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Kaviguru Nobel Centenary Training College]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="95" y="433" width="205" height="15" uuid="78b3957d-60e9-42d3-be4e-3ba0a3983569"/>
-				<text><![CDATA[Kalitala]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="95" y="448" width="205" height="15" uuid="b9725ece-fc46-4cdf-be98-704cd2fc3e3a"/>
-				<text><![CDATA[Beldanga, Murshidabad, 742133]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="95" y="463" width="205" height="15" uuid="ce223dea-e3b6-4342-9df5-88c8f76fa986"/>
-				<text><![CDATA[8900100700, www.kabigurunctc.org]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="95" y="475" width="205" height="15" uuid="deee4961-caa0-4677-965d-8427b733e22b"/>
-				<text><![CDATA[seckabiguru@yahoo.com]]></text>
-			</staticText>
 			<staticText>
 				<reportElement x="380" y="60" width="36" height="15" uuid="5944978e-b60c-4a52-aab8-48ac0c483238"/>
 				<text><![CDATA[Date]]></text>
@@ -135,52 +90,52 @@
 				<text><![CDATA[Student Copy]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="145" y="83" width="253" height="26" uuid="5eb691ba-5427-4eef-802b-fa947b0aefbd"/>
+				<reportElement x="145" y="83" width="253" height="19" uuid="5eb691ba-5427-4eef-802b-fa947b0aefbd"/>
 				<textElement textAlignment="Center">
 					<font size="14" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Money Receipt]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="145" y="491" width="253" height="26" uuid="4974fe74-8f7d-4fd2-9dac-269b70863be1"/>
+				<reportElement x="145" y="491" width="253" height="19" uuid="4974fe74-8f7d-4fd2-9dac-269b70863be1"/>
 				<textElement textAlignment="Center">
 					<font size="14" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Money Receipt]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="111" y="143" width="100" height="20" uuid="bcef286d-1ab5-46b1-96fe-40fc4a24953e"/>
+				<reportElement x="82" y="143" width="129" height="20" uuid="bcef286d-1ab5-46b1-96fe-40fc4a24953e"/>
 				<textFieldExpression><![CDATA[$P{course}]]></textFieldExpression>
 			</textField>
 			<line>
 				<reportElement x="0" y="102" width="556" height="1" uuid="3d50ccf3-7e3f-4dfe-9ba6-d90e65ae5ca7"/>
 			</line>
 			<staticText>
-				<reportElement x="11" y="104" width="100" height="20" uuid="de12640a-7d8d-4919-8d51-0ff08d5e7100"/>
+				<reportElement x="11" y="104" width="71" height="20" uuid="de12640a-7d8d-4919-8d51-0ff08d5e7100"/>
 				<text><![CDATA[Student Name]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="111" y="104" width="100" height="20" uuid="99a3f98e-1fca-4e76-900b-fdf11b219dee"/>
+				<reportElement x="82" y="104" width="198" height="20" uuid="99a3f98e-1fca-4e76-900b-fdf11b219dee"/>
 				<textFieldExpression><![CDATA[$P{name}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="11" y="123" width="100" height="20" uuid="42bfaa1a-d32b-4cc9-95aa-d44957acfeef"/>
+				<reportElement x="11" y="123" width="71" height="20" uuid="42bfaa1a-d32b-4cc9-95aa-d44957acfeef"/>
 				<text><![CDATA[Student ID]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="111" y="123" width="100" height="20" uuid="5cb78eda-e38e-4fa5-abb5-00342a277e2c"/>
+				<reportElement x="82" y="123" width="129" height="20" uuid="5cb78eda-e38e-4fa5-abb5-00342a277e2c"/>
 				<textFieldExpression><![CDATA[$P{id}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="11" y="143" width="100" height="20" uuid="0f73aae4-d64f-4480-b759-fb44c407af4b"/>
+				<reportElement x="11" y="143" width="71" height="20" uuid="0f73aae4-d64f-4480-b759-fb44c407af4b"/>
 				<text><![CDATA[Course]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="11" y="163" width="100" height="20" uuid="f4b9e6ca-4445-4926-b257-03f721854c11"/>
+				<reportElement x="11" y="163" width="71" height="20" uuid="f4b9e6ca-4445-4926-b257-03f721854c11"/>
 				<text><![CDATA[Session]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="111" y="163" width="100" height="20" uuid="4ed735d3-15a4-42de-bd61-406ce0789f1e"/>
+				<reportElement x="82" y="163" width="129" height="20" uuid="4ed735d3-15a4-42de-bd61-406ce0789f1e"/>
 				<textFieldExpression><![CDATA[$P{session}]]></textFieldExpression>
 			</textField>
 			<textField>
@@ -194,38 +149,38 @@
 				<reportElement x="0" y="181" width="556" height="1" uuid="c8113ab4-1d95-401f-8322-6655da71309e"/>
 			</line>
 			<textField>
-				<reportElement x="111" y="551" width="100" height="20" uuid="0c1dd213-8ad4-4fe8-bc8a-8ddf3477d808"/>
+				<reportElement x="82" y="551" width="129" height="20" uuid="0c1dd213-8ad4-4fe8-bc8a-8ddf3477d808"/>
 				<textFieldExpression><![CDATA[$P{course}]]></textFieldExpression>
 			</textField>
 			<line>
 				<reportElement x="0" y="510" width="556" height="1" uuid="2632dc80-b1c3-40ca-b3ff-6a37762d60b4"/>
 			</line>
 			<staticText>
-				<reportElement x="11" y="512" width="100" height="20" uuid="6ef4698b-26e8-4f41-9b8d-ff987d27aae6"/>
+				<reportElement x="11" y="512" width="69" height="20" uuid="6ef4698b-26e8-4f41-9b8d-ff987d27aae6"/>
 				<text><![CDATA[Student Name]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="111" y="512" width="100" height="20" uuid="027d27e3-69a5-4c6b-9f4c-f8f6bb6d7298"/>
+				<reportElement x="82" y="512" width="198" height="20" uuid="027d27e3-69a5-4c6b-9f4c-f8f6bb6d7298"/>
 				<textFieldExpression><![CDATA[$P{name}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="11" y="531" width="100" height="20" uuid="531f5b3d-2f10-4156-834e-cdd69823eaab"/>
+				<reportElement x="11" y="531" width="69" height="20" uuid="531f5b3d-2f10-4156-834e-cdd69823eaab"/>
 				<text><![CDATA[Student ID]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="111" y="531" width="100" height="20" uuid="916a3d18-1afb-4e76-b3a0-87dc4aff0377"/>
+				<reportElement x="81" y="531" width="131" height="20" uuid="916a3d18-1afb-4e76-b3a0-87dc4aff0377"/>
 				<textFieldExpression><![CDATA[$P{id}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="11" y="551" width="100" height="20" uuid="3565c77a-3d1a-4836-8b81-663d56a6dec6"/>
+				<reportElement x="11" y="551" width="69" height="20" uuid="3565c77a-3d1a-4836-8b81-663d56a6dec6"/>
 				<text><![CDATA[Course]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="11" y="571" width="100" height="20" uuid="4d4790cb-f9dc-47cf-b604-78195213f16f"/>
+				<reportElement x="11" y="571" width="69" height="20" uuid="4d4790cb-f9dc-47cf-b604-78195213f16f"/>
 				<text><![CDATA[Session]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="111" y="571" width="100" height="20" uuid="dd9874c9-2262-4715-9aa6-ca706ddd842a"/>
+				<reportElement x="82" y="571" width="129" height="20" uuid="dd9874c9-2262-4715-9aa6-ca706ddd842a"/>
 				<textFieldExpression><![CDATA[$P{session}]]></textFieldExpression>
 			</textField>
 			<line>
@@ -344,16 +299,12 @@
 				<text><![CDATA[Authorised Signatory]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="480" y="318" width="74" height="20" uuid="0acd64fb-ecee-4a76-a3b9-4ce0da72077b"/>
-				<text><![CDATA[For KGNCTC]]></text>
+				<reportElement x="450" y="318" width="28" height="20" uuid="0acd64fb-ecee-4a76-a3b9-4ce0da72077b"/>
+				<text><![CDATA[For]]></text>
 			</staticText>
 			<rectangle>
 				<reportElement x="301" y="729" width="250" height="60" uuid="0b140c55-309d-4f27-89d1-a7dd1961b711"/>
 			</rectangle>
-			<staticText>
-				<reportElement x="478" y="729" width="74" height="20" uuid="58b463c4-6ad1-4d6c-8578-d0ae5b705a49"/>
-				<text><![CDATA[For KGNCTC]]></text>
-			</staticText>
 			<staticText>
 				<reportElement x="420" y="774" width="130" height="15" uuid="74ad2795-d13e-4ab3-8a4a-b5c04bc23f09"/>
 				<text><![CDATA[Authorised Signatory]]></text>
@@ -438,6 +389,68 @@
 					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{user}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="95" y="0" width="480" height="25" uuid="160e184c-c13d-4d31-ad22-9e8fbe7841af"/>
+				<textElement>
+					<font size="18" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{collegeLongName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="478" y="318" width="74" height="20" uuid="db00c369-1737-462f-b305-f7bc4a118d74">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$P{collegeShortName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="95" y="410" width="480" height="25" uuid="fd69d15f-cdb7-4075-8167-f5427a45c2a7"/>
+				<textElement>
+					<font size="18" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{collegeLongName}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="447" y="728" width="28" height="20" uuid="2b7d7033-6e9c-41ca-b606-dded3f2c8cb3"/>
+				<text><![CDATA[For]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="475" y="728" width="74" height="20" uuid="04ddc9c2-c93f-4007-ad97-758f67b44caf">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$P{collegeShortName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="95" y="24" width="205" height="15" uuid="a0242424-d0c1-4e90-9ca8-38094157563d"/>
+				<textFieldExpression><![CDATA[$P{collegeAddress1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="95" y="39" width="205" height="15" uuid="e6ad67ed-7295-455f-9f94-ce9ea7e583f5"/>
+				<textFieldExpression><![CDATA[$P{collegeAddress2}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="95" y="54" width="205" height="15" uuid="bb0a34aa-6c9f-4b7f-9566-b000873db527"/>
+				<textFieldExpression><![CDATA[$P{collegeContact}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="95" y="67" width="205" height="15" uuid="c4adfe13-4f50-4857-870f-b60da244b5fe"/>
+				<textFieldExpression><![CDATA[$P{collegeEmail}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="95" y="434" width="205" height="15" uuid="e7442c92-1fb3-49e2-a284-a866ca13ddb3"/>
+				<textFieldExpression><![CDATA[$P{collegeAddress1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="95" y="449" width="205" height="15" uuid="b7a281cc-3170-4e2a-a1a9-152c59f30ae4"/>
+				<textFieldExpression><![CDATA[$P{collegeAddress2}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="95" y="464" width="205" height="15" uuid="e8fa26dc-250c-4d84-b68e-d834ac734bb7"/>
+				<textFieldExpression><![CDATA[$P{collegeContact}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="95" y="477" width="205" height="15" uuid="958c11f8-91b9-4e4c-a086-e15860a371c4"/>
+				<textFieldExpression><![CDATA[$P{collegeEmail}]]></textFieldExpression>
 			</textField>
 		</band>
 	</background>

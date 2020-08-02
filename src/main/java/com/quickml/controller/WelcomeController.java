@@ -67,11 +67,23 @@ public class WelcomeController {
 	}
 
 	// inject via application.properties
-	@Value("${app.welcome.message}")
-	private String MESSAGE = "";
+	@Value("${app.college.longname}")
+	private String collegeLongName = "";
 
-	@Value("${app.welcome.title}")
-	private String TITLE = "";
+	@Value("${app.college.shortname}")
+	private String collegeShortName = "";
+	
+	@Value("${app.college.address1}")
+	private String collegeAddress1 = "";
+	
+	@Value("${app.college.address2}")
+	private String collegeAddress2 = "";
+	
+	@Value("${app.college.contact}")
+	private String collegeContact = "";
+	
+	@Value("${app.college.email}")
+	private String collegeEmail = "";
 	
 	@Autowired
 	public final StudentRepository studRepo;
@@ -309,7 +321,7 @@ public class WelcomeController {
 			}
 		}
 		
-		Resource resource = new ClassPathResource("Blank_A4.jrxml");
+		Resource resource = new ClassPathResource("InvoiceA4.jrxml");
 		InputStream input = resource.getInputStream();
 		JasperDesign design = null;
 		try {
@@ -329,6 +341,13 @@ public class WelcomeController {
 		OutputStream outputStream = new FileOutputStream(new File(outputFile));
 		try {
 			Map<String, Object> paramMap = new HashMap<String, Object>();
+			paramMap.put("logoFile", collegeShortName.toLowerCase() + "_logo.jpeg");
+			paramMap.put("collegeLongName", collegeLongName);
+			paramMap.put("collegeShortName", collegeShortName);
+			paramMap.put("collegeAddress1", collegeAddress1);
+			paramMap.put("collegeAddress2", collegeAddress2);
+			paramMap.put("collegeContact", collegeContact);
+			paramMap.put("collegeEmail", collegeEmail);
 			paramMap.put("name", student.name);
 			paramMap.put("id", student.id);
 			paramMap.put("course", student.course);
@@ -373,8 +392,8 @@ public class WelcomeController {
     }
 	
 	public void populateCommonPageFields(Map<String, Object> model, HttpServletRequest request) {
-		model.put("title", TITLE);
-		model.put("message", MESSAGE);
+		model.put("title", collegeShortName);
+		model.put("message", collegeLongName);
 		model.put("user", request.getRemoteUser());
 	}
 	
