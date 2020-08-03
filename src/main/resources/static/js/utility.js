@@ -82,6 +82,14 @@ function changeAncAttSess() {
     $('#paydue').attr({target: '_blank', href: url});
 }
 
+function changeAncAttSessStudentDetails() {
+    var url = '/allStudents?' + $.param({
+                course: $('#r2course').val(),
+                session: $('#r2session').val()
+            });
+    $('#studentDetail').attr({target: '_blank', href: url});
+}
+
 $(document).ready(function() {
     // Listen to click event on the submit button
     $('#button').click(function(e) {

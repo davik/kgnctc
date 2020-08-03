@@ -467,11 +467,13 @@ public class WelcomeController {
 
 	@RequestMapping(value = "/allStudents", method=RequestMethod.GET)
 	void downloadAllStudents(Map<String, Object> model,
+			@RequestParam(name = "session") String session,
+			@RequestParam(name = "course") String course,
 			HttpServletResponse response,
 			HttpServletRequest request) throws IOException {
 		populateCommonPageFields(model, request);
 
-		List<Student> students = studRepo.findAll();
+		List<Student> students = studRepo.findByCourseAndSession(course, session);
 
 		String outputFileName = "C:\\Users\\polaris2\\" + "allStudents.csv";
 		File reportFile = new File(outputFileName);
@@ -509,7 +511,7 @@ public class WelcomeController {
 		// Download section
 		String mimeType = "text/csv";
 		response.setContentType(mimeType);
-		String reportFileName = "All_Students"+".csv";
+		String reportFileName = "All_Students"+"_"+course+"_"+session.substring(0, 4)+".csv";
 		response.setHeader("Content-Disposition", String.format("attachment; filename=\""+reportFileName+"\""));
 		response.setContentLength((int) reportFile.length());
 		InputStream inputStream = new BufferedInputStream(new FileInputStream(reportFile));
