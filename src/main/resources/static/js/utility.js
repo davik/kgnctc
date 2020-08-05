@@ -208,4 +208,37 @@ $(document).ready(function() {
           $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
         });
       });
+
+    $("body").on('show.bs.modal', "#exampleModal", function(event) {
+        $('#reverseMsg').hide();
+        var button = $(event.relatedTarget); // Button that triggered the modal
+        var url = button.data('url'); // Extract info from data-* attributes
+        var amount = button.data('amount');
+
+        var modal = $(this);
+        modal.find('.amount').text(amount);
+        modal.find('.reverse').attr({href: url});
+    });
+
+    $("body").on('click', "#reverse", function(event) {
+        event.preventDefault();
+        var url = $(this).attr('href');
+        console.log(url);
+        $.ajax({
+            type: "GET",
+            url: url,
+            success: function(data) {
+                $("#reverseMsg").show();
+                $('#reverseMsg').html(data);
+                $('.clearit').val('');
+                setTimeout(function() {
+                    $("#reverseMsg").hide();
+                    $('#exampleModal').modal('hide');
+                    $('.modal-backdrop').remove();
+                    $("#idSearch").click();
+                }, 3000);
+            }
+        });
+    });
+
 });

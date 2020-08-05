@@ -267,10 +267,14 @@ public class WelcomeController {
 			model.put("result", "Student not found!");
 			return "create";
 		} else {
-			if (payment.amount == 0 ||
-					payment.transactionId.isEmpty()) {
+			if (payment.amount == 0) {
 				model.put("alert", "alert alert-danger");
-				model.put("result", "Please fill the mandatory fields!");
+				model.put("result", "Please fill the mandatory field Amount!");
+				return "create";
+			}
+			if (!payment.mode.equals("Cash") && payment.transactionId.isEmpty()) {
+				model.put("alert", "alert alert-danger");
+				model.put("result", "Transaction ID is mandatory except Cash!");
 				return "create";
 			}
 			ArrayList<Payment> payments = student.payments;
@@ -521,5 +525,61 @@ public class WelcomeController {
 
 		model.put("alert", "alert alert-success");
 		model.put("result", "Report Generated Successfully!");
+	}
+
+	@RequestMapping(value = "/reverse", method=RequestMethod.GET)
+	public String revertTransaction(Map<String, Object> model,
+			@RequestParam(name = "id") String studentId,
+			@RequestParam(name = "paymentId") String paymentId,
+			HttpServletResponse response,
+			HttpServletRequest request) throws IOException {
+		populateCommonPageFields(model, request);
+		Student student = studRepo.findOne(studentId);
+		if (null == student) {
+			model.put("alert", "alert alert-danger");
+			model.put("result", "Student not found!");
+			return "create";
+		}
+		Payment pt = null;
+		for(Payment p : student.payments) {
+			if (paymentId.equals(p.paymentId)) {
+				pt = p;
+			}
+		}
+		if (pt == null) {
+			model.put("alert", "alert alert-danger");
+			model.put("result", "Payment not found!");
+			return "create";
+		}
+		// Make the actual payment not active
+		pt.isActive = false;
+		Payment reversePt = new Payment();
+		Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("IST"));
+		// Fetch the Payment or Money Receipt ID counter
+		int year = getFiscalYear(calendar);
+		Counter ct = counterRepo.findOne(year + "-" + String.valueOf(year+1).substring(2));
+		if (null == ct) {
+			ct = new Counter();
+			ct.id = year + "-" + String.valueOf(year+1).substring(2);
+			ct.nextId++;
+		}
+
+		reversePt.paymentId = ct.id + "/" + String.format("%05d", ct.nextId);
+		reversePt.transactionDate = (DateTime) DateTime.now().withZone(DateTimeZone.forID("Asia/Kolkata"));
+		reversePt.acceptedBy = request.getRemoteUser();
+		reversePt.isActive = false;
+		reversePt.amount = -pt.amount;
+		reversePt.transactionId = pt.transactionId;
+		reversePt.mode = pt.mode;
+		reversePt.purpose = "Reverse";
+		student.payments.add(reversePt);
+
+		ct.nextId++;
+		counterRepo.save(ct);
+		studRepo.save(student);
+
+		model.put("alert", "alert alert-success");
+		model.put("result", "Payment Reversed Successfully!");
+		return "paymentDetails";
 	}
 }

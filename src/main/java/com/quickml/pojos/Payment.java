@@ -13,4 +13,5 @@ public class Payment {
 	public String mode; // Cash, Cheque, DD etc
 	public String purpose; // Course Fee, Exam Fee
 	public String acceptedBy = "admin";
+	public boolean isActive = true;  // Payments which are Reversed and the Reverse Payment are NOT Active
 }
