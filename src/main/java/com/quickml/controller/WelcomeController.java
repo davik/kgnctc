@@ -109,7 +109,7 @@ public class WelcomeController {
 			boolean bed = false, ded = false; 
 			
 			for (Payment pt : st.payments) {
-				if (pt.transactionDate.getDayOfMonth() == from.getDayOfMonth()) {
+				if (pt.transactionDate.getDayOfMonth() == from.getDayOfMonth() && pt.isActive) {
 					if (st.course.equalsIgnoreCase("B.Ed")) {
 						bedInvoiceCount++;
 						bed = true;
