@@ -8,7 +8,7 @@ public class Payment {
 	public String paymentId;
 	@Indexed
 	public DateTime transactionDate;
-	public String transactionId;
+	public String transactionId = "N/A";
 	public double amount;
 	public String mode; // Cash, Cheque, DD etc
 	public String purpose; // Course Fee, Exam Fee

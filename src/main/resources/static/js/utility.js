@@ -223,7 +223,7 @@ $(document).ready(function() {
     $("body").on('click', "#reverse", function(event) {
         event.preventDefault();
         var url = $(this).attr('href');
-        console.log(url);
+        $(this).addClass('disabled');
         $.ajax({
             type: "GET",
             url: url,

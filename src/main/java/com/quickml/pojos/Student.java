@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Date;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "students")
@@ -19,6 +20,7 @@ public class Student {
 	public String gender = "";
 	public String religion = "";
 	public String category = "";
+	@Indexed
 	public String mobile = "";
 	public String email = "";
 	public String guardianContact = "";

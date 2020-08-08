@@ -21,6 +21,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
@@ -154,6 +156,13 @@ public class WelcomeController {
 				student.courseFee == 0) {
 			model.put("alert", "alert alert-danger");
 			model.put("result", "Please fill the mandatory fields!");
+			return "create";
+		}
+
+		List<Student> existingStudents = studRepo.findByMobile(student.mobile);
+		if (null != existingStudents && existingStudents.size() > 0) {
+			model.put("alert", "alert alert-danger");
+			model.put("result", "Student with same Mobile Number is already registered!");
 			return "create";
 		}
 
@@ -319,9 +328,12 @@ public class WelcomeController {
 			return;
 		}
 		Payment pt = null;
+		double paid = 0;
 		for(Payment p : student.payments) {
+			paid += p.amount;
 			if (paymentId.equals(p.paymentId)) {
 				pt = p;
+				break;
 			}
 		}
 		
@@ -359,10 +371,13 @@ public class WelcomeController {
 			paramMap.put("paymentId", pt.paymentId);
 			paramMap.put("transactionMode", pt.mode);
 			paramMap.put("transactionId", pt.transactionId);
+			paramMap.put("due", student.courseFee - paid);
 			paramMap.put("purpose", pt.purpose);
 			paramMap.put("amount", pt.amount);
 			paramMap.put("inWords", Currency.convertToIndianCurrency(pt.amount));
-			paramMap.put("date", pt.transactionDate.toDate());
+			DateTimeFormatter dtfOut = DateTimeFormat.forPattern("MM/dd/yyyy");
+			String date = pt.transactionDate.toString(dtfOut);
+			paramMap.put("date", date);
 			User user = userRepo.findByUsername(pt.acceptedBy);
 			paramMap.put("user", user.fullname);
 			JasperPrint jasperPrint = JasperFillManager.fillReport(

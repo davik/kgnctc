@@ -2,7 +2,7 @@
 <!-- Created with Jaspersoft Studio version 6.11.0.final using JasperReports Library version 6.11.0-0c4056ccaa4d25a5a8c45672d2f764ea3498bebb  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_A4_2" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="74bc61cb-0b35-429b-ba93-fd3f6de25fb1">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
-	<parameter name="date" class="java.util.Date"/>
+	<parameter name="date" class="java.lang.String"/>
 	<parameter name="name" class="java.lang.String"/>
 	<parameter name="id" class="java.lang.String"/>
 	<parameter name="course" class="java.lang.String"/>
@@ -21,6 +21,7 @@
 	<parameter name="collegeContact" class="java.lang.String"/>
 	<parameter name="collegeEmail" class="java.lang.String"/>
 	<parameter name="logoFile" class="java.lang.String"/>
+	<parameter name="due" class="java.lang.Double"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -28,15 +29,18 @@
 		<band height="802" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<property name="com.jaspersoft.studio.layout"/>
+			<frame>
+				<reportElement x="0" y="-2" width="555" height="400" uuid="3358b034-35fc-4e7c-ac38-e522a2810576"/>
+				<subreport>
+					<reportElement x="0" y="0" width="555" height="400" uuid="f7c286ca-9408-4255-a340-6b8137db3384">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				</subreport>
+			</frame>
 			<subreport>
-				<reportElement x="0" y="-2" width="555" height="400" uuid="f7c286ca-9408-4255-a340-6b8137db3384">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
-				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-			</subreport>
-			<subreport>
-				<reportElement positionType="FixRelativeToBottom" x="0" y="401" width="555" height="401" uuid="3bb4cec4-f6fb-4d4f-9073-ca8c0e0e5f43">
+				<reportElement positionType="FixRelativeToBottom" x="0" y="401" width="558" height="401" uuid="3bb4cec4-f6fb-4d4f-9073-ca8c0e0e5f43">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
@@ -292,30 +296,27 @@
 				<textFieldExpression><![CDATA[$P{inWords}]]></textFieldExpression>
 			</textField>
 			<rectangle>
-				<reportElement x="303" y="318" width="250" height="60" uuid="ae088747-c97b-4024-9ee0-3a4392cdc47b"/>
+				<reportElement x="303" y="298" width="250" height="60" uuid="ae088747-c97b-4024-9ee0-3a4392cdc47b"/>
 			</rectangle>
 			<staticText>
-				<reportElement x="420" y="363" width="133" height="15" uuid="36863b0e-6ec8-4860-8454-39fb1c9729fd"/>
+				<reportElement x="450" y="343" width="103" height="15" uuid="36863b0e-6ec8-4860-8454-39fb1c9729fd"/>
 				<text><![CDATA[Authorised Signatory]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="450" y="318" width="28" height="20" uuid="0acd64fb-ecee-4a76-a3b9-4ce0da72077b"/>
+				<reportElement x="450" y="298" width="28" height="20" uuid="0acd64fb-ecee-4a76-a3b9-4ce0da72077b"/>
 				<text><![CDATA[For]]></text>
 			</staticText>
 			<rectangle>
-				<reportElement x="301" y="729" width="250" height="60" uuid="0b140c55-309d-4f27-89d1-a7dd1961b711"/>
+				<reportElement x="301" y="709" width="250" height="60" uuid="0b140c55-309d-4f27-89d1-a7dd1961b711"/>
 			</rectangle>
 			<staticText>
-				<reportElement x="420" y="774" width="130" height="15" uuid="74ad2795-d13e-4ab3-8a4a-b5c04bc23f09"/>
+				<reportElement x="450" y="754" width="100" height="15" uuid="74ad2795-d13e-4ab3-8a4a-b5c04bc23f09"/>
 				<text><![CDATA[Authorised Signatory]]></text>
 			</staticText>
 			<textField>
 				<reportElement x="82" y="685" width="467" height="13" uuid="6af03bf1-decb-4523-b760-8cce1958fb2d"/>
 				<textFieldExpression><![CDATA[$P{inWords}]]></textFieldExpression>
 			</textField>
-			<line>
-				<reportElement x="-1" y="388" width="556" height="1" uuid="f278f237-804c-4c2c-aa6b-8ea4deb86ab0"/>
-			</line>
 			<staticText>
 				<reportElement x="290" y="104" width="100" height="20" uuid="cae5e790-f582-4beb-b53d-915e7f8f54a7"/>
 				<text><![CDATA[Money Receipt No]]></text>
@@ -369,22 +370,22 @@
 				<textFieldExpression><![CDATA[$P{transactionMode}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="136" y="363" width="140" height="16" uuid="5ccf533d-804d-475e-846d-e67291be0c84"/>
+				<reportElement x="416" y="363" width="139" height="16" uuid="5ccf533d-804d-475e-846d-e67291be0c84"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{user}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="10" y="363" width="125" height="16" uuid="34d7baa3-f78c-48c4-8d6f-5499680926b9"/>
+				<reportElement x="303" y="363" width="113" height="16" uuid="34d7baa3-f78c-48c4-8d6f-5499680926b9"/>
 				<text><![CDATA[Payment Accepted By:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="10" y="773" width="125" height="16" uuid="4de0829f-941f-45d5-a6f1-ede32a89c852"/>
+				<reportElement x="300" y="773" width="117" height="16" uuid="4de0829f-941f-45d5-a6f1-ede32a89c852"/>
 				<text><![CDATA[Payment Accepted By:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="135" y="773" width="135" height="16" uuid="b0c63df3-f663-400b-abdb-a8cb19c8dd81"/>
+				<reportElement x="417" y="773" width="135" height="16" uuid="b0c63df3-f663-400b-abdb-a8cb19c8dd81"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
@@ -398,7 +399,7 @@
 				<textFieldExpression><![CDATA[$P{collegeLongName}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="478" y="318" width="74" height="20" uuid="db00c369-1737-462f-b305-f7bc4a118d74">
+				<reportElement x="478" y="298" width="74" height="20" uuid="db00c369-1737-462f-b305-f7bc4a118d74">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textFieldExpression><![CDATA[$P{collegeShortName}]]></textFieldExpression>
@@ -411,11 +412,11 @@
 				<textFieldExpression><![CDATA[$P{collegeLongName}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="447" y="728" width="28" height="20" uuid="2b7d7033-6e9c-41ca-b606-dded3f2c8cb3"/>
+				<reportElement x="447" y="708" width="28" height="20" uuid="2b7d7033-6e9c-41ca-b606-dded3f2c8cb3"/>
 				<text><![CDATA[For]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="475" y="728" width="74" height="20" uuid="04ddc9c2-c93f-4007-ad97-758f67b44caf">
+				<reportElement x="475" y="708" width="74" height="20" uuid="04ddc9c2-c93f-4007-ad97-758f67b44caf">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textFieldExpression><![CDATA[$P{collegeShortName}]]></textFieldExpression>
@@ -451,6 +452,29 @@
 			<textField>
 				<reportElement x="95" y="477" width="205" height="15" uuid="958c11f8-91b9-4e4c-a086-e15860a371c4"/>
 				<textFieldExpression><![CDATA[$P{collegeEmail}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="10" y="299" width="250" height="60" uuid="debbcaf7-12dc-486f-951c-668f4ffc1514"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="160" y="344" width="100" height="15" uuid="47c08d65-d7c9-480e-b87d-c959e65a4a1f"/>
+				<text><![CDATA[Student's Signature]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="290" y="164" width="100" height="20" uuid="aeb09f6c-59a0-4503-a801-72934de3578f"/>
+				<text><![CDATA[Due Amount]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="390" y="164" width="100" height="20" uuid="362d590c-a13f-40d5-b6cd-97252d5384fe"/>
+				<textFieldExpression><![CDATA[$P{due}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="291" y="572" width="100" height="20" uuid="cb5d15e1-0f36-411b-9fd1-d2f6df22bdb0"/>
+				<text><![CDATA[Due Amount]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="391" y="572" width="100" height="20" uuid="39940c2a-1bab-4e24-9218-eab480208074"/>
+				<textFieldExpression><![CDATA[$P{due}]]></textFieldExpression>
 			</textField>
 		</band>
 	</background>
