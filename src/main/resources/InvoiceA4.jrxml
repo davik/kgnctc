@@ -299,7 +299,7 @@
 				<reportElement x="303" y="298" width="250" height="60" uuid="ae088747-c97b-4024-9ee0-3a4392cdc47b"/>
 			</rectangle>
 			<staticText>
-				<reportElement x="450" y="343" width="103" height="15" uuid="36863b0e-6ec8-4860-8454-39fb1c9729fd"/>
+				<reportElement x="433" y="343" width="119" height="15" uuid="36863b0e-6ec8-4860-8454-39fb1c9729fd"/>
 				<text><![CDATA[Authorised Signatory]]></text>
 			</staticText>
 			<staticText>
@@ -310,7 +310,7 @@
 				<reportElement x="301" y="709" width="250" height="60" uuid="0b140c55-309d-4f27-89d1-a7dd1961b711"/>
 			</rectangle>
 			<staticText>
-				<reportElement x="450" y="754" width="100" height="15" uuid="74ad2795-d13e-4ab3-8a4a-b5c04bc23f09"/>
+				<reportElement x="433" y="754" width="117" height="15" uuid="74ad2795-d13e-4ab3-8a4a-b5c04bc23f09"/>
 				<text><![CDATA[Authorised Signatory]]></text>
 			</staticText>
 			<textField>
