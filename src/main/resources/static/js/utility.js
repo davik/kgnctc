@@ -43,7 +43,7 @@ function downloadInvoice(paymentid) {
 }
 
 function createPayment() {
-    var payment = {
+    let payment = {
         transactionId: $("#transactionId").val(),
         amount: $("#amount").val(),
         mode: $("#mode").val(),
@@ -75,7 +75,7 @@ function createPayment() {
 }
 
 function changeAncAttSess() {
-    var url = '/payDueReport?' + $.param({
+    let url = '/payDueReport?' + $.param({
                 course: $('#course').val(),
                 session: $('#session').val()
             });
@@ -83,11 +83,26 @@ function changeAncAttSess() {
 }
 
 function changeAncAttSessStudentDetails() {
-    var url = '/allStudents?' + $.param({
+    let url = '/allStudents?' + $.param({
                 course: $('#r2course').val(),
                 session: $('#r2session').val()
             });
     $('#studentDetail').attr({target: '_blank', href: url});
+}
+
+function changeAncAttDailyCollection() {
+    $('#to').attr({min: $('#from').val()});
+    $('#to').attr({max: $('#from').attr('max')});
+    if ($('#from').val() && $('#to').val()) {
+        $('#collectionReport').removeClass("disabled");
+    } else {
+        $('#collectionReport').addClass("disabled");
+    }
+    let url = '/collectionReport?' + $.param({
+                from: $('#from').val(),
+                to: $('#to').val()
+            });
+    $('#collectionReport').attr({target: '_blank', href: url});
 }
 
 $(document).ready(function() {
@@ -96,10 +111,10 @@ $(document).ready(function() {
 
         e.preventDefault();
 
-        var coursen = $("#courseBed").is(":checked") ?
+        let coursen = $("#courseBed").is(":checked") ?
             $("#courseBed").val() : $("#courseDed").val();
-        var academics = [];
-        var mp = {
+        let academics = [];
+        let mp = {
             name: "Madhyamik Pariksha/ 10th",
             board: $("#mpboard").val(),
             year: $("#mpyear").val(),
@@ -107,7 +122,7 @@ $(document).ready(function() {
             marks: $("#mpmarks").val()
         };
         academics[0] = mp;
-        var hs = {
+        let hs = {
             name: "Higher Secondary/ 12th",
             board: $("#hsboard").val(),
             year: $("#hsyear").val(),
@@ -115,7 +130,7 @@ $(document).ready(function() {
             marks: $("#hsmarks").val()
         };
         academics[1] = hs;
-        var gr = {
+        let gr = {
             name: "Graduation",
             board: $("#gradboard").val(),
             year: $("#gradyear").val(),
@@ -123,7 +138,7 @@ $(document).ready(function() {
             marks: $("#gradmarks").val()
         };
         academics[2] = gr;
-        var pg = {
+        let pg = {
             name: "Post Graduation",
             board: $("#pgboard").val(),
             year: $("#pgyear").val(),
@@ -131,7 +146,7 @@ $(document).ready(function() {
             marks: $("#pgmarks").val()
         };
         academics[3] = pg;
-        var student = {
+        let student = {
             course: coursen,
             name: $("#name").val(),
             father: $("#father").val(),
@@ -189,9 +204,9 @@ $(document).ready(function() {
             success: function(data) {
                 $('#paymentDetail').html(data);
                 $(".convertTime").each(function() {
-                    var utcDate = $(this).text();
-                    var localDate = new Date(utcDate);
-                    var x = localDate.toLocaleDateString('en-GB', {
+                    let utcDate = $(this).text();
+                    let localDate = new Date(utcDate);
+                    let x = localDate.toLocaleDateString('en-GB', {
                         day: '2-digit', month: 'short', year: 'numeric'
                       }).replace(/ /g, '-');
                     $(this).text(x);
@@ -203,7 +218,7 @@ $(document).ready(function() {
     });
     
     $("#studentSearch").on("keyup", function() {
-        var value = $(this).val().toLowerCase();
+        let value = $(this).val().toLowerCase();
         $("#studentTable tr").filter(function() {
           $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
         });
@@ -211,18 +226,18 @@ $(document).ready(function() {
 
     $("body").on('show.bs.modal', "#exampleModal", function(event) {
         $('#reverseMsg').hide();
-        var button = $(event.relatedTarget); // Button that triggered the modal
-        var url = button.data('url'); // Extract info from data-* attributes
-        var amount = button.data('amount');
+        let button = $(event.relatedTarget); // Button that triggered the modal
+        let url = button.data('url'); // Extract info from data-* attributes
+        let amount = button.data('amount');
 
-        var modal = $(this);
+        let modal = $(this);
         modal.find('.amount').text(amount);
         modal.find('.reverse').attr({href: url});
     });
 
     $("body").on('click', "#reverse", function(event) {
         event.preventDefault();
-        var url = $(this).attr('href');
+        let url = $(this).attr('href');
         $(this).addClass('disabled');
         $.ajax({
             type: "GET",
@@ -241,4 +256,19 @@ $(document).ready(function() {
         });
     });
 
+    $("#from").attr({max: function(){
+        let today = new Date();
+        let dd = today.getDate(); // Today is allowed
+        let mm = today.getMonth()+1; //January is 0!
+        let yyyy = today.getFullYear();
+         if(dd<10){
+                dd='0'+ dd
+            }
+            if(mm<10){
+                mm='0'+ mm
+            }
+
+        today = yyyy+'-'+mm+'-'+dd;
+        return today;
+    }});
 });

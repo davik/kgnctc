@@ -4,7 +4,6 @@ public class Academic {
 	public String name;
 	public String board;
 	public String year;
-	public String total;
-	public String marks;
-	public String percentage;
+	public Double total;
+	public Double marks;
 }

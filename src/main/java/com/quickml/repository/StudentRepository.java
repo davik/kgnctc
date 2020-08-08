@@ -16,7 +16,12 @@ public interface StudentRepository extends MongoRepository<Student, String> {
 
 	List<Student> findByMobile(String mobile);
 
-	@Query(value = "{ 'payments.transactionDate' : {$gte : ?0, $lte: ?1 } }", fields = "{ 'course' : 1, 'payments.amount' : 1 , 'payments.transactionDate' : 1}")
+	@Query(value = "{ 'payments.transactionDate' : {$gte : ?0, $lte: ?1 } }",
+			fields = "{ 'name' : 1, 'mobile' : 1, 'session' : 1, 'course' : 1,"
+					+ " 'payments.paymentId' : 1 , 'payments.transactionId' : 1,"
+					+ " 'payments.mode' : 1 , 'payments.purpose' : 1,"
+					+ " 'payments.acceptedBy' : 1 ,"
+					+ " 'payments.amount' : 1 , 'payments.transactionDate' : 1}")
 	List<Student> findByPaymentsTransactionDateBetween(DateTime from, DateTime to);
 }
 

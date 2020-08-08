@@ -15,7 +15,7 @@
 						<div class="nav nav-tabs" id="nav-tab" role="tablist">
 							<a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Due Payment</a>
 							<a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Student List</a>
-							<a class="nav-item nav-link disabled" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Report 3</a>
+							<a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Collection</a>
 						</div>
 					</nav>
 					<div class="tab-content" id="nav-tabContent">
@@ -80,7 +80,30 @@
 								</div>
 							</form>
 						</div>
-						<div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">contact</div>
+						<div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
+							<form class="form-inline pt-4">
+								<div class="col-md-4">
+									<div class="input-group mb-3">
+										<div class="input-group-prepend">
+											<label class="input-group-text" for="from">Start Date</label>
+										</div>
+										<input type="date" class="form-control clearit" id="from" onchange="changeAncAttDailyCollection();">
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="input-group mb-3">
+										<div class="input-group-prepend">
+											<label class="input-group-text" for="to">End Date</label>
+										</div>
+										<input type="date" class="form-control clearit" id="to" onchange="changeAncAttDailyCollection();">
+									</div>
+								</div>
+								<div class="col-md-2">
+									<a class="btn btn-primary mb-3 disabled" id="collectionReport" target="_blank" href="">Generate Collection Report</a>
+								</div>
+							</form>
+							<div id="msg" class="py-4"></div>
+						</div>
 					</div>
 				</div>
 				

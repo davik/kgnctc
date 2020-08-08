@@ -93,6 +93,7 @@ public class WelcomeController {
 	public final CounterRepository counterRepo;
 	@Autowired
 	public final UserRepository userRepo;
+	public static final DateTimeFormatter dtfOut = DateTimeFormat.forPattern("MM/dd/yyyy");
 
 	@RequestMapping("/")
 	public String welcome(Map<String, Object> model, HttpServletRequest request) {
@@ -375,7 +376,6 @@ public class WelcomeController {
 			paramMap.put("purpose", pt.purpose);
 			paramMap.put("amount", pt.amount);
 			paramMap.put("inWords", Currency.convertToIndianCurrency(pt.amount));
-			DateTimeFormatter dtfOut = DateTimeFormat.forPattern("MM/dd/yyyy");
 			String date = pt.transactionDate.toString(dtfOut);
 			paramMap.put("date", date);
 			User user = userRepo.findByUsername(pt.acceptedBy);
@@ -510,10 +510,10 @@ public class WelcomeController {
 	        		"Nationality", "Application Type", "Aadhaar Number", "Address",
 	        		"Alternate Address", "Last Registration Number", "Subject",
 	        		"Last School Name", "Session", "Course Fee",
-	        		"Degree", "Board", "Year", "Total Marks", "Marks Obtained",
-	        		"Degree", "Board", "Year", "Total Marks", "Marks Obtained",
-	        		"Degree", "Board", "Year", "Total Marks", "Marks Obtained",
-	        		"Degree", "Board", "Year", "Total Marks", "Marks Obtained"});
+	        		"Degree", "Board", "Year", "Total Marks", "Marks Obtained", "Percentage",
+                    "Degree", "Board", "Year", "Total Marks", "Marks Obtained", "Percentage",
+                    "Degree", "Board", "Year", "Total Marks", "Marks Obtained", "Percentage",
+                    "Degree", "Board", "Year", "Total Marks", "Marks Obtained", "Percentage"});
 	        for (Student st : students) {
 				// Add Student Details
 				data.add(st.ToStringArray());
@@ -596,5 +596,85 @@ public class WelcomeController {
 		model.put("alert", "alert alert-success");
 		model.put("result", "Payment Reversed Successfully!");
 		return "paymentDetails";
+	}
+
+	@RequestMapping(value = "/collectionReport", method=RequestMethod.GET)
+	void generateCollectionReport(Map<String, Object> model,
+			@RequestParam(name = "from") @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd") DateTime from,
+			@RequestParam(name = "to") @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd") DateTime to,
+			HttpServletResponse response,
+			HttpServletRequest request) throws IOException {
+		populateCommonPageFields(model, request);
+
+		from = from.withTimeAtStartOfDay();
+		to = to.withTimeAtStartOfDay().plusHours(24);
+		List<Student> students = studRepo.findByPaymentsTransactionDateBetween(from, to);
+
+		String outputFileName = "C:\\Users\\polaris2\\" + "collection.csv";
+		File reportFile = new File(outputFileName);
+
+	    try {
+	        // create FileWriter object with file as parameter
+	        FileWriter outputfile = new FileWriter(reportFile);
+
+	        // create CSVWriter object filewriter object as parameter
+	        CSVWriter writer = new CSVWriter(outputfile);
+
+	        // create a List which contains String array
+	        List<String[]> data = new ArrayList<String[]>();
+	        data.add(new String[] { "StudentID", "Name", "Mobile", "Course",
+	        		"Session", "Money Receipt No", "Date", "Transaction ID",
+	        		"Mode", "Purpose", "Accepted By", "Amount"});
+	        double total = 0;
+	        for (Student st : students) {
+				ArrayList<Payment> payments = st.payments;
+				if (null != payments) {
+					for (Payment payment : payments) {
+						if (payment.transactionDate.isAfter(from) &&
+								payment.transactionDate.isBefore(to)) {
+							// Add Student Details
+							data.add(new String[] {st.id,
+									st.name,
+									st.mobile,
+									st.course,
+									st.session,
+									payment.paymentId,
+									payment.transactionDate.toString(dtfOut),
+									payment.transactionId,
+									payment.mode,
+									payment.purpose,
+									payment.acceptedBy,
+									Double.toString(payment.amount)});
+						}
+						total += payment.amount;
+					}
+				}
+			}
+	        data.add(new String[] {"", "", "", "", "", "", "", "", "", "", "", ""});
+	        data.add(new String[] {"Total", "", "", "", "", "", "", "", "", "", "", Double.toString(total)});
+	        writer.writeAll(data);
+
+	        // closing writer connection
+	        writer.close();
+	    }
+	    catch (IOException e) {
+	        // TODO Auto-generated catch block
+	        e.printStackTrace();
+	    }
+		// Download section
+		String mimeType = "text/csv";
+		response.setContentType(mimeType);
+		String reportFileName = "Collection"+"_"+
+				from.getDayOfMonth() + "_"+ from.getMonthOfYear() + "_" +
+				to.getDayOfMonth()+"_"+to.getMonthOfYear()+".csv";
+		response.setHeader("Content-Disposition", String.format("attachment; filename=\""+reportFileName+"\""));
+		response.setContentLength((int) reportFile.length());
+		InputStream inputStream = new BufferedInputStream(new FileInputStream(reportFile));
+
+		FileCopyUtils.copy(inputStream, response.getOutputStream());
+		response.flushBuffer();
+
+		model.put("alert", "alert alert-success");
+		model.put("result", "Report Generated Successfully!");
 	}
 }

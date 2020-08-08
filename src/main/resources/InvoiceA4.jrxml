@@ -462,18 +462,30 @@
 			</staticText>
 			<staticText>
 				<reportElement x="290" y="164" width="100" height="20" uuid="aeb09f6c-59a0-4503-a801-72934de3578f"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
 				<text><![CDATA[Due Amount]]></text>
 			</staticText>
 			<textField>
 				<reportElement x="390" y="164" width="100" height="20" uuid="362d590c-a13f-40d5-b6cd-97252d5384fe"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$P{due}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="291" y="572" width="100" height="20" uuid="cb5d15e1-0f36-411b-9fd1-d2f6df22bdb0"/>
+				<textElement markup="styled">
+					<font size="12" isBold="true"/>
+				</textElement>
 				<text><![CDATA[Due Amount]]></text>
 			</staticText>
 			<textField>
 				<reportElement x="391" y="572" width="100" height="20" uuid="39940c2a-1bab-4e24-9218-eab480208074"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$P{due}]]></textFieldExpression>
 			</textField>
 		</band>
