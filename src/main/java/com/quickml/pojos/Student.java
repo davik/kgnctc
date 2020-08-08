@@ -49,14 +49,24 @@ public class Student {
 				lastRegNo, subject, lastSchoolName, session, Double.toString(courseFee)));
 		for (Academic ac : academics) {
 			double percentage = 0;
-			if (null != ac.marks && null != ac.total) {
-				percentage = (ac.marks/ac.total)*100;
+			double total = 0;
+			double marks = 0;
+			try {
+				total = Double.parseDouble(ac.total);
+				marks = Double.parseDouble(ac.marks);
+				if (0 != marks && 0 != total) {
+					percentage = (marks/total)*100;
+				}
+				arrayList.addAll(Arrays.asList(
+						ac.name, ac.board, ac.year,
+						null != ac.total ? Double.toString(total): "",
+						null != ac.marks ? Double.toString(marks): "",
+					    String.format("%.2f", percentage)));
+			} catch (NumberFormatException e) {
+				arrayList.addAll(Arrays.asList(
+						ac.name, ac.board, ac.year,
+						ac.total, ac.marks, Double.toString(percentage)));
 			}
-			arrayList.addAll(Arrays.asList(
-					ac.name, ac.board, ac.year,
-					null != ac.total ? Double.toString(ac.total): "",
-					null != ac.marks ? Double.toString(ac.marks): "",
-					Double.toString(percentage)));
 		}
 
 		return arrayList.toArray(new String[arrayList.size()]);
