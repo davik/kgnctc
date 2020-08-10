@@ -18,6 +18,7 @@ public class Student {
 	public String name = "";
 	public String father = "";
 	public String mother = "";
+	@org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd")
 	public DateTime dob;
 	public String gender = "";
 	public String religion = "";
@@ -27,8 +28,8 @@ public class Student {
 	public String email = "";
 	public String guardianContact = "";
 	public String blood = "";
-	public String language = "";
-	public String nationality = "";
+	public String language = "Bengali";
+	public String nationality = "Indian";
 	public String applicationType = "";
 	public String aadhaar = "";
 	public String address1 = "";
@@ -40,6 +41,9 @@ public class Student {
 	public String session = "";
 	public ArrayList<Payment> payments = new ArrayList<Payment>();
 	public double courseFee;
+	public double familyIncome;
+	
+	public ArrayList<ChangeHistory> changeHistory= new ArrayList<>();
 
 	public String[] ToStringArray() {
 		ArrayList<String> arrayList = new ArrayList<> (Arrays.asList(id, course, name, father, mother,

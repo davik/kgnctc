@@ -1,0 +1,217 @@
+{{#student}}
+<div class="col-md-10">
+	{{#isModification}}
+	<legend>Student Deatils Modification Form</legend>
+	{{/isModification}}
+	{{^isModification}}
+	<legend>Student Registration Form</legend>
+	{{/isModification}}
+	<form id="studRegForm">
+		<fieldset class="form-group">
+			<div class="row">
+				<legend class="col-form-label col-sm-2 pt-0">Course</legend>
+				<div class="col-sm-10" id="course" data-course="{{course}}">
+					<div class="form-check form-check-inline">
+						<input class="form-check-input" type="radio" name="courseRadio" id="courseBed" value="B.Ed" checked>
+						<label class="form-check-label" for="courseBed">
+							B.Ed
+						</label>
+					</div>
+					<div class="form-check form-check-inline">
+						<input class="form-check-input" type="radio" name="courseRadio" id="courseDed" value="D.El.Ed">
+						<label class="form-check-label" for="courseDed">
+							D.El.Ed
+						</label>
+					</div>
+				</div>
+			</div>
+		</fieldset>
+		<div class="form-group">
+			<label for="name">Name*</label>
+			<input type="text" class="form-control clearit" id="name" value="{{name}}">
+		</div>
+		<div class="form-row">
+			<div class="form-group col-md-6">
+				<label for="father">Father's Name</label>
+				<input type="text" class="form-control clearit" id="father" value="{{father}}">
+			</div>
+			<div class="form-group col-md-6">
+				<label for="mother">Mother's Name</label>
+				<input type="text" class="form-control clearit" id="mother" value="{{mother}}">
+			</div>
+		</div>
+		<div class="form-row">
+			<div class="form-group col-md-6">
+				<label for="courseFee">Course Fee*</label>
+				<input type="number" class="form-control clearit" id="courseFee" value="{{courseFee}}">
+			</div>
+			<div class="form-group col-md-6">
+				<label for="familyIncome">Family Income</label>
+				<input type="text" class="form-control clearit" id="familyIncome" placeholder="Yearly Income" value="{{familyIncome}}">
+			</div>
+		</div>
+		<div class="form-row">
+			<div class="form-group col-md-4">
+				<label for="dob">Date of Birth*</label>
+				<input type="date" class="form-control clearit" id="dob" value="{{dob}}">
+			</div>
+			<div class="form-group col-md-2">
+				<label for="gender">Gender</label>
+				<select id="gender" class="form-control" data-gender="{{gender}}">
+					<option value="Male">Male</option>
+					<option value="Female">Female</option>
+				</select>
+			</div>
+			<div class="form-group col-md-3">
+				<label for="religion">Religion</label>
+				<select id="religion" class="form-control" data-religion="{{religion}}">
+					<option value="Hinduism">Hinduism</option>
+					<option value="Islam">Islam</option>
+					<option value="Christianity">Christianity</option>
+					<option value="Sikhism">Sikhism</option>
+					<option value="Buddhism">Buddhism</option>
+					<option value="Jainism">Jainism</option>
+					<option value="N/A">N/A</option>
+				</select>
+			</div>
+			<div class="form-group col-md-3">
+				<label for="category">Category</label>
+				<select id="category" class="form-control" data-category="{{category}}">
+					<option value="General">General</option>
+					<option value="SC">SC</option>
+					<option value="ST">ST</option>
+					<option value="OBC-A">OBC-A</option>
+					<option value="OBC-B">OBC-B</option>
+					<option value="PH">PH</option>
+				</select>
+			</div>
+		</div>
+		<div class="form-row">
+			<div class="form-group col-md-4">
+				<label for="mobile">Mobile Number*</label>
+				<input type="number" class="form-control clearit" id="mobile" value="{{mobile}}">
+			</div>
+			<div class="form-group col-md-4">
+				<label for="email">Email Address*</label>
+				<input type="email" class="form-control clearit" id="email" placeholder="username@domain" value="{{email}}">
+			</div>
+			<div class="form-group col-md-4">
+				<label for="guardianContact">Guardian Contact Number</label>
+				<input type="text" class="form-control clearit" id="guardianContact" value="{{guardianContact}}">
+			</div>
+		</div>
+		<div class="form-row">
+			<div class="form-group col-md-4">
+				<label for="blood">Blood Group</label>
+				<select id="blood" class="form-control" data-blood="{{blood}}">
+					<option value="N/A">N/A</option>
+					<option value="O-">O-</option>
+					<option value="O+">O+</option>
+					<option value="A-">A-</option>
+					<option value="A+">A+</option>
+					<option value="B-">B-</option>
+					<option value="B+">B+</option>
+					<option value="AB-">AB-</option>
+					<option value="AB+">AB+</option>
+				</select>
+			</div>
+			<div class="form-group col-md-4">
+				<label for="language">Language</label>
+				<input type="text" class="form-control" id="language" value="{{language}}">
+			</div>
+			<div class="form-group col-md-4">
+				<label for="nationality">Nationality</label>
+				<input type="text" class="form-control" id="nationality" value="{{nationality}}">
+			</div>
+		</div>
+		<div class="form-row">
+			<div class="form-group col-md-4">
+				<label for="type">Application Type</label>
+				<select id="type" class="form-control" data-applicationtype="{{applicationType}}">
+					<option value="Fresher">Fresher</option>
+					<option value="Deputed">Deputed</option>
+				</select>
+			</div>
+			<div class="form-group col-md-4">
+				<label for="session">Academic Session</label>
+				<select id="session" class="form-control" data-session="{{session}}">
+					<option value="2018-20">2018-20</option>
+					<option value="2019-21">2019-21</option>
+					<option value="2020-22">2020-22</option>
+				</select>
+			</div>
+			<div class="form-group col-md-4">
+				<label for="aadhaar">Aadhaar*</label>
+				<input type="number" class="form-control clearit" id="aadhaar" value="{{aadhaar}}">
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="address1">Address</label>
+			<textarea class="form-control clearit" id="address1">{{address1}}</textarea>
+		</div>
+		<div class="form-group">
+			<label for="address2">Alternate Address</label>
+			<textarea class="form-control clearit" id="address2">{{address2}}</textarea>
+		</div>
+		<legend>Academic Information</legend>
+		<table class="table table-striped">
+			<thead class="thead-light">
+				<tr>
+					<th scope="col">Examination</th>
+					<th scope="col">Board/ University</th>
+					<th scope="col">Year</th>
+					<th scope="col">Total Marks</th>
+					<th scope="col">Marks Obtained</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<th scope="row">M.P or 10th*</th>
+					<td><input type="text" class="form-control clearit" id="mpboard" value="{{mpboard}}"></td>
+					<td><input type="text" class="form-control clearit" id="mpyear" value="{{mpyear}}"></td>
+					<td><input type="number" class="form-control clearit" id="mptotal" value="{{mptotal}}"></td>
+					<td><input type="number" class="form-control clearit" id="mpmarks" value="{{mpmarks}}"></td>
+				</tr>
+				<tr>
+					<th scope="row">H.S or 12th*</th>
+					<td><input type="text" class="form-control clearit" id="hsboard" value="{{hsboard}}"></td>
+					<td><input type="text" class="form-control clearit" id="hsyear" value="{{hsyear}}"></td>
+					<td><input type="number" class="form-control clearit" id="hstotal" value="{{hstotal}}"></td>
+					<td><input type="number" class="form-control clearit" id="hsmarks" value="{{hsmarks}}"></td>
+				</tr>
+				<tr>
+					<th scope="row">Graduation</th>
+					<td><input type="text" class="form-control clearit" id="gradboard" value="{{gradboard}}"></td>
+					<td><input type="text" class="form-control clearit" id="gradyear" value="{{gradyear}}"></td>
+					<td><input type="number" class="form-control clearit" id="gradtotal" value="{{gradtotal}}"></td>
+					<td><input type="number" class="form-control clearit" id="gradmarks" value="{{gradmarks}}"></td>
+				</tr>
+				<tr>
+					<th scope="row">Post Graduation</th>
+					<td><input type="text" class="form-control clearit" id="pgboard" value="{{pgboard}}"></td>
+					<td><input type="text" class="form-control clearit" id="pgyear" value="{{pgyear}}"></td>
+					<td><input type="number" class="form-control clearit" id="pgtotal" value="{{pgtotal}}"></td>
+					<td><input type="number" class="form-control clearit" id="pgmarks" value="{{pgmarks}}"></td>
+				</tr>
+			</tbody>
+		</table>
+		<div class="form-row">
+			<div class="form-group col-md-6">
+				<label for="regLast">Registration No. from the University Last Attended</label>
+				<input type="text" class="form-control clearit" id="regLast" value="{{lastRegNo}}">
+			</div>
+			<div class="form-group col-md-6">
+				<label for="subject">Subject</label>
+				<input type="text" class="form-control clearit" id="subject" value="{{subject}}">
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="schoolName">Last School Name</label>
+			<input type="text" class="form-control clearit" id="schoolName" value="{{lastSchoolName}}">
+		</div>
+		<button type="submit" class="btn btn-primary" id="button" data-id={{id}}>Submit</button>
+	</form>
+	<div id="msg" class="py-4">
+	</div>
+</div>
+{{/student}}

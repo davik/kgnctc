@@ -35,9 +35,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.opencsv.CSVWriter;
+import com.quickml.pojos.ChangeHistory;
 import com.quickml.pojos.Counter;
 import com.quickml.pojos.Payment;
 import com.quickml.pojos.Student;
+import com.quickml.pojos.StudentDTO;
 import com.quickml.pojos.User;
 import com.quickml.repository.CounterRepository;
 import com.quickml.repository.StudentRepository;
@@ -189,6 +191,12 @@ public class WelcomeController {
 		counterRepo.save(ct);
 
 		student.id = id_prefix;
+		ChangeHistory ch = new ChangeHistory();
+		ch.time = DateTime.now();
+		ch.user = request.getRemoteUser();
+		ch.operationType = ChangeHistory.Operation.CREATED;
+		
+		student.changeHistory.add(ch);
     	studRepo.save(student);
     	
     	model.put("alert", "alert alert-success");
@@ -201,6 +209,7 @@ public class WelcomeController {
     		HttpServletRequest request) throws IOException{
 		populateCommonPageFields(model, request);
 		model.put("result", "Result will be displayed here!");
+		model.put("student", new StudentDTO());
 		return "registration";
     }
 	
@@ -676,5 +685,116 @@ public class WelcomeController {
 
 		model.put("alert", "alert alert-success");
 		model.put("result", "Report Generated Successfully!");
+	}
+
+	@RequestMapping(value = "/studentDetails", method=RequestMethod.GET)
+	String getStudentDetails(Map<String, Object> model,
+			@RequestParam(name = "id") String studentId,
+			HttpServletRequest request) throws IOException, ParseException {
+		populateCommonPageFields(model, request);
+
+		Student student = studRepo.findOne(studentId);
+		if (null == student) {
+			model.put("alert", "alert alert-danger");
+			model.put("result", "Student not found!");
+		} else {
+			StudentDTO st = new StudentDTO().replicate(student);
+			st.isModification = true;
+			model.put("student", st);
+		}
+		return "layout/registrationForm";
+	}
+
+	@RequestMapping(value = "/modifyStudentDetails", method=RequestMethod.POST)
+	String modifyStudentDetails(Map<String, Object> model,
+			@RequestParam(name = "id") String studentId,
+			@RequestBody Student newStudent,
+			HttpServletRequest request) throws IOException, ParseException {
+		populateCommonPageFields(model, request);
+
+		Student oldStudent = studRepo.findOne(studentId);
+		if (null == oldStudent) {
+			model.put("alert", "alert alert-danger");
+			model.put("result", "Student not found!");
+			return "create";
+		}
+		if (newStudent.name.isEmpty() ||
+				newStudent.father.isEmpty() ||
+				newStudent.mother.isEmpty() ||
+				newStudent.mobile.isEmpty() ||
+				newStudent.email.isEmpty()	 ||
+				newStudent.aadhaar.isEmpty() ||
+				newStudent.courseFee == 0) {
+			model.put("alert", "alert alert-danger");
+			model.put("result", "Please fill the mandatory fields!");
+			return "create";
+		}
+		boolean idChanged = false;
+
+		ChangeHistory ch = new ChangeHistory();
+		ch.time = DateTime.now();
+		ch.user = request.getRemoteUser();
+		ch.operationType = ChangeHistory.Operation.MODIFIED;
+
+		if (!newStudent.session.equals(oldStudent.session) ||
+				!newStudent.course.equals(oldStudent.course)) {
+
+			if (!newStudent.session.equals(oldStudent.session)) {
+				ch.message = "Session Modified from " + oldStudent.session + " to " + newStudent.session;
+			}
+			if (!newStudent.course.equals(oldStudent.course)) {
+				ch.message = "Course Modified from " + oldStudent.course + " to " + newStudent.course;
+			}
+			// Change in ID
+			String id_prefix = newStudent.session.substring(0, 4);
+			// Counter is used to get the next id to be assigned for a new student based on session and course
+			Counter ct = null;
+			if (newStudent.course.equalsIgnoreCase("b.ed")) {
+				id_prefix = id_prefix + "01";
+				ct = counterRepo.findOne(id_prefix);
+			} else {
+				id_prefix = id_prefix + "02";
+				ct = counterRepo.findOne(id_prefix);
+			}
+			// If counter config not exists, create one
+			if (ct == null) {
+				ct = new Counter();
+				ct.id = id_prefix;
+				ct.nextId++;
+			}
+			// Increment and save the counter config
+			id_prefix = id_prefix + String.format("%03d", ct.nextId);
+			ct.nextId++;
+			counterRepo.save(ct);
+
+			newStudent.id = id_prefix;
+			idChanged = true;
+		} else {
+			newStudent.id = oldStudent.id;
+		}
+		// Copy Payment Information
+		newStudent.payments = new ArrayList<>(oldStudent.payments);
+		if (newStudent.courseFee != oldStudent.courseFee) {
+			model.put("alert", "alert alert-warning");
+			model.put("result", "Change in Course Fee, Incident will be reported!");
+			ch.message = "Course Fee Modified from " + oldStudent.courseFee + " to " + newStudent.courseFee;
+		} else {
+			if (idChanged) {
+				model.put("alert", "alert alert-warning");
+		    	model.put("result", "Student Information Modified, ID is changed to " + newStudent.id );
+			} else {
+				model.put("alert", "alert alert-success");
+		    	model.put("result", "Student Information Modified Successfully!");
+			}
+		}
+		newStudent.changeHistory = new ArrayList<>(oldStudent.changeHistory);
+		newStudent.changeHistory.add(ch);
+		studRepo.save(newStudent);
+
+		if (idChanged) {
+			studRepo.delete(oldStudent);
+		}
+
+		return "create";
 	}
 }

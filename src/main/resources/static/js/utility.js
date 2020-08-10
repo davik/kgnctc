@@ -12,6 +12,12 @@ function fetchPaymentDetail(id) {
     $('#idSearch').click();
 }
 
+function fetchStudentDetail(id) {
+    $('#nav-edit-tab').trigger('click');
+    $('#idStudent').val(id);
+    $('#idSearchEdit').click();
+}
+
 function call(e, path) {
     e.preventDefault();
     $.ajax({
@@ -58,13 +64,13 @@ function createPayment() {
         }),
         data: JSON.stringify(payment),
         success: function(data) {
-            $("#msg").show();
-            $('#msg').html(data);
+            $("#msgPayment").show();
+            $('#msgPayment').html(data);
             $('html,body').animate({
-                scrollTop: $("#msg").offset().top
+                scrollTop: $("#msgPayment").offset().top
             }, 'slow');
             setTimeout(function() {
-                $("#msg").hide();
+                $("#msgPayment").hide();
                 $('#idSearch').click();
             }, 3000);
             $("#transactionId").val(''),
@@ -105,94 +111,108 @@ function changeAncAttDailyCollection() {
     $('#collectionReport').attr({target: '_blank', href: url});
 }
 
-$(document).ready(function() {
-    // Listen to click event on the submit button
-    $('#button').click(function(e) {
+function createStudent(e) {
 
-        e.preventDefault();
+    e.preventDefault();
 
-        let coursen = $("#courseBed").is(":checked") ?
-            $("#courseBed").val() : $("#courseDed").val();
-        let academics = [];
-        let mp = {
-            name: "Madhyamik Pariksha/ 10th",
-            board: $("#mpboard").val(),
-            year: $("#mpyear").val(),
-            total: $("#mptotal").val(),
-            marks: $("#mpmarks").val()
-        };
-        academics[0] = mp;
-        let hs = {
-            name: "Higher Secondary/ 12th",
-            board: $("#hsboard").val(),
-            year: $("#hsyear").val(),
-            total: $("#hstotal").val(),
-            marks: $("#hsmarks").val()
-        };
-        academics[1] = hs;
-        let gr = {
-            name: "Graduation",
-            board: $("#gradboard").val(),
-            year: $("#gradyear").val(),
-            total: $("#gradtotal").val(),
-            marks: $("#gradmarks").val()
-        };
-        academics[2] = gr;
-        let pg = {
-            name: "Post Graduation",
-            board: $("#pgboard").val(),
-            year: $("#pgyear").val(),
-            total: $("#pgtotal").val(),
-            marks: $("#pgmarks").val()
-        };
-        academics[3] = pg;
-        let student = {
-            course: coursen,
-            name: $("#name").val(),
-            father: $("#father").val(),
-            mother: $("#mother").val(),
-            dob: $("#dob").val(),
-            gender: $("#gender").val(),
-            religion: $("#religion").val(),
-            category: $("#category").val(),
-            mobile: $("#mobile").val(),
-            email: $("#email").val(),
-            guardianContact: $("#guardianContact").val(),
-            blood: $("#blood").val(),
-            language: $("#language").val(),
-            nationality: $("#nationality").val(),
-            applicationType: $("#type").val(),
-            aadhaar: $("#aadhaar").val(),
-            address1: $("#address1").val(),
-            address2: $("#address2").val(),
-            academics: academics,
-            session: $('#session').val(),
-            lastRegNo: $('#regLast').val(),
-            subject: $('#subject').val(),
-            lastSchoolName: $('#schoolName').val(),
-            courseFee: $('#courseFee').val(),
-            familyIncome: $('#familyIncome').val()
-        };
-        console.log(student);
+    let coursen = $("#courseBed").is(":checked") ?
+        $("#courseBed").val() : $("#courseDed").val();
+    let academics = [];
+    let mp = {
+        name: "Madhyamik Pariksha/ 10th",
+        board: $("#mpboard").val(),
+        year: $("#mpyear").val(),
+        total: $("#mptotal").val(),
+        marks: $("#mpmarks").val()
+    };
+    academics[0] = mp;
+    let hs = {
+        name: "Higher Secondary/ 12th",
+        board: $("#hsboard").val(),
+        year: $("#hsyear").val(),
+        total: $("#hstotal").val(),
+        marks: $("#hsmarks").val()
+    };
+    academics[1] = hs;
+    let gr = {
+        name: "Graduation",
+        board: $("#gradboard").val(),
+        year: $("#gradyear").val(),
+        total: $("#gradtotal").val(),
+        marks: $("#gradmarks").val()
+    };
+    academics[2] = gr;
+    let pg = {
+        name: "Post Graduation",
+        board: $("#pgboard").val(),
+        year: $("#pgyear").val(),
+        total: $("#pgtotal").val(),
+        marks: $("#pgmarks").val()
+    };
+    academics[3] = pg;
+    let student = {
+        course: coursen,
+        name: $("#name").val(),
+        father: $("#father").val(),
+        mother: $("#mother").val(),
+        dob: $("#dob").val(),
+        gender: $("#gender").val(),
+        religion: $("#religion").val(),
+        category: $("#category").val(),
+        mobile: $("#mobile").val(),
+        email: $("#email").val(),
+        guardianContact: $("#guardianContact").val(),
+        blood: $("#blood").val(),
+        language: $("#language").val(),
+        nationality: $("#nationality").val(),
+        applicationType: $("#type").val(),
+        aadhaar: $("#aadhaar").val(),
+        address1: $("#address1").val(),
+        address2: $("#address2").val(),
+        academics: academics,
+        session: $('#session').val(),
+        lastRegNo: $('#regLast').val(),
+        subject: $('#subject').val(),
+        lastSchoolName: $('#schoolName').val(),
+        courseFee: $('#courseFee').val(),
+        familyIncome: $('#familyIncome').val()
+    };
+    console.log(student);
 
-        $.ajax({
-            type: "POST",
-            url: "/create",
-            data: JSON.stringify(student),
-            success: function(data) {
-                $("#msg").show();
-                $('#msg').html(data);
-                $('html,body').animate({
-                    scrollTop: $("#msg").offset().top
-                }, 'slow');
-                $('.clearit').val('');
-                setTimeout(function() {
-                    $("#msg").hide();
-                }, 3000);
-            },
-            contentType: "application/json"
-        });
+    let url;
+    if ($('#button').data('id') == '') {
+        url = "/create"
+    } else {
+        url = "modifyStudentDetails?" + $.param({
+                id: $('#button').data('id')
+            })
+    }
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: JSON.stringify(student),
+        success: function(data) {
+            $("#msg").show();
+            $('#msg').html(data);
+            $('html,body').animate({
+                scrollTop: $("#msg").offset().top
+            }, 'slow');
+            $('.clearit').val('');
+            setTimeout(function() {
+                $("#msg").hide();
+            }, 3000);
+        },
+        contentType: "application/json"
     });
+}
+
+$(document).ready(function() {
+    $("body").tooltip({ selector: '[data-toggle=tooltip]' });
+    $('[data-toggle="tooltip"]').tooltip({
+        trigger : 'hover'
+    });
+    // Listen to click event on the submit button
+    $('#button').click(createStudent);
 
     $('#idSearch').click(function(e) {
         e.preventDefault();
@@ -216,7 +236,43 @@ $(document).ready(function() {
             contentType: "application/json"
         });
     });
-    
+
+    $('#idSearchEdit').click(function(e) {
+        e.preventDefault();
+        $.ajax({
+            type: "GET",
+            url: '/studentDetails?' + $.param({
+                id: $('#idStudent').val()
+            }),
+            success: function(data) {
+                $('#studentDetail').html(data);
+                // Select gender
+                let findString = 'option[value="'+$('#gender').data('gender')+'"]';
+                $('#gender').find(findString).attr("selected",true);
+                // Select Religion
+                findString = 'option[value="'+$('#religion').data('religion')+'"]';
+                $('#religion').find(findString).attr("selected",true);
+                // Select Category
+                findString = 'option[value="'+$('#category').data('category')+'"]';
+                $('#category').find(findString).attr("selected",true);
+                // Select Blood
+                findString = 'option[value="'+$('#blood').data('blood')+'"]';
+                $('#blood').find(findString).attr("selected",true);
+                // Select Application Type
+                findString = 'option[value="'+$('#type').data('applicationtype')+'"]';
+                $('#type').find(findString).attr("selected",true);
+                // Select Session
+                findString = 'option[value="'+$('#session').data('session')+'"]';
+                $('#session').find(findString).attr("selected",true);
+                // Select Course
+                $('input[value="'+$("#course").data("course")+'"]').attr("checked",true);
+                // Listen to click event on the submit button
+                $('#button').click(createStudent);
+            },
+            contentType: "application/json"
+        });
+    });
+
     $("#studentSearch").on("keyup", function() {
         let value = $(this).val().toLowerCase();
         $("#studentTable tr").filter(function() {
