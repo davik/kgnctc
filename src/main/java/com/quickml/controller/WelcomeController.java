@@ -797,4 +797,76 @@ public class WelcomeController {
 
 		return "create";
 	}
+
+	@RequestMapping(value = "/icard", method=RequestMethod.GET)
+	void downloadICard(Map<String, Object> model,
+			@RequestParam(name = "id") String studentId,
+			HttpServletResponse response,
+			HttpServletRequest request) throws IOException {
+		populateCommonPageFields(model, request);
+		Student student = studRepo.findOne(studentId);
+		if (null == student) {
+			model.put("alert", "alert alert-danger");
+			model.put("result", "Student not found!");
+			return;
+		}
+		
+		Resource resource = new ClassPathResource("ICard.jrxml");
+		InputStream input = resource.getInputStream();
+		JasperDesign design = null;
+		try {
+			design = JRXmlLoader.load(input);
+		} catch (JRException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		JasperReport jasperReport = null;
+		try {
+			jasperReport = JasperCompileManager.compileReport(design);
+		} catch (JRException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String outputFile = "C:\\Users\\polaris2\\" + "JasperReportExample.pdf";
+		OutputStream outputStream = new FileOutputStream(new File(outputFile));
+		try {
+			Map<String, Object> paramMap = new HashMap<String, Object>();
+			paramMap.put("logoFile", collegeShortName.toLowerCase() + "_logo.jpeg");
+			paramMap.put("collegeLongName", collegeLongName);
+			paramMap.put("collegeShortName", collegeShortName);
+			paramMap.put("collegeAddress1", collegeAddress1);
+			paramMap.put("collegeAddress2", collegeAddress2);
+			paramMap.put("collegeContact", collegeContact);
+			paramMap.put("collegeEmail", collegeEmail);
+			paramMap.put("name", student.name);
+			paramMap.put("id", student.id);
+			paramMap.put("course", student.course);
+			paramMap.put("session", student.session);
+			String dob = student.dob.toString(dtfOut);
+			paramMap.put("dob", dob);
+			paramMap.put("blood", student.blood);
+			paramMap.put("address1", student.address1);
+			JasperPrint jasperPrint = JasperFillManager.fillReport(
+					jasperReport,
+					paramMap,
+					new JREmptyDataSource());
+			JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
+		} catch (JRException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		outputStream.flush();
+		outputStream.close();
+		// Download section
+		File invoiceFile = new File(outputFile);
+		String mimeType = "application/pdf";
+		response.setContentType(mimeType);
+		String icard = student.id+".pdf";
+		response.setHeader("Content-Disposition", String.format("inline; filename=\""+icard+"\""));
+		response.setContentLength((int) invoiceFile.length());
+		InputStream inputStream = new BufferedInputStream(new FileInputStream(invoiceFile));
+
+		FileCopyUtils.copy(inputStream, response.getOutputStream());
+		response.flushBuffer();
+	}
 }
