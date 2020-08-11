@@ -42,7 +42,7 @@
 				<textElement>
 					<font size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Student Name]]></text>
+				<text><![CDATA[Name]]></text>
 			</staticText>
 			<textField>
 				<reportElement x="94" y="117" width="198" height="20" uuid="99a3f98e-1fca-4e76-900b-fdf11b219dee"/>
@@ -56,7 +56,7 @@
 				<textElement>
 					<font size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Student ID]]></text>
+				<text><![CDATA[ID No]]></text>
 			</staticText>
 			<textField>
 				<reportElement x="94" y="136" width="129" height="20" uuid="5cb78eda-e38e-4fa5-abb5-00342a277e2c"/>
