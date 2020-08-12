@@ -654,8 +654,8 @@ public class WelcomeController {
 									payment.purpose,
 									payment.acceptedBy,
 									Double.toString(payment.amount)});
+							total += payment.amount;
 						}
-						total += payment.amount;
 					}
 				}
 			}
@@ -675,7 +675,7 @@ public class WelcomeController {
 		response.setContentType(mimeType);
 		String reportFileName = "Collection"+"_"+
 				from.getDayOfMonth() + "_"+ from.getMonthOfYear() + "_" +
-				to.getDayOfMonth()+"_"+to.getMonthOfYear()+".csv";
+				to.minusHours(24).getDayOfMonth()+"_"+to.getMonthOfYear()+".csv";
 		response.setHeader("Content-Disposition", String.format("attachment; filename=\""+reportFileName+"\""));
 		response.setContentLength((int) reportFile.length());
 		InputStream inputStream = new BufferedInputStream(new FileInputStream(reportFile));
