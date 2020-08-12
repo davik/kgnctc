@@ -6,5 +6,4 @@ public class Academic {
 	public String year;
 	public String total;
 	public String marks;
-	public String percentage;
 }

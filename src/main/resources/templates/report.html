@@ -14,8 +14,8 @@
 					<nav>
 						<div class="nav nav-tabs" id="nav-tab" role="tablist">
 							<a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Due Payment</a>
-							<a class="nav-item nav-link disabled" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Report 2</a>
-							<a class="nav-item nav-link disabled" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Report 3</a>
+							<a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Student List</a>
+							<a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Collection</a>
 						</div>
 					</nav>
 					<div class="tab-content" id="nav-tabContent">
@@ -51,11 +51,59 @@
 							<div id="msg" class="py-4"></div>
 						</div>
 						<div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-							<div class="pt-4">
-								profile
-							</div>
+							<form class="form-inline pt-4">
+								<div class="col-md-4">
+									<div class="input-group mb-3">
+										<div class="input-group-prepend">
+											<label class="input-group-text" for="session">Session</label>
+										</div>
+										<select class="custom-select" id="r2session" onchange="changeAncAttSessStudentDetails();">
+											<option value="2018-20">2018-20</option>
+											<option value="2019-21">2019-21</option>
+											<option value="2020-22">2020-22</option>
+										</select>
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="input-group mb-3">
+										<div class="input-group-prepend">
+											<label class="input-group-text" for="course">Course</label>
+										</div>
+										<select class="custom-select" id="r2course" onchange="changeAncAttSessStudentDetails();">
+											<option value="B.Ed">B.Ed</option>
+											<option value="D.El.Ed">D.El.Ed</option>
+										</select>
+									</div>
+								</div>
+								<div class="col-md-2">
+									<a class="btn btn-primary mb-3" id="studentDetail" target="_blank" href="/allStudents?course=B.Ed&session=2018-20">Download Students Detail</a>
+								</div>
+							</form>
 						</div>
-						<div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">contact</div>
+						<div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
+							<form class="form-inline pt-4">
+								<div class="col-md-4">
+									<div class="input-group mb-3">
+										<div class="input-group-prepend">
+											<label class="input-group-text" for="from">Start Date</label>
+										</div>
+										<input type="date" class="form-control clearit" id="from" onchange="changeAncAttDailyCollection();">
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="input-group mb-3">
+										<div class="input-group-prepend">
+											<label class="input-group-text" for="to">End Date</label>
+										</div>
+										<input type="date" class="form-control clearit" id="to" onchange="changeAncAttDailyCollection();">
+									</div>
+								</div>
+								<div class="col-md-2">
+									<a class="btn btn-primary mb-3 disabled" id="collectionReport" target="_blank" href="">Generate Collection Report</a>
+								</div>
+							</form>
+							<div id="msg" class="py-4"></div>
+						</div>
 					</div>
 				</div>
 				
