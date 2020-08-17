@@ -108,7 +108,7 @@
 				<text><![CDATA[Money Receipt]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="82" y="143" width="129" height="20" uuid="bcef286d-1ab5-46b1-96fe-40fc4a24953e"/>
+				<reportElement x="82" y="143" width="198" height="20" uuid="bcef286d-1ab5-46b1-96fe-40fc4a24953e"/>
 				<textFieldExpression><![CDATA[$P{course}]]></textFieldExpression>
 			</textField>
 			<line>
@@ -127,7 +127,7 @@
 				<text><![CDATA[Student ID]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="82" y="123" width="129" height="20" uuid="5cb78eda-e38e-4fa5-abb5-00342a277e2c"/>
+				<reportElement x="82" y="123" width="199" height="20" uuid="5cb78eda-e38e-4fa5-abb5-00342a277e2c"/>
 				<textFieldExpression><![CDATA[$P{id}]]></textFieldExpression>
 			</textField>
 			<staticText>
@@ -139,11 +139,11 @@
 				<text><![CDATA[Session]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="82" y="163" width="129" height="20" uuid="4ed735d3-15a4-42de-bd61-406ce0789f1e"/>
+				<reportElement x="82" y="163" width="198" height="20" uuid="4ed735d3-15a4-42de-bd61-406ce0789f1e"/>
 				<textFieldExpression><![CDATA[$P{session}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="390" y="104" width="100" height="20" uuid="6c39d517-ac20-48df-a9c0-b130fb940c12"/>
+				<reportElement x="390" y="104" width="165" height="20" uuid="6c39d517-ac20-48df-a9c0-b130fb940c12"/>
 				<textFieldExpression><![CDATA[$P{paymentId}]]></textFieldExpression>
 			</textField>
 			<line>
@@ -153,7 +153,7 @@
 				<reportElement x="0" y="181" width="556" height="1" uuid="c8113ab4-1d95-401f-8322-6655da71309e"/>
 			</line>
 			<textField>
-				<reportElement x="82" y="551" width="129" height="20" uuid="0c1dd213-8ad4-4fe8-bc8a-8ddf3477d808"/>
+				<reportElement x="82" y="551" width="198" height="20" uuid="0c1dd213-8ad4-4fe8-bc8a-8ddf3477d808"/>
 				<textFieldExpression><![CDATA[$P{course}]]></textFieldExpression>
 			</textField>
 			<line>
@@ -172,7 +172,7 @@
 				<text><![CDATA[Student ID]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="81" y="531" width="131" height="20" uuid="916a3d18-1afb-4e76-b3a0-87dc4aff0377"/>
+				<reportElement x="81" y="531" width="199" height="20" uuid="916a3d18-1afb-4e76-b3a0-87dc4aff0377"/>
 				<textFieldExpression><![CDATA[$P{id}]]></textFieldExpression>
 			</textField>
 			<staticText>
@@ -184,7 +184,7 @@
 				<text><![CDATA[Session]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="82" y="571" width="129" height="20" uuid="dd9874c9-2262-4715-9aa6-ca706ddd842a"/>
+				<reportElement x="82" y="571" width="198" height="20" uuid="dd9874c9-2262-4715-9aa6-ca706ddd842a"/>
 				<textFieldExpression><![CDATA[$P{session}]]></textFieldExpression>
 			</textField>
 			<line>
@@ -221,7 +221,7 @@
 				<text><![CDATA[Particulars]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="110" y="210" width="100" height="30" uuid="2ee31c3b-12e8-4fd6-beb5-2f00e381a5bb"/>
+				<reportElement x="110" y="210" width="171" height="30" uuid="2ee31c3b-12e8-4fd6-beb5-2f00e381a5bb"/>
 				<textFieldExpression><![CDATA[$P{purpose}]]></textFieldExpression>
 			</textField>
 			<textField>
@@ -326,7 +326,7 @@
 				<text><![CDATA[Transaction ID]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="390" y="123" width="100" height="20" uuid="ed4e7e46-a667-4600-b44e-41acdc54635e"/>
+				<reportElement x="390" y="123" width="165" height="20" uuid="ed4e7e46-a667-4600-b44e-41acdc54635e"/>
 				<textFieldExpression><![CDATA[$P{transactionId}]]></textFieldExpression>
 			</textField>
 			<staticText>
@@ -334,7 +334,7 @@
 				<text><![CDATA[Money Receipt No]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="391" y="532" width="100" height="20" uuid="aa56768d-9953-4fd9-903a-31b51e6b8c9c"/>
+				<reportElement x="391" y="532" width="164" height="20" uuid="aa56768d-9953-4fd9-903a-31b51e6b8c9c"/>
 				<textFieldExpression><![CDATA[$P{transactionId}]]></textFieldExpression>
 			</textField>
 			<staticText>
@@ -342,7 +342,7 @@
 				<text><![CDATA[Transaction ID]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="391" y="512" width="100" height="20" uuid="0ebab5e6-a66f-406d-8faa-6ed701fb3e6b"/>
+				<reportElement x="391" y="512" width="164" height="20" uuid="0ebab5e6-a66f-406d-8faa-6ed701fb3e6b"/>
 				<textFieldExpression><![CDATA[$P{paymentId}]]></textFieldExpression>
 			</textField>
 			<staticText>
@@ -358,7 +358,7 @@
 				<text><![CDATA[Transaction Mode]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="390" y="144" width="100" height="20" uuid="4904c0c6-9b10-47ca-866f-e4474c518394"/>
+				<reportElement x="390" y="144" width="165" height="20" uuid="4904c0c6-9b10-47ca-866f-e4474c518394"/>
 				<textFieldExpression><![CDATA[$P{transactionMode}]]></textFieldExpression>
 			</textField>
 			<staticText>
@@ -366,18 +366,18 @@
 				<text><![CDATA[Transaction Mode]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="391" y="552" width="100" height="20" uuid="3af7db13-3e03-49fb-b8ba-bc7cf3bf0dd4"/>
+				<reportElement x="391" y="552" width="164" height="20" uuid="3af7db13-3e03-49fb-b8ba-bc7cf3bf0dd4"/>
 				<textFieldExpression><![CDATA[$P{transactionMode}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="416" y="363" width="139" height="16" uuid="5ccf533d-804d-475e-846d-e67291be0c84"/>
+				<reportElement x="430" y="363" width="125" height="16" uuid="5ccf533d-804d-475e-846d-e67291be0c84"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{user}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="303" y="363" width="113" height="16" uuid="34d7baa3-f78c-48c4-8d6f-5499680926b9"/>
+				<reportElement x="303" y="363" width="127" height="16" uuid="34d7baa3-f78c-48c4-8d6f-5499680926b9"/>
 				<text><![CDATA[Payment Accepted By:]]></text>
 			</staticText>
 			<staticText>
@@ -468,7 +468,7 @@
 				<text><![CDATA[Due Amount]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="390" y="164" width="100" height="20" uuid="362d590c-a13f-40d5-b6cd-97252d5384fe"/>
+				<reportElement x="390" y="164" width="165" height="20" uuid="362d590c-a13f-40d5-b6cd-97252d5384fe"/>
 				<textElement>
 					<font size="12" isBold="true"/>
 				</textElement>
@@ -482,7 +482,7 @@
 				<text><![CDATA[Due Amount]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="391" y="572" width="100" height="20" uuid="39940c2a-1bab-4e24-9218-eab480208074"/>
+				<reportElement x="391" y="572" width="164" height="20" uuid="39940c2a-1bab-4e24-9218-eab480208074"/>
 				<textElement>
 					<font size="12" isBold="true"/>
 				</textElement>

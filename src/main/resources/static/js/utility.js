@@ -48,7 +48,8 @@ function downloadInvoice(paymentid) {
         });
 }
 
-function createPayment() {
+function createPayment(event) {
+	$('#paymentButton').prop('disabled', true);
     let payment = {
         transactionId: $("#transactionId").val(),
         amount: $("#amount").val(),
