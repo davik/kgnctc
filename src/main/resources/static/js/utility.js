@@ -112,6 +112,21 @@ function changeAncAttDailyCollection() {
     $('#collectionReport').attr({target: '_blank', href: url});
 }
 
+function fetchStudents() {
+    let url = '/studentList?' + $.param({
+                course: $('#course').val(),
+                session: $('#session').val()
+            });
+    $.ajax({
+        type: "GET",
+        url: url,
+        success: function(data) {
+            $(".table").html(data);
+        },
+        contentType: "application/json"
+    });
+}
+
 function createStudent(e) {
 
     e.preventDefault();

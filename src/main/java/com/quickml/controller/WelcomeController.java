@@ -223,14 +223,28 @@ public class WelcomeController {
 	
 	@RequestMapping(value = "/students", method=RequestMethod.GET)
 	String getStudentsPage(Map<String, Object> model,
-			HttpServletRequest request) throws IOException {
+			HttpServletRequest request,
+			@RequestParam(value = "course", defaultValue = "B.Ed") String course,
+			@RequestParam(value = "session", defaultValue = "2018-20") String session) throws IOException {
 		populateCommonPageFields(model, request);
 		
-		List<Student> students = studRepo.findAll();
+		List<Student> students = studRepo.findByCourseAndSession(course, session);
 		model.put("students", students);
 		return "students";
 	}
-	
+
+	@RequestMapping(value = "/studentList", method=RequestMethod.GET)
+	String getStudentList(Map<String, Object> model,
+			HttpServletRequest request,
+			@RequestParam(value = "course", defaultValue = "B.Ed") String course,
+			@RequestParam(value = "session", defaultValue = "2018-20") String session) throws IOException {
+		populateCommonPageFields(model, request);
+
+		List<Student> students = studRepo.findByCourseAndSession(course, session);
+		model.put("students", students);
+		return "studentList";
+	}
+
 	@RequestMapping(value = "/payment", method=RequestMethod.GET)
 	String getPaymentPage(Map<String, Object> model,
 			HttpServletRequest request) throws IOException {
@@ -518,7 +532,7 @@ public class WelcomeController {
 	        		"Mobile", "Email Address", "Guardian Contact", "Blood Group", "Language",
 	        		"Nationality", "Application Type", "Aadhaar Number", "Address",
 	        		"Alternate Address", "Last Registration Number", "Subject",
-	        		"Last School Name", "Session", "Course Fee",
+	        		"Last School Name", "Session", "Course Fee", "Status",
 	        		"Degree", "Board", "Year", "Total Marks", "Marks Obtained", "Percentage",
                     "Degree", "Board", "Year", "Total Marks", "Marks Obtained", "Percentage",
                     "Degree", "Board", "Year", "Total Marks", "Marks Obtained", "Percentage",
