@@ -97,16 +97,20 @@
 	</tr>
 	{{/payments}}
 </table>
+<div class="alert alert-warning alert-dismissible fade" role="alert">
+  <strong>Alert!</strong> Course Fee will be decreased by concession amount!
+</div>
 <div class="col-md-12 border border-dark py-3 my-3" id="paymentForm">
 	<legend>Payment Form</legend>
 	<div class="form-row">
 		<div class="form-group col-md-3">
 			<label for="purpose">Purpose</label>
-			<select id="purpose" class="form-control">
+			<select id="purpose" class="form-control" onchange="onPaymentCh();">
 				<option>Admission Fee</option>
 				<option>Registration Fee</option>
 				<option>Course Fee</option>
 				<option>Examination Fee</option>
+				<option>Concession</option>
 			</select>
 		</div>
 		<div class="form-group col-md-3">

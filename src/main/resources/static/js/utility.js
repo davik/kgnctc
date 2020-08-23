@@ -32,6 +32,8 @@ function call(e, path) {
 }
 
 function showPaymentForm() {
+    $('.alert').hide();
+    $('#msgPayment').hide();
     $('#paymentForm').show();
     $('html,body').animate({
         scrollTop: $("#paymentForm").offset().top
@@ -125,6 +127,20 @@ function fetchStudents() {
         },
         contentType: "application/json"
     });
+}
+
+function onPaymentCh() {
+    if ($('#purpose').val() == 'Concession') {
+       $('.alert').show();
+       $('.alert').addClass('show');
+       $('#mode').attr("disabled", "disabled");
+       $('#transactionId').attr("readonly", true);
+    } else {
+        $('.alert').hide();
+        $('.alert').removeClass('show');
+        $('#mode').removeAttr("disabled");
+        $('#transactionId').removeAttr("readonly");
+    }
 }
 
 function createStudent(e) {

@@ -323,7 +323,16 @@ public class WelcomeController {
 				ct.id = year + "-" + String.valueOf(year+1).substring(2);
 				ct.nextId++;
 			}
-			
+			if (payment.purpose.equals("Concession")) {
+				student.courseFee -= payment.amount;
+				payment.isActive = false;
+				ChangeHistory ch = new ChangeHistory();
+				ch.time = DateTime.now();
+				ch.user = request.getRemoteUser();
+				ch.operationType = ChangeHistory.Operation.MODIFIED;
+				ch.message = "Concession given. Amount: " + payment.amount;
+				student.changeHistory.add(ch);
+			}
 			payment.paymentId = ct.id + "/" + String.format("%05d", ct.nextId);
 			payment.transactionDate = (DateTime) DateTime.now().withZone(DateTimeZone.forID("Asia/Kolkata"));
 			payment.acceptedBy = request.getRemoteUser();
@@ -600,6 +609,16 @@ public class WelcomeController {
 			ct = new Counter();
 			ct.id = year + "-" + String.valueOf(year+1).substring(2);
 			ct.nextId++;
+		}
+
+		if (pt.purpose.equals("Concession")) {
+			student.courseFee += pt.amount;
+			ChangeHistory ch = new ChangeHistory();
+			ch.time = DateTime.now();
+			ch.user = request.getRemoteUser();
+			ch.operationType = ChangeHistory.Operation.MODIFIED;
+			ch.message = "Concession withdrawn. Amount: " + pt.amount;
+			student.changeHistory.add(ch);
 		}
 
 		reversePt.paymentId = ct.id + "/" + String.format("%05d", ct.nextId);
