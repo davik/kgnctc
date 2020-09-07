@@ -1,0 +1,24 @@
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>ID</th>
+			<th>Name</th>
+			<th>Course</th>
+			<th>Session</th>
+			<th>Mobile</th>
+			<th>Course Fee</th>
+		</tr>
+	</thead>
+	<tbody id ="studentTable">
+		{{#students}}
+		<tr>
+			<td><a href="#" id="{{id}}" onclick="fetchPaymentDetail(this.id);">{{id}}</a></td>
+			<td>{{name}}</td>
+			<td>{{course}}</td>
+			<td>{{session}}</td>
+			<td>{{mobile}}</td>
+			<td>{{courseFee}}</td>
+		</tr>
+		{{/students}}
+	</tbody>
+</table>

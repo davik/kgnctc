@@ -1,0 +1,74 @@
+{{>layout/header}}
+<body>
+	<div class="wrapper">
+		<div class="container">
+			<div class="row">
+				{{>layout/navbar}}
+			</div>
+			<div class="row">
+				{{>layout/sidebar}}
+				
+				<!-- responsive equal width cols, can be sm, md, lg, or xl -->
+				
+				<div class="col-md-10">
+					<button type="button" class="btn btn-warning">
+						SMS Balance <span class="badge badge-light">{{balanceSMS}}</span>
+					</button>
+					<button type="button" class="btn btn-success">
+						SMS Sent <span class="badge badge-light">{{sentSMS}}</span>
+					</button>
+					
+					<nav class="pt-2">
+						<div class="nav nav-tabs" id="nav-tab" role="tablist">
+							<a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Send Notice</a>
+						</div>
+					</nav>
+					<div class="tab-content" id="nav-tabContent">
+						<div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+							<form class="form-inline pt-4">
+								<div class="col-md-4">
+									<div class="input-group mb-3">
+										<div class="input-group-prepend">
+											<label class="input-group-text" for="session">Session</label>
+										</div>
+										<select class="custom-select" id="session" onchange="changeAncAttSess();">
+											<option value="2018-20">2018-20</option>
+											<option value="2019-21">2019-21</option>
+											<option value="2020-22">2020-22</option>
+										</select>
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="input-group mb-3">
+										<div class="input-group-prepend">
+											<label class="input-group-text" for="course">Course</label>
+										</div>
+										<select class="custom-select" id="course" onchange="changeAncAttSess();">
+											<option value="B.Ed">B.Ed</option>
+											<option value="D.El.Ed">D.El.Ed</option>
+										</select>
+									</div>
+								</div>
+							</form>
+							<div class="input-group col-md-8">
+								<div class="input-group-prepend">
+									<span class="input-group-text">This is hereby notified that</span>
+								</div>
+								<textarea class="form-control" aria-label="With textarea" id="smsBody"></textarea>
+							</div>
+							<div class="input-group col-md-2">
+								<button type="submit" class="btn btn-primary mt-3" id="smsButton" onclick="sendSMS();">Send SMS</button>
+							</div>
+
+							
+							<div id="msg" class="py-4"></div>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+	<!-- /.container -->
+</body>
+{{>layout/footer}}

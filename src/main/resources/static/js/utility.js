@@ -32,6 +32,8 @@ function call(e, path) {
 }
 
 function showPaymentForm() {
+    $('.alert').hide();
+    $('#msgPayment').hide();
     $('#paymentForm').show();
     $('html,body').animate({
         scrollTop: $("#paymentForm").offset().top
@@ -48,7 +50,8 @@ function downloadInvoice(paymentid) {
         });
 }
 
-function createPayment() {
+function createPayment(event) {
+	$('#paymentButton').prop('disabled', true);
     let payment = {
         transactionId: $("#transactionId").val(),
         amount: $("#amount").val(),
@@ -75,6 +78,33 @@ function createPayment() {
             }, 3000);
             $("#transactionId").val(''),
                 $("#amount").val('');
+        },
+        contentType: "application/json"
+    });
+}
+
+function sendSMS() {
+    $('#smsButton').prop('disabled', true);
+    let sms = {
+        course: $("#course").val(),
+        session: $("#session").val(),
+        message: $("#smsBody").val()
+    };
+    console.log(sms);
+
+    $.ajax({
+        type: "POST",
+        url: "/sendSMS",
+        data: JSON.stringify(sms),
+        success: function(data) {
+            $("#msg").show();
+            $('#msg').html(data);
+            $('html,body').animate({
+                scrollTop: $("#msg").offset().top
+            }, 'slow');
+            setTimeout(function() {
+                $("#msg").hide();
+            }, 3000);
         },
         contentType: "application/json"
     });
@@ -109,6 +139,35 @@ function changeAncAttDailyCollection() {
                 to: $('#to').val()
             });
     $('#collectionReport').attr({target: '_blank', href: url});
+}
+
+function fetchStudents() {
+    let url = '/studentList?' + $.param({
+                course: $('#course').val(),
+                session: $('#session').val()
+            });
+    $.ajax({
+        type: "GET",
+        url: url,
+        success: function(data) {
+            $(".table").html(data);
+        },
+        contentType: "application/json"
+    });
+}
+
+function onPaymentCh() {
+    if ($('#purpose').val() == 'Concession') {
+       $('.alert').show();
+       $('.alert').addClass('show');
+       $('#mode').attr("disabled", "disabled");
+       $('#transactionId').attr("readonly", true);
+    } else {
+        $('.alert').hide();
+        $('.alert').removeClass('show');
+        $('#mode').removeAttr("disabled");
+        $('#transactionId').removeAttr("readonly");
+    }
 }
 
 function createStudent(e) {

@@ -20,67 +20,67 @@
 					</nav>
 					<div class="tab-content" id="nav-tabContent">
 						<div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-							<div class="col-md-5 pb-4 pt-4">
-								<div class="input-group">
+							<div class="pb-4 pt-4 row row-list">
+
+								<div class="input-group col-md-6">
 									<input type="text" class="form-control" placeholder="Search.." id="studentSearch">
 								</div>
-							</div>
-							<table class="table table-striped">
-								<thead>
-									<tr>
-										<th>Id</th>
-										<th>Name</th>
-										<th>Course</th>
-										<th>Session</th>
-										<th>Mobile</th>
-										<th>Course Fee</th>
-									</tr>
-								</thead>
-								<tbody id ="studentTable">
-									{{#students}}
-									<tr>
-										<td><a href="#" id="{{id}}" onclick="fetchPaymentDetail(this.id);">{{id}}</a></td>
-										<td>{{name}}</td>
-										<td>{{course}}</td>
-										<td>{{session}}</td>
-										<td>{{mobile}}</td>
-										<td>{{courseFee}}</td>
-									</tr>
-									{{/students}}
-								</tbody>
-							</table>
-						</div>
-						<div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-							<div class="col-md-5 pt-4">
-								<div class="input-group">
-									<input type="text" class="form-control" placeholder="Student Id" id="id">
-									<span class="input-group-btn">
-										<button class="btn btn-secondary" type="button" id="idSearch">Go!</button>
-									</span>
+								<div class="input-group col-md-3">
+									<div class="input-group-prepend">
+										<label class="input-group-text" for="session">Session</label>
+									</div>
+									<select class="custom-select" id="session" onchange="fetchStudents();">
+										<option value="">--Select--</option>
+										<option value="2018-20">2018-20</option>
+										<option value="2019-21">2019-21</option>
+										<option value="2020-22">2020-22</option>
+									</select>
 								</div>
-							</div>
-							<div class="col-md-10" id="paymentDetail"  class="py-4">
-							</div>
-						</div>
-						<div class="tab-pane fade" id="nav-edit" role="tabpanel" aria-labelledby="nav-edit-tab">
-							<div class="col-md-5 pt-4">
-								<div class="input-group">
-									<input type="text" class="form-control" placeholder="Student Id" id="idStudent">
-									<span class="input-group-btn">
-										<button class="btn btn-secondary" type="button" id="idSearchEdit">Go!</button>
-									</span>
+								<div class="input-group col-md-3">
+									<div class="input-group-prepend">
+										<label class="input-group-text" for="course">Course</label>
+									</div>
+									<select class="custom-select" id="course" onchange="fetchStudents();">
+										<option value="">--Select--</option>
+										<option value="B.Ed">B.Ed</option>
+										<option value="D.El.Ed">D.El.Ed</option>
+									</select>
 								</div>
+
 							</div>
-							<div id="studentDetail" class="py-4">
-							</div>
+					{{>studentList}}
+				</div>
+				<div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+					<div class="col-md-5 pt-4">
+						<div class="input-group">
+							<input type="text" class="form-control" placeholder="Student Id" id="id">
+							<span class="input-group-btn">
+								<button class="btn btn-secondary" type="button" id="idSearch">Go!</button>
+							</span>
 						</div>
 					</div>
-					
+					<div class="col-md-10" id="paymentDetail"  class="py-4">
+					</div>
 				</div>
-				
+				<div class="tab-pane fade" id="nav-edit" role="tabpanel" aria-labelledby="nav-edit-tab">
+					<div class="col-md-5 pt-4">
+						<div class="input-group">
+							<input type="text" class="form-control" placeholder="Student Id" id="idStudent">
+							<span class="input-group-btn">
+								<button class="btn btn-secondary" type="button" id="idSearchEdit">Go!</button>
+							</span>
+						</div>
+					</div>
+					<div id="studentDetail" class="py-4">
+					</div>
+				</div>
 			</div>
+
 		</div>
+
 	</div>
-	<!-- /.container -->
+</div>
+</div>
+<!-- /.container -->
 </body>
 {{>layout/footer}}

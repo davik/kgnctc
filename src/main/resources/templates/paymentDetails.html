@@ -24,9 +24,13 @@
 		</h5>
 	</div>
 	<div class="card-body">
+		<h4 class="card-title">
+			<span class="badge">Status: {{status}}</span>
+		</h4>
 		<h5 class="card-title">
-			<span class="badge badge-warning">Due Amount : &#x20b9; {{due}}</span>
-			<span class="badge badge-primary">Course Fee : &#x20b9; {{courseFee}}</span>
+
+			<span class="badge badge-warning">Due Amount: &#x20b9; {{due}}</span>
+			<span class="badge badge-primary">Course Fee: &#x20b9; {{courseFee}}</span>
 		</h5>
 		<a href="tel:{{mobile}}" class="card-text">
 			<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-telephone-outbound-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -93,16 +97,20 @@
 	</tr>
 	{{/payments}}
 </table>
+<div class="alert alert-warning alert-dismissible fade" role="alert">
+  <strong>Alert!</strong> Course Fee will be decreased by concession amount!
+</div>
 <div class="col-md-12 border border-dark py-3 my-3" id="paymentForm">
 	<legend>Payment Form</legend>
 	<div class="form-row">
 		<div class="form-group col-md-3">
 			<label for="purpose">Purpose</label>
-			<select id="purpose" class="form-control">
+			<select id="purpose" class="form-control" onchange="onPaymentCh();">
 				<option>Admission Fee</option>
 				<option>Registration Fee</option>
 				<option>Course Fee</option>
 				<option>Examination Fee</option>
+				<option>Concession</option>
 			</select>
 		</div>
 		<div class="form-group col-md-3">
