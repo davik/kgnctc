@@ -38,13 +38,19 @@ import com.opencsv.CSVWriter;
 import com.quickml.pojos.ChangeHistory;
 import com.quickml.pojos.Counter;
 import com.quickml.pojos.Payment;
+import com.quickml.pojos.SMSDTO;
 import com.quickml.pojos.Student;
 import com.quickml.pojos.StudentDTO;
 import com.quickml.pojos.User;
+import com.quickml.pojos.smstemplate.NoticeBody;
+import com.quickml.pojos.smstemplate.PaymentBody;
+import com.quickml.pojos.smstemplate.RegistrationBody;
+import com.quickml.pojos.smstemplate.RootTemplate;
 import com.quickml.repository.CounterRepository;
 import com.quickml.repository.StudentRepository;
 import com.quickml.repository.UserRepository;
 import com.quickml.utils.Currency;
+import com.quickml.utils.SMS;
 
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRException;
@@ -89,6 +95,12 @@ public class WelcomeController {
 	@Value("${app.college.email}")
 	private String collegeEmail = "";
 	
+	@Value("${app.college.sms}")
+	private String smsEnabled = "";
+
+	@Value("${app.college.smscount}")
+	private int smsProvisionCount = 0;
+	
 	@Autowired
 	public final StudentRepository studRepo;
 	@Autowired
@@ -96,6 +108,8 @@ public class WelcomeController {
 	@Autowired
 	public final UserRepository userRepo;
 	public static final DateTimeFormatter dtfOut = DateTimeFormat.forPattern("MM/dd/yyyy");
+
+	SMS sms = new SMS();
 
 	@RequestMapping("/")
 	public String welcome(Map<String, Object> model, HttpServletRequest request) {
@@ -197,7 +211,22 @@ public class WelcomeController {
 		ch.operationType = ChangeHistory.Operation.CREATED;
 		
 		student.changeHistory.add(ch);
-    	studRepo.save(student);
+    	Student savedEntity = studRepo.save(student);
+    	if (null != savedEntity) {
+    		RegistrationBody rb = new RegistrationBody();
+    		rb.id = savedEntity.id;
+    		rb.name = savedEntity.name;
+    		rb.mobiles = "91" + savedEntity.mobile;
+    		rb.course = savedEntity.course;
+    		rb.session = savedEntity.session;
+    		rb.fee = Double.toString(savedEntity.courseFee);
+    		rb.college = collegeShortName;
+    		RootTemplate<RegistrationBody> template = new RootTemplate<RegistrationBody>();
+    		template.flowType = RootTemplate.FlowType.REGISTRATION;
+    		template.recipients = new ArrayList<RegistrationBody>();
+    		template.recipients.add(rb);
+    		sms.send(template, smsEnabled, collegeShortName, smsProvisionCount, counterRepo);
+    	}
     	
     	model.put("alert", "alert alert-success");
     	model.put("result", "Student Registered Successfully!");
@@ -227,8 +256,8 @@ public class WelcomeController {
 			@RequestParam(value = "course", defaultValue = "B.Ed") String course,
 			@RequestParam(value = "session", defaultValue = "2018-20") String session) throws IOException {
 		populateCommonPageFields(model, request);
-		
-		List<Student> students = studRepo.findByCourseAndSession(course, session);
+
+		List<Student> students = studRepo.findAll();
 		model.put("students", students);
 		return "students";
 	}
@@ -236,11 +265,16 @@ public class WelcomeController {
 	@RequestMapping(value = "/studentList", method=RequestMethod.GET)
 	String getStudentList(Map<String, Object> model,
 			HttpServletRequest request,
-			@RequestParam(value = "course", defaultValue = "B.Ed") String course,
-			@RequestParam(value = "session", defaultValue = "2018-20") String session) throws IOException {
+			@RequestParam(value = "course") String course,
+			@RequestParam(value = "session") String session) throws IOException {
 		populateCommonPageFields(model, request);
 
-		List<Student> students = studRepo.findByCourseAndSession(course, session);
+		List<Student> students;
+		if (course.isEmpty() || session.isEmpty()) {
+			students = studRepo.findAll();
+		} else {
+			students = studRepo.findByCourseAndSession(course, session);
+		}
 		model.put("students", students);
 		return "studentList";
 	}
@@ -257,6 +291,24 @@ public class WelcomeController {
 			HttpServletRequest request) throws IOException {
 		populateCommonPageFields(model, request);
 		return "report";
+	}
+
+	@RequestMapping(value = "/communication", method=RequestMethod.GET)
+	String getCommPage(Map<String, Object> model,
+			HttpServletRequest request) throws IOException {
+		populateCommonPageFields(model, request);
+
+		Counter ct = counterRepo.findOne("SMS");
+		if (null == ct) {
+			model.put("sentSMS", 0);
+			ct = new Counter();
+			ct.id = "SMS";
+			ct.nextId = 0;
+			counterRepo.save(ct);
+		}
+		model.put("sentSMS", ct.nextId);
+		model.put("balanceSMS", smsProvisionCount - ct.nextId);
+		return "communication";
 	}
 	
 	@RequestMapping(value = "/paymentDetails", method=RequestMethod.GET)
@@ -275,7 +327,8 @@ public class WelcomeController {
 			if (null != payments) {
 				for (Payment payment : payments) {
 					if (payment.purpose.equals("Examination Fee") ||
-						payment.purpose.equals("Registration Fee")) {
+						payment.purpose.equals("Registration Fee") ||
+						payment.purpose.equals("Concession")) {
 						continue;
 					}
 					paid += payment.amount;
@@ -340,7 +393,32 @@ public class WelcomeController {
 			
 			ct.nextId++;
 			counterRepo.save(ct);
-			studRepo.save(student);
+			Student savedEntity = studRepo.save(student);
+			if (null != savedEntity) {
+				// Evaluate Due amount
+				double due = 0;
+				double paid = 0;
+				for (Payment pt : savedEntity.payments) {
+					if (pt.purpose.equals("Concession")) {
+						continue;
+					}
+					paid += pt.amount;
+				}
+				due = savedEntity.courseFee - paid;
+
+	    		PaymentBody pb = new PaymentBody();
+	    		pb.mobiles = "91" + savedEntity.mobile;
+	    		pb.paymentId = payment.paymentId;
+	    		pb.purpose = payment.purpose;
+	    		pb.amount = Double.toString(payment.amount);
+	    		pb.mode = payment.mode;
+	    		pb.due = Double.toString(due);
+	    		RootTemplate<PaymentBody> template = new RootTemplate<PaymentBody>();
+	    		template.flowType = RootTemplate.FlowType.PAYMENT;
+	    		template.recipients = new ArrayList<PaymentBody>();
+	    		template.recipients.add(pb);
+	    		sms.send(template, smsEnabled, collegeShortName, smsProvisionCount, counterRepo);
+	    	}
 		}
 		model.put("alert", "alert alert-success");
     	model.put("result", "Payment Information Recorded Successfully!");
@@ -901,5 +979,37 @@ public class WelcomeController {
 
 		FileCopyUtils.copy(inputStream, response.getOutputStream());
 		response.flushBuffer();
+	}
+
+	@RequestMapping(value = "/sendSMS", method=RequestMethod.POST)
+	String sendSMS(Map<String, Object> model,
+			@RequestBody SMSDTO smsDTO,
+			HttpServletRequest request) throws IOException {
+		populateCommonPageFields(model, request);
+		List<Student> students = studRepo.findByCourseAndSession(smsDTO.course, smsDTO.session);
+		if (null == students) {
+			model.put("alert", "alert alert-danger");
+			model.put("result", "No Students found!");
+			return "message";
+		}
+		RootTemplate<NoticeBody> template = new RootTemplate<NoticeBody>();
+		template.flowType = RootTemplate.FlowType.NOTICE;
+		template.recipients = new ArrayList<NoticeBody>();
+		for (Student st : students) {
+			NoticeBody nb = new NoticeBody();
+			nb.mobiles = "91" + st.mobile;
+			nb.message = smsDTO.message;
+			template.recipients.add(nb);
+		}
+		String msg = sms.send(template, smsEnabled, collegeShortName, smsProvisionCount, counterRepo);
+		if (!msg.isEmpty()) {
+			model.put("alert", "alert alert-danger");
+			model.put("result", msg);
+			return "message";
+		}
+
+		model.put("alert", "alert alert-success");
+    	model.put("result", "SMSs are being sent");
+    	return "message";
 	}
 }

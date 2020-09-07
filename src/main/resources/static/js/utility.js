@@ -83,6 +83,33 @@ function createPayment(event) {
     });
 }
 
+function sendSMS() {
+    $('#smsButton').prop('disabled', true);
+    let sms = {
+        course: $("#course").val(),
+        session: $("#session").val(),
+        message: $("#smsBody").val()
+    };
+    console.log(sms);
+
+    $.ajax({
+        type: "POST",
+        url: "/sendSMS",
+        data: JSON.stringify(sms),
+        success: function(data) {
+            $("#msg").show();
+            $('#msg').html(data);
+            $('html,body').animate({
+                scrollTop: $("#msg").offset().top
+            }, 'slow');
+            setTimeout(function() {
+                $("#msg").hide();
+            }, 3000);
+        },
+        contentType: "application/json"
+    });
+}
+
 function changeAncAttSess() {
     let url = '/payDueReport?' + $.param({
                 course: $('#course').val(),
