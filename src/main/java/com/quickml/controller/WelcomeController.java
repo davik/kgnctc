@@ -123,9 +123,11 @@ public class WelcomeController {
 		double bedAmount = 0, dedAmount = 0;
 		for (Student st : students) {
 			boolean bed = false, ded = false; 
-			
+
 			for (Payment pt : st.payments) {
-				if (pt.transactionDate.getDayOfMonth() == from.getDayOfMonth() && pt.isActive) {
+				if (pt.transactionDate.isAfter(from) &&
+						pt.transactionDate.isBefore(to) &&
+						pt.isActive) {
 					if (st.course.equalsIgnoreCase("B.Ed")) {
 						bedInvoiceCount++;
 						bed = true;
