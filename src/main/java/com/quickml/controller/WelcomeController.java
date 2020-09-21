@@ -1003,6 +1003,13 @@ public class WelcomeController {
 			nb.message = smsDTO.message;
 			template.recipients.add(nb);
 		}
+		String[] additionalNumbers = smsDTO.additionalNumbers.split(",");
+		for (String number : additionalNumbers) {
+			NoticeBody nb = new NoticeBody();
+			nb.mobiles = "91" + number.trim();
+			nb.message = smsDTO.message;
+			template.recipients.add(nb);
+		}
 		String msg = sms.send(template, smsEnabled, collegeShortName, smsProvisionCount, counterRepo);
 		if (!msg.isEmpty()) {
 			model.put("alert", "alert alert-danger");

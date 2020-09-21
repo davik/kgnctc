@@ -88,6 +88,7 @@ function sendSMS() {
     let sms = {
         course: $("#course").val(),
         session: $("#session").val(),
+        additionalNumbers: $("#additionalNumbers").val(),
         message: $("#smsBody").val()
     };
     console.log(sms);
