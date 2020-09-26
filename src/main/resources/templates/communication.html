@@ -50,7 +50,13 @@
 									</div>
 								</div>
 							</form>
-							<div class="input-group col-md-8">
+							<div class="form-check">
+								<input class="form-check-input ml-1" type="checkbox" value="" id="onlyAddiNumbers" onchange="handleAddiNumChk();">
+								<label class="form-check-label ml-4" for="onlyAddiNumbers">
+									Send only to the Additional Numbers
+								</label>
+							</div>
+							<div class="input-group col-md-8 mt-3">
 								<div class="input-group-prepend">
 									<span class="input-group-text">Additional Numbers</span>
 								</div>
@@ -58,9 +64,13 @@
 							</div>
 							<div class="input-group col-md-8 mt-3">
 								<div class="input-group-prepend">
-									<span class="input-group-text">This is hereby notified that</span>
+									<span class="input-group-text" id="smsPrefix">This is hereby notified that</span>
 								</div>
 								<textarea class="form-control" aria-label="With textarea" id="smsBody"></textarea>
+							</div>
+							<div id="the-count" class="col-md-5">
+							  	<span id="current">0</span>
+							    <span id="maximum">/ 160</span>
 							</div>
 							<div class="input-group col-md-2">
 								<button type="submit" class="btn btn-primary mt-3" id="smsButton" onclick="sendSMS();">Send SMS</button>

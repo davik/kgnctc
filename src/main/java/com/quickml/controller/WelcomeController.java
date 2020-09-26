@@ -988,20 +988,23 @@ public class WelcomeController {
 			@RequestBody SMSDTO smsDTO,
 			HttpServletRequest request) throws IOException {
 		populateCommonPageFields(model, request);
-		List<Student> students = studRepo.findByCourseAndSession(smsDTO.course, smsDTO.session);
-		if (null == students) {
-			model.put("alert", "alert alert-danger");
-			model.put("result", "No Students found!");
-			return "message";
-		}
 		RootTemplate<NoticeBody> template = new RootTemplate<NoticeBody>();
 		template.flowType = RootTemplate.FlowType.NOTICE;
 		template.recipients = new ArrayList<NoticeBody>();
-		for (Student st : students) {
-			NoticeBody nb = new NoticeBody();
-			nb.mobiles = "91" + st.mobile;
-			nb.message = smsDTO.message;
-			template.recipients.add(nb);
+
+		if (!smsDTO.onlyAddiNumbers) {
+			List<Student> students = studRepo.findByCourseAndSession(smsDTO.course, smsDTO.session);
+			if (null == students) {
+				model.put("alert", "alert alert-danger");
+				model.put("result", "No Students found!");
+				return "message";
+			}
+			for (Student st : students) {
+				NoticeBody nb = new NoticeBody();
+				nb.mobiles = "91" + st.mobile;
+				nb.message = smsDTO.message;
+				template.recipients.add(nb);
+			}
 		}
 		String[] additionalNumbers = smsDTO.additionalNumbers.split(",");
 		for (String number : additionalNumbers) {

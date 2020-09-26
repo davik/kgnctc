@@ -83,11 +83,22 @@ function createPayment(event) {
     });
 }
 
+function handleAddiNumChk() {
+    if ($('#onlyAddiNumbers').is(':checked')) {
+        $("#course").prop("disabled", true);
+        $("#session").prop("disabled", true);
+    } else {
+        $("#course").prop("disabled", false);
+        $("#session").prop("disabled", false);
+    }
+}
+
 function sendSMS() {
     $('#smsButton').prop('disabled', true);
     let sms = {
         course: $("#course").val(),
         session: $("#session").val(),
+        onlyAddiNumbers: $('#onlyAddiNumbers').is(':checked'),
         additionalNumbers: $("#additionalNumbers").val(),
         message: $("#smsBody").val()
     };
@@ -387,4 +398,28 @@ $(document).ready(function() {
         today = yyyy+'-'+mm+'-'+dd;
         return today;
     }});
+
+    
+    $('#smsBody').keyup(function() {
+        var characterCount = $('#smsPrefix').text().length + $(this).val().length,
+          current = $('#current'),
+          maximum = $('#maximum'),
+          theCount = $('#the-count');
+
+        current.text(characterCount);
+
+        if (characterCount > 160) {
+            maximum.css('color', '#8f0001');
+            current.css('color', '#8f0001');
+            theCount.css('font-weight','bold');
+            $('#smsButton').prop('disabled', true);
+        } else {
+            maximum.css('color', '#666');
+            current.css('color', '#666');
+            theCount.css('font-weight','normal');
+            $('#smsButton').prop('disabled', false);
+        }
+
+          
+    });
 });
