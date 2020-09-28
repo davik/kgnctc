@@ -64,13 +64,20 @@
 							</div>
 							<div class="input-group col-md-8 mt-3">
 								<div class="input-group-prepend">
-									<span class="input-group-text" id="smsPrefix">This is hereby notified that</span>
+									<label class="input-group-text" for="noticePrefix">Notice Prefix</label>
 								</div>
+								<select class="custom-select" id="noticePrefix">
+									<option selected value="1">This is hereby notified that</option>
+									<option value="2">Eto dara aponader janano jachhe je</option>
+								</select>
+							</div>
+							<div class="form-group col-md-8 mt-3">
+								<label for="smsBody">Notice Content</label>
 								<textarea class="form-control" aria-label="With textarea" id="smsBody"></textarea>
 							</div>
 							<div id="the-count" class="col-md-5">
-							  	<span id="current">0</span>
-							    <span id="maximum">/ 160</span>
+								<span id="current">0</span>
+								<span id="maximum">/ 160</span>
 							</div>
 							<div class="input-group col-md-2">
 								<button type="submit" class="btn btn-primary mt-3" id="smsButton" onclick="sendSMS();">Send SMS</button>

@@ -415,6 +415,7 @@ public class WelcomeController {
 	    		pb.amount = Double.toString(payment.amount);
 	    		pb.mode = payment.mode;
 	    		pb.due = Double.toString(due);
+	    		pb.college = collegeShortName;
 	    		RootTemplate<PaymentBody> template = new RootTemplate<PaymentBody>();
 	    		template.flowType = RootTemplate.FlowType.PAYMENT;
 	    		template.recipients = new ArrayList<PaymentBody>();
@@ -989,7 +990,11 @@ public class WelcomeController {
 			HttpServletRequest request) throws IOException {
 		populateCommonPageFields(model, request);
 		RootTemplate<NoticeBody> template = new RootTemplate<NoticeBody>();
-		template.flowType = RootTemplate.FlowType.NOTICE;
+		if (smsDTO.noticePrefix.equals("1")) {
+			template.flowType = RootTemplate.FlowType.NOTICE_ENG;
+		} else {
+			template.flowType = RootTemplate.FlowType.NOTICE_BNG;
+		}
 		template.recipients = new ArrayList<NoticeBody>();
 
 		if (!smsDTO.onlyAddiNumbers) {

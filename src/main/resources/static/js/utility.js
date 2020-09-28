@@ -100,6 +100,7 @@ function sendSMS() {
         session: $("#session").val(),
         onlyAddiNumbers: $('#onlyAddiNumbers').is(':checked'),
         additionalNumbers: $("#additionalNumbers").val(),
+        noticePrefix: $("#noticePrefix").val(),
         message: $("#smsBody").val()
     };
     console.log(sms);
@@ -401,7 +402,7 @@ $(document).ready(function() {
 
     
     $('#smsBody').keyup(function() {
-        var characterCount = $('#smsPrefix').text().length + $(this).val().length,
+        var characterCount = $('#noticePrefix option:selected').text().length + $(this).val().length,
           current = $('#current'),
           maximum = $('#maximum'),
           theCount = $('#the-count');

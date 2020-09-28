@@ -5,5 +5,6 @@ public class SMSDTO {
 	public String session;
 	public boolean onlyAddiNumbers;
 	public String additionalNumbers;
+	public String noticePrefix;
 	public String message;
 }

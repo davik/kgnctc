@@ -8,4 +8,5 @@ public class PaymentBody {
 	public String mode;
 	public String due;
 	public String id;
+	public String college;
 }
