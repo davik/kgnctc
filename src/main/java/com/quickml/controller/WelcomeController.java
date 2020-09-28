@@ -123,9 +123,11 @@ public class WelcomeController {
 		double bedAmount = 0, dedAmount = 0;
 		for (Student st : students) {
 			boolean bed = false, ded = false; 
-			
+
 			for (Payment pt : st.payments) {
-				if (pt.transactionDate.getDayOfMonth() == from.getDayOfMonth() && pt.isActive) {
+				if (pt.transactionDate.isAfter(from) &&
+						pt.transactionDate.isBefore(to) &&
+						pt.isActive) {
 					if (st.course.equalsIgnoreCase("B.Ed")) {
 						bedInvoiceCount++;
 						bed = true;
@@ -413,6 +415,7 @@ public class WelcomeController {
 	    		pb.amount = Double.toString(payment.amount);
 	    		pb.mode = payment.mode;
 	    		pb.due = Double.toString(due);
+	    		pb.college = collegeShortName;
 	    		RootTemplate<PaymentBody> template = new RootTemplate<PaymentBody>();
 	    		template.flowType = RootTemplate.FlowType.PAYMENT;
 	    		template.recipients = new ArrayList<PaymentBody>();
@@ -986,18 +989,32 @@ public class WelcomeController {
 			@RequestBody SMSDTO smsDTO,
 			HttpServletRequest request) throws IOException {
 		populateCommonPageFields(model, request);
-		List<Student> students = studRepo.findByCourseAndSession(smsDTO.course, smsDTO.session);
-		if (null == students) {
-			model.put("alert", "alert alert-danger");
-			model.put("result", "No Students found!");
-			return "message";
-		}
 		RootTemplate<NoticeBody> template = new RootTemplate<NoticeBody>();
-		template.flowType = RootTemplate.FlowType.NOTICE;
+		if (smsDTO.noticePrefix.equals("1")) {
+			template.flowType = RootTemplate.FlowType.NOTICE_ENG;
+		} else {
+			template.flowType = RootTemplate.FlowType.NOTICE_BNG;
+		}
 		template.recipients = new ArrayList<NoticeBody>();
-		for (Student st : students) {
+
+		if (!smsDTO.onlyAddiNumbers) {
+			List<Student> students = studRepo.findByCourseAndSession(smsDTO.course, smsDTO.session);
+			if (null == students) {
+				model.put("alert", "alert alert-danger");
+				model.put("result", "No Students found!");
+				return "message";
+			}
+			for (Student st : students) {
+				NoticeBody nb = new NoticeBody();
+				nb.mobiles = "91" + st.mobile;
+				nb.message = smsDTO.message;
+				template.recipients.add(nb);
+			}
+		}
+		String[] additionalNumbers = smsDTO.additionalNumbers.split(",");
+		for (String number : additionalNumbers) {
 			NoticeBody nb = new NoticeBody();
-			nb.mobiles = "91" + st.mobile;
+			nb.mobiles = "91" + number.trim();
 			nb.message = smsDTO.message;
 			template.recipients.add(nb);
 		}

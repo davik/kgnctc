@@ -12,7 +12,8 @@ public class RootTemplate<T> {
 	public enum FlowType {
 		REGISTRATION,
 		PAYMENT,
-		NOTICE
+		NOTICE_ENG,
+		NOTICE_BNG
 	}
 	@JsonIgnore
 	public FlowType flowType;

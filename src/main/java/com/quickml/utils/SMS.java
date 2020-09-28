@@ -29,8 +29,9 @@ public class SMS {
 
 	public SMS() {
 		flowIdMap.put(RootTemplate.FlowType.REGISTRATION, "5f545d1e2bb121244559a3bd");
-		flowIdMap.put(RootTemplate.FlowType.PAYMENT, "5f546c470b0b813f3f3d7335");
-		flowIdMap.put(RootTemplate.FlowType.NOTICE, "5f54c95a9723df6c7265715e");
+		flowIdMap.put(RootTemplate.FlowType.PAYMENT, "5f701e4f0eb7f77937303f2e");
+		flowIdMap.put(RootTemplate.FlowType.NOTICE_ENG, "5f54c95a9723df6c7265715e");
+		flowIdMap.put(RootTemplate.FlowType.NOTICE_BNG, "5f701d19e6582708913a9b45");
 	}
 	
 	String post(String json) throws IOException {
