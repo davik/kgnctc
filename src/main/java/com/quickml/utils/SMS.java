@@ -51,6 +51,14 @@ public class SMS {
 			String senderId,
 			int smsProvisionCount,
 			CounterRepository counterRepo) {
+		return send(template, smsEnabled, senderId, smsProvisionCount, counterRepo, 1);
+	}
+	public String send(RootTemplate template,
+			String smsEnabled,
+			String senderId,
+			int smsProvisionCount,
+			CounterRepository counterRepo,
+			int perSMSCredit) {
 		System.out.println("SMS enabled" + smsEnabled);
 		if (!smsEnabled.equals("YES")) {
 			return "SMS is not enabled";
@@ -76,7 +84,7 @@ public class SMS {
 			try {
 				String rsp = post(json);
 				System.out.println(rsp);
-				smsCount.nextId = smsCount.nextId + template.recipients.size();
+				smsCount.nextId = smsCount.nextId + (template.recipients.size() * perSMSCredit);
 				counterRepo.save(smsCount);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

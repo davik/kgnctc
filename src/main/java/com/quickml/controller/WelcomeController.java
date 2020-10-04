@@ -42,6 +42,7 @@ import com.quickml.pojos.SMSDTO;
 import com.quickml.pojos.Student;
 import com.quickml.pojos.StudentDTO;
 import com.quickml.pojos.User;
+import com.quickml.pojos.smstemplate.DueReminderBody;
 import com.quickml.pojos.smstemplate.NoticeBody;
 import com.quickml.pojos.smstemplate.PaymentBody;
 import com.quickml.pojos.smstemplate.RegistrationBody;
@@ -324,19 +325,8 @@ public class WelcomeController {
 			model.put("alert", "alert alert-danger");
 			model.put("result", "Student not found!");
 		} else {
-			ArrayList<Payment> payments = student.payments;
-			double paid = 0;
-			if (null != payments) {
-				for (Payment payment : payments) {
-					if (payment.purpose.equals("Examination Fee") ||
-						payment.purpose.equals("Registration Fee") ||
-						payment.purpose.equals("Concession")) {
-						continue;
-					}
-					paid += payment.amount;
-				}
-			}
-			model.put("due", student.courseFee - paid);
+			
+			model.put("due", student.courseFee - GetPaid(student));
 			model.put("student", student);
 		}
 		return "paymentDetails";
@@ -554,17 +544,7 @@ public class WelcomeController {
 	        List<String[]> data = new ArrayList<String[]>(); 
 	        data.add(new String[] { "StudentID", "Name", "Mobile", "CourseFee", "Paid", "Due" });
 	        for (Student st : students) {
-				ArrayList<Payment> payments = st.payments;
-				double paid = 0;
-				if (null != payments) {
-					for (Payment payment : payments) {
-						if (payment.purpose.equals("Examination Fee") ||
-							payment.purpose.equals("Registration Fee")) {
-							continue;
-						}
-						paid += payment.amount;
-					}
-				}
+				double paid = GetPaid(st);
 				// Add Student Details
 				data.add(new String[] {st.id,
 						st.name,
@@ -1018,7 +998,9 @@ public class WelcomeController {
 			nb.message = smsDTO.message;
 			template.recipients.add(nb);
 		}
-		String msg = sms.send(template, smsEnabled, collegeShortName, smsProvisionCount, counterRepo);
+		int perSMSCredit = ((smsDTO.prefixLength + smsDTO.message.length()) / 160) + 1;
+		String msg = sms.send(template, smsEnabled, collegeShortName,
+				smsProvisionCount, counterRepo, perSMSCredit);
 		if (!msg.isEmpty()) {
 			model.put("alert", "alert alert-danger");
 			model.put("result", msg);
@@ -1028,5 +1010,56 @@ public class WelcomeController {
 		model.put("alert", "alert alert-success");
     	model.put("result", "SMSs are being sent");
     	return "message";
+	}
+
+	@RequestMapping(value = "/remindDue", method=RequestMethod.GET)
+	String sendDueReminderSMS(Map<String, Object> model,
+			@RequestParam(name = "id") String studentId,
+			HttpServletRequest request) throws IOException {
+		populateCommonPageFields(model, request);
+		Student student = studRepo.findOne(studentId);
+		if (null == student) {
+			model.put("alert", "alert alert-danger");
+			model.put("result", "Student not found!");
+			return "message";
+		}
+		RootTemplate<DueReminderBody> template = new RootTemplate<DueReminderBody>();
+	    template.flowType = RootTemplate.FlowType.DUE_REMINDER;
+		template.recipients = new ArrayList<DueReminderBody>();
+
+		DueReminderBody drb = new DueReminderBody();
+		drb.mobiles = "91" + student.mobile;
+		drb.name = student.name;
+		drb.due = student.courseFee - GetPaid(student);
+		template.recipients.add(drb);
+
+//		String msg = sms.send(template, smsEnabled, collegeShortName, smsProvisionCount, counterRepo);
+		String msg = "Reminder is being sent";
+		System.out.println(student.name);
+		if (!msg.isEmpty()) {
+			model.put("alert", "alert alert-danger");
+			model.put("result", msg);
+			return "message";
+		}
+
+		model.put("alert", "alert alert-success");
+    	model.put("result", "SMSs are being sent");
+    	return "message";
+	}
+
+	public double GetPaid(Student student) {
+		ArrayList<Payment> payments = student.payments;
+		double paid = 0;
+		if (null != payments) {
+			for (Payment payment : payments) {
+				if (payment.purpose.equals("Examination Fee") ||
+					payment.purpose.equals("Registration Fee") ||
+					payment.purpose.equals("Concession")) {
+					continue;
+				}
+				paid += payment.amount;
+			}
+		}
+		return paid;
 	}
 }

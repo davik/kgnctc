@@ -101,6 +101,7 @@ function sendSMS() {
         onlyAddiNumbers: $('#onlyAddiNumbers').is(':checked'),
         additionalNumbers: $("#additionalNumbers").val(),
         noticePrefix: $("#noticePrefix").val(),
+        prefixLength: $('#noticePrefix option:selected').text().length,
         message: $("#smsBody").val()
     };
     console.log(sms);
@@ -363,6 +364,7 @@ $(document).ready(function() {
         modal.find('.reverse').attr({href: url});
     });
 
+
     $("body").on('click', "#reverse", function(event) {
         event.preventDefault();
         let url = $(this).attr('href');
@@ -384,6 +386,17 @@ $(document).ready(function() {
         });
     });
 
+    $("body").on('show.bs.modal', "#DueReminderModal", function(event) {
+        $('#reverseMsg').hide();
+        let button = $(event.relatedTarget); // Button that triggered the modal
+        let url = button.data('url'); // Extract info from data-* attributes
+        let amount = button.data('amount');
+
+        let modal = $(this);
+        modal.find('.amount').text(amount);
+        modal.find('.reverse').attr({href: url});
+    });
+
     $("#from").attr({max: function(){
         let today = new Date();
         let dd = today.getDate(); // Today is allowed
@@ -402,23 +415,23 @@ $(document).ready(function() {
 
     
     $('#smsBody').keyup(function() {
-        var characterCount = $('#noticePrefix option:selected').text().length + $(this).val().length,
+        let characterCount = $('#noticePrefix option:selected').text().length + $(this).val().length,
           current = $('#current'),
           maximum = $('#maximum'),
-          theCount = $('#the-count');
+          theCount = $('#the-count'),
+          credit = $('#credit');
 
         current.text(characterCount);
+        credit.text(Math.ceil(characterCount/160));
 
         if (characterCount > 160) {
             maximum.css('color', '#8f0001');
             current.css('color', '#8f0001');
             theCount.css('font-weight','bold');
-            $('#smsButton').prop('disabled', true);
         } else {
             maximum.css('color', '#666');
             current.css('color', '#666');
             theCount.css('font-weight','normal');
-            $('#smsButton').prop('disabled', false);
         }
 
           

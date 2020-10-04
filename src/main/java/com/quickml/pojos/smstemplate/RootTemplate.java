@@ -13,7 +13,8 @@ public class RootTemplate<T> {
 		REGISTRATION,
 		PAYMENT,
 		NOTICE_ENG,
-		NOTICE_BNG
+		NOTICE_BNG,
+		DUE_REMINDER
 	}
 	@JsonIgnore
 	public FlowType flowType;
