@@ -243,7 +243,7 @@ function createStudent(e) {
         address1: $("#address1").val(),
         address2: $("#address2").val(),
         academics: academics,
-        session: $('#session').val(),
+        session: $('#sessionReg').val(),
         lastRegNo: $('#regLast').val(),
         subject: $('#subject').val(),
         lastSchoolName: $('#schoolName').val(),
@@ -335,8 +335,8 @@ $(document).ready(function() {
                 findString = 'option[value="'+$('#type').data('applicationtype')+'"]';
                 $('#type').find(findString).attr("selected",true);
                 // Select Session
-                findString = 'option[value="'+$('#session').data('session')+'"]';
-                $('#session').find(findString).attr("selected",true);
+                findString = 'option[value="'+$('#sessionReg').data('session')+'"]';
+                $('#sessionReg').find(findString).attr("selected",true);
                 // Select Course
                 $('input[value="'+$("#course").data("course")+'"]').attr("checked",true);
                 // Listen to click event on the submit button
