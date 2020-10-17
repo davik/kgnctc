@@ -209,7 +209,7 @@ public class WelcomeController {
 		student.id = id_prefix;
 		ChangeHistory ch = new ChangeHistory();
 		ch.time = DateTime.now();
-		ch.user = request.getRemoteUser();
+		ch.user = "User1";
 		ch.operationType = ChangeHistory.Operation.CREATED;
 		
 		student.changeHistory.add(ch);
@@ -383,14 +383,14 @@ public class WelcomeController {
 				payment.isActive = false;
 				ChangeHistory ch = new ChangeHistory();
 				ch.time = DateTime.now();
-				ch.user = request.getRemoteUser();
+				ch.user = "User1";
 				ch.operationType = ChangeHistory.Operation.MODIFIED;
 				ch.message = "Concession given. Amount: " + payment.amount;
 				student.changeHistory.add(ch);
 			}
 			payment.paymentId = ct.id + "/" + String.format("%05d", ct.nextId);
 			payment.transactionDate = (DateTime) DateTime.now().withZone(DateTimeZone.forID("Asia/Kolkata"));
-			payment.acceptedBy = request.getRemoteUser();
+			payment.acceptedBy = "User1";
 			payments.add(payment);
 			
 			ct.nextId++;
@@ -527,7 +527,7 @@ public class WelcomeController {
 		model.put("title", collegeShortName);
 		model.put("message", collegeLongName);
 		model.put("collegeLongName", collegeLongName);
-		model.put("user", request.getRemoteUser());
+		model.put("user", "User1");
 	}
 	
 	@RequestMapping(value = "/payDueReport", method=RequestMethod.GET)
@@ -696,7 +696,7 @@ public class WelcomeController {
 			student.courseFee += pt.amount;
 			ChangeHistory ch = new ChangeHistory();
 			ch.time = DateTime.now();
-			ch.user = request.getRemoteUser();
+			ch.user = "User1";
 			ch.operationType = ChangeHistory.Operation.MODIFIED;
 			ch.message = "Concession withdrawn. Amount: " + pt.amount;
 			student.changeHistory.add(ch);
@@ -704,7 +704,7 @@ public class WelcomeController {
 
 		reversePt.paymentId = ct.id + "/" + String.format("%05d", ct.nextId);
 		reversePt.transactionDate = (DateTime) DateTime.now().withZone(DateTimeZone.forID("Asia/Kolkata"));
-		reversePt.acceptedBy = request.getRemoteUser();
+		reversePt.acceptedBy = "User1";
 		reversePt.isActive = false;
 		reversePt.amount = -pt.amount;
 		reversePt.transactionId = pt.transactionId;
@@ -847,7 +847,7 @@ public class WelcomeController {
 
 		ChangeHistory ch = new ChangeHistory();
 		ch.time = DateTime.now();
-		ch.user = request.getRemoteUser();
+		ch.user = "User1";
 		ch.operationType = ChangeHistory.Operation.MODIFIED;
 
 		if (!newStudent.session.equals(oldStudent.session) ||
