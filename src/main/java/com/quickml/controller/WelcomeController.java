@@ -1054,7 +1054,8 @@ public class WelcomeController {
 			for (Payment payment : payments) {
 				if (payment.purpose.equals("Examination Fee") ||
 					payment.purpose.equals("Registration Fee") ||
-					payment.purpose.equals("Concession")) {
+					payment.purpose.equals("Concession") ||
+					payment.purpose.equals("Late Fee")) {
 					continue;
 				}
 				paid += payment.amount;
