@@ -432,14 +432,7 @@ public class WelcomeController {
 			return;
 		}
 		Payment pt = null;
-		double paid = 0;
-		for(Payment p : student.payments) {
-			paid += p.amount;
-			if (paymentId.equals(p.paymentId)) {
-				pt = p;
-				break;
-			}
-		}
+		double paid = GetPaid(student);
 		
 		Resource resource = new ClassPathResource("InvoiceA4.jrxml");
 		InputStream input = resource.getInputStream();
