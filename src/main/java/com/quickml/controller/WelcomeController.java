@@ -432,6 +432,17 @@ public class WelcomeController {
 			return;
 		}
 		Payment pt = null;
+		for(Payment p : student.payments) {
+			if (paymentId.equals(p.paymentId)) {
+				pt = p;
+				break;
+			}
+		}
+		if (null == pt) {
+			model.put("alert", "alert alert-danger");
+			model.put("result", "Payment Info not found!");
+			return;
+		}
 		double paid = GetPaid(student);
 		
 		Resource resource = new ClassPathResource("InvoiceA4.jrxml");
