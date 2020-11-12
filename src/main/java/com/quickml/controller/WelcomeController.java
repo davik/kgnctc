@@ -168,11 +168,8 @@ public class WelcomeController {
 		populateCommonPageFields(model, request);
 
 		if (student.name.isEmpty() ||
-				student.father.isEmpty() ||
-				student.mother.isEmpty() ||
 				student.mobile.isEmpty() ||
-				student.email.isEmpty()	 ||
-				student.aadhaar.isEmpty() ||
+		    		student.subject.isEmpty() ||
 				student.courseFee == 0) {
 			model.put("alert", "alert alert-danger");
 			model.put("result", "Please fill the mandatory fields!");
