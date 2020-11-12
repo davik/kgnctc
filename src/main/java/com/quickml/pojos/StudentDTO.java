@@ -57,7 +57,9 @@ public class StudentDTO {
 		this.name = st.name;
 		this.father = st.father;
 		this.mother = st.mother;
-		this.dob = st.dob.toString(DateTimeFormat.forPattern("YYYY-MM-dd"));
+		if (st.dob != null) {
+			this.dob = st.dob.toString(DateTimeFormat.forPattern("YYYY-MM-dd"));
+		}
 		this.gender = st.gender;
 		this.religion = st.religion;
 		this.category = st.category;
