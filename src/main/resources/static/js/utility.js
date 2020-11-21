@@ -58,7 +58,6 @@ function createPayment(event) {
         mode: $("#mode").val(),
         purpose: $("#purpose").val()
     };
-    console.log(payment);
 
     $.ajax({
         type: "POST",
@@ -104,7 +103,6 @@ function sendSMS() {
         prefixLength: $('#noticePrefix option:selected').text().length,
         message: $("#smsBody").val()
     };
-    console.log(sms);
 
     $.ajax({
         type: "POST",
@@ -250,7 +248,6 @@ function createStudent(e) {
         courseFee: $('#courseFee').val(),
         familyIncome: $('#familyIncome').val()
     };
-    console.log(student);
 
     let url;
     if ($('#button').data('id') == '') {
@@ -305,6 +302,13 @@ $(document).ready(function() {
                     $(this).text(x);
                 });
                 $('#paymentForm').hide();
+                if ($('#studentStatus').text() == "ACTIVE") {
+                    $('#studentStatus').addClass("badge-success");
+                } else if ($('#studentStatus').text() == "DROPOUT"){
+                    $('#studentStatus').addClass("badge-danger");
+                } else {
+                    $('#studentStatus').addClass("badge-warning");
+                }
             },
             contentType: "application/json"
         });
@@ -395,6 +399,39 @@ $(document).ready(function() {
         let modal = $(this);
         modal.find('.amount').text(amount);
         modal.find('.reverse').attr({href: url});
+    });
+
+    $("body").on('show.bs.modal', "#changeStatusModal", function(event) {
+        $('#reverseMsg').hide();
+        let button = $(event.relatedTarget); // Button that triggered the modal
+        let id = button.data('id'); // Extract info from data-* attributes
+        let url = "/changeStatus?id=" + id;
+
+        let modal = $(this);
+        modal.find('.change').attr({href: url});
+    });
+
+    $("body").on('click', "#changeStatus", function(event) {
+        event.preventDefault();
+        let url = $(this).attr('href');
+        let status = $('#status').val();
+        url = url + "&status=" + status;
+        $(this).addClass('disabled');
+        $.ajax({
+            type: "GET",
+            url: url,
+            success: function(data) {
+                $("#statusMsg").show();
+                $('#statusMsg').html(data);
+                $('.clearit').val('');
+                setTimeout(function() {
+                    $("#statusMsg").hide();
+                    $('#changeStatusModal').modal('hide');
+                    $('.modal-backdrop').remove();
+                    $("#idSearch").click();
+                }, 3000);
+            }
+        });
     });
 
     $("#from").attr({max: function(){

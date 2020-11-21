@@ -986,10 +986,12 @@ public class WelcomeController {
 				return "message";
 			}
 			for (Student st : students) {
-				NoticeBody nb = new NoticeBody();
-				nb.mobiles = "91" + st.mobile;
-				nb.message = smsDTO.message;
-				template.recipients.add(nb);
+				if (st.status == Student.Status.ACTIVE) {
+					NoticeBody nb = new NoticeBody();
+					nb.mobiles = "91" + st.mobile;
+					nb.message = smsDTO.message;
+					template.recipients.add(nb);
+				}
 			}
 		}
 		String[] additionalNumbers = smsDTO.additionalNumbers.split(",");
@@ -1045,6 +1047,26 @@ public class WelcomeController {
 
 		model.put("alert", "alert alert-success");
     	model.put("result", "SMSs are being sent");
+    	return "message";
+	}
+
+	@RequestMapping(value = "/changeStatus", method=RequestMethod.GET)
+	String changeStatus(Map<String, Object> model,
+			@RequestParam(name = "id") String studentId,
+			@RequestParam(name = "status") Student.Status status,
+			HttpServletRequest request) throws IOException {
+		populateCommonPageFields(model, request);
+		Student student = studRepo.findOne(studentId);
+		if (null == student) {
+			model.put("alert", "alert alert-danger");
+			model.put("result", "Student not found!");
+			return "message";
+		}
+		student.status = status;
+		studRepo.save(student);
+
+		model.put("alert", "alert alert-success");
+    	model.put("result", "Status Changed");
     	return "message";
 	}
 
