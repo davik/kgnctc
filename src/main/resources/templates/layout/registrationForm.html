@@ -210,10 +210,12 @@
 		</table>
 		{{/isModification}}
 		<div class="form-row">
+			{{#isModification}}
 			<div class="form-group col-md-6">
 				<label for="regLast">Registration No. from the University Last Attended</label>
 				<input type="text" class="form-control clearit" id="regLast" value="{{lastRegNo}}">
 			</div>
+			{{/isModification}}
 			<div class="form-group col-md-6">
 				<label for="subject">Subject*</label>
 				<input type="text" class="form-control clearit" id="subject" value="{{subject}}">
