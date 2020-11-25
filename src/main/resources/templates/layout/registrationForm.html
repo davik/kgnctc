@@ -30,6 +30,7 @@
 			<label for="name">Name*</label>
 			<input type="text" class="form-control clearit" id="name" value="{{name}}">
 		</div>
+		{{#isModification}}
 		<div class="form-row">
 			<div class="form-group col-md-6">
 				<label for="father">Father's Name</label>
@@ -40,16 +41,20 @@
 				<input type="text" class="form-control clearit" id="mother" value="{{mother}}">
 			</div>
 		</div>
+		{{/isModification}}
 		<div class="form-row">
 			<div class="form-group col-md-6">
 				<label for="courseFee">Course Fee*</label>
 				<input type="number" class="form-control clearit" id="courseFee" value="{{courseFee}}">
 			</div>
+			{{#isModification}}
 			<div class="form-group col-md-6">
 				<label for="familyIncome">Family Income</label>
 				<input type="text" class="form-control clearit" id="familyIncome" placeholder="Yearly Income" value="{{familyIncome}}">
 			</div>
+			{{/isModification}}
 		</div>
+		{{#isModification}}
 		<div class="form-row">
 			<div class="form-group col-md-4">
 				<label for="dob">Date of Birth</label>
@@ -86,11 +91,13 @@
 				</select>
 			</div>
 		</div>
+		{{/isModification}}
 		<div class="form-row">
 			<div class="form-group col-md-4">
 				<label for="mobile">Mobile Number*</label>
 				<input type="number" class="form-control clearit" id="mobile" value="{{mobile}}">
 			</div>
+			{{#isModification}}
 			<div class="form-group col-md-4">
 				<label for="email">Email Address</label>
 				<input type="email" class="form-control clearit" id="email" placeholder="username@domain" value="{{email}}">
@@ -99,7 +106,9 @@
 				<label for="guardianContact">Guardian Contact Number</label>
 				<input type="text" class="form-control clearit" id="guardianContact" value="{{guardianContact}}">
 			</div>
+			{{/isModification}}
 		</div>
+		{{#isModification}}
 		<div class="form-row">
 			<div class="form-group col-md-4">
 				<label for="blood">Blood Group</label>
@@ -124,6 +133,7 @@
 				<input type="text" class="form-control" id="nationality" value="{{nationality}}">
 			</div>
 		</div>
+		{{/isModification}}
 		<div class="form-row">
 			<div class="form-group col-md-4">
 				<label for="type">Application Type</label>
@@ -140,11 +150,14 @@
 					<option value="2018-20">2018-20</option>
 				</select>
 			</div>
+			{{#isModification}}
 			<div class="form-group col-md-4">
 				<label for="aadhaar">Aadhaar</label>
 				<input type="number" class="form-control clearit" id="aadhaar" value="{{aadhaar}}">
 			</div>
+			{{/isModification}}
 		</div>
+		{{#isModification}}
 		<div class="form-group">
 			<label for="address1">Address</label>
 			<textarea class="form-control clearit" id="address1">{{address1}}</textarea>
@@ -195,6 +208,7 @@
 				</tr>
 			</tbody>
 		</table>
+		{{/isModification}}
 		<div class="form-row">
 			<div class="form-group col-md-6">
 				<label for="regLast">Registration No. from the University Last Attended</label>
@@ -205,10 +219,12 @@
 				<input type="text" class="form-control clearit" id="subject" value="{{subject}}">
 			</div>
 		</div>
+		{{#isModification}}
 		<div class="form-group">
 			<label for="schoolName">Last School Name</label>
 			<input type="text" class="form-control clearit" id="schoolName" value="{{lastSchoolName}}">
 		</div>
+		{{/isModification}}
 		<button type="submit" class="btn btn-primary" id="button" data-id={{id}}>Submit</button>
 	</form>
 	<div id="msg" class="py-4">
