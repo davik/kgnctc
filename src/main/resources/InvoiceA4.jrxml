@@ -22,6 +22,10 @@
 	<parameter name="collegeEmail" class="java.lang.String"/>
 	<parameter name="logoFile" class="java.lang.String"/>
 	<parameter name="due" class="java.lang.Double"/>
+	<parameter name="latefee" class="java.lang.String"/>
+	<parameter name="latefeeAmount" class="java.lang.Double"/>
+	<parameter name="total" class="java.lang.Double"/>
+	<parameter name="secondSerial" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -38,9 +42,28 @@
 					</reportElement>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				</subreport>
+				<textField>
+					<reportElement x="109" y="232" width="150" height="20" uuid="d1b815de-6c2d-4dff-88d4-7195d3802cbe">
+						<printWhenExpression><![CDATA[$P{latefee} != null]]></printWhenExpression>
+					</reportElement>
+					<textFieldExpression><![CDATA[$P{latefee}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="441" y="231" width="100" height="22" uuid="b1cfb4ef-17a4-4932-a90a-b06d385cac06">
+						<printWhenExpression><![CDATA[$P{latefeeAmount} != null]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$P{latefeeAmount}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="112" y="640" width="100" height="20" uuid="3f4b94b2-d634-4bd1-a7d5-44dc4e98ce43">
+						<printWhenExpression><![CDATA[$P{latefee} != null]]></printWhenExpression>
+					</reportElement>
+					<textFieldExpression><![CDATA[$P{latefee}]]></textFieldExpression>
+				</textField>
 			</frame>
 			<subreport>
-				<reportElement positionType="FixRelativeToBottom" x="0" y="401" width="558" height="401" uuid="3bb4cec4-f6fb-4d4f-9073-ca8c0e0e5f43">
+				<reportElement positionType="FixRelativeToBottom" x="-1" y="-12" width="558" height="401" uuid="3bb4cec4-f6fb-4d4f-9073-ca8c0e0e5f43">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
@@ -209,7 +232,7 @@
 				<reportElement x="80" y="181" width="1" height="90" uuid="4e5cc4f1-d521-4fea-8e2b-16d9ec3deac7"/>
 			</line>
 			<staticText>
-				<reportElement x="12" y="210" width="34" height="22" uuid="6165ea19-dba8-40ce-b4d5-b59817ae3ba0"/>
+				<reportElement x="12" y="210" width="34" height="20" uuid="6165ea19-dba8-40ce-b4d5-b59817ae3ba0"/>
 				<text><![CDATA[1.]]></text>
 			</staticText>
 			<staticText>
@@ -221,11 +244,11 @@
 				<text><![CDATA[Particulars]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="110" y="210" width="171" height="30" uuid="2ee31c3b-12e8-4fd6-beb5-2f00e381a5bb"/>
+				<reportElement x="110" y="207" width="150" height="20" uuid="2ee31c3b-12e8-4fd6-beb5-2f00e381a5bb"/>
 				<textFieldExpression><![CDATA[$P{purpose}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="441" y="210" width="100" height="22" uuid="494caaa7-54b1-4f3b-9985-bf2a7377204f"/>
+				<reportElement x="441" y="208" width="100" height="19" uuid="494caaa7-54b1-4f3b-9985-bf2a7377204f"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$P{amount}]]></textFieldExpression>
 			</textField>
@@ -240,7 +263,7 @@
 			<textField>
 				<reportElement x="461" y="252" width="80" height="16" uuid="2ead42a3-d7f0-43ad-8202-f15925abbaf3"/>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$P{amount}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{total}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="10" y="594" width="54" height="16" uuid="70ad4a03-6117-43d8-8b0e-98f6a5c24280"/>
@@ -264,15 +287,15 @@
 				<reportElement x="80" y="589" width="1" height="90" uuid="cbc522ac-cfc9-4be8-8a8b-2650958bede0"/>
 			</line>
 			<staticText>
-				<reportElement x="10" y="620" width="34" height="22" uuid="15088380-6dc0-4df9-b879-5cc81d884242"/>
+				<reportElement x="10" y="620" width="34" height="17" uuid="15088380-6dc0-4df9-b879-5cc81d884242"/>
 				<text><![CDATA[1.]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="112" y="618" width="100" height="30" uuid="0c609d6a-35e8-4e7a-a581-3b4cdfec058a"/>
+				<reportElement x="112" y="618" width="100" height="20" uuid="0c609d6a-35e8-4e7a-a581-3b4cdfec058a"/>
 				<textFieldExpression><![CDATA[$P{purpose}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="443" y="618" width="100" height="22" uuid="d1ce020c-9977-4163-a2e0-05c18cab8145"/>
+				<reportElement x="444" y="616" width="100" height="22" uuid="d1ce020c-9977-4163-a2e0-05c18cab8145"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$P{amount}]]></textFieldExpression>
 			</textField>
@@ -282,7 +305,7 @@
 			<textField>
 				<reportElement x="463" y="660" width="80" height="16" uuid="8d7a7ce1-c969-457b-b9cf-6c3ee041d0f8"/>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$P{amount}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{total}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="365" y="661" width="50" height="13" uuid="e5ef434a-2401-4389-ad7e-9545a93ac713"/>
@@ -487,6 +510,25 @@
 					<font size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{due}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="444" y="637" width="100" height="22" uuid="8c0a291a-18f2-4de9-b0bc-640ce95415cb">
+					<printWhenExpression><![CDATA[$P{latefeeAmount} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$P{latefeeAmount}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="10" y="638" width="34" height="20" uuid="41d030f5-c82e-4036-a2f2-5fd888335ce5">
+					<printWhenExpression><![CDATA[$P{secondSerial} != null]]></printWhenExpression>
+				</reportElement>
+				<textFieldExpression><![CDATA[$P{secondSerial}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="12" y="232" width="34" height="17" uuid="30b58781-7d79-4f87-80de-faebfc2e201d">
+					<printWhenExpression><![CDATA[$P{secondSerial} != null]]></printWhenExpression>
+				</reportElement>
+				<textFieldExpression><![CDATA[$P{secondSerial}]]></textFieldExpression>
 			</textField>
 		</band>
 	</background>

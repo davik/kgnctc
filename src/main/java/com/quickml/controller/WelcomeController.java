@@ -115,7 +115,6 @@ public class WelcomeController {
 	@RequestMapping("/")
 	public String welcome(Map<String, Object> model, HttpServletRequest request) {
 		populateCommonPageFields(model, request);
-		// TODO : Delete the nest section
 		DateTime from = DateTime.now().withTimeAtStartOfDay();
 		DateTime to = DateTime.now().withTimeAtStartOfDay().plusHours(24);
 		List<Student> students = studRepo.findByPaymentsTransactionDateBetween(from, to);
@@ -136,10 +135,11 @@ public class WelcomeController {
 						dedInvoiceCount++;
 						ded = true;
 					}
+					double lateFeeAmount = pt.lateFeeAmount != -1 ? pt.lateFeeAmount : 0;
 					if (bed) {
-						bedAmount =  bedAmount + pt.amount;
+						bedAmount =  bedAmount + pt.amount + lateFeeAmount;
 					} else if (ded) {
-						dedAmount =  dedAmount + pt.amount;
+						dedAmount =  dedAmount + pt.amount + lateFeeAmount;
 					}
 				}
 			}
@@ -448,17 +448,15 @@ public class WelcomeController {
 		try {
 			design = JRXmlLoader.load(input);
 		} catch (JRException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		JasperReport jasperReport = null;
 		try {
 			jasperReport = JasperCompileManager.compileReport(design);
 		} catch (JRException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		String outputFile = "C:\\Users\\polaris2\\" + "JasperReportExample.pdf";
+		String outputFile = "C:\\Users\\avik\\" + "JasperReportExample.pdf";
 		OutputStream outputStream = new FileOutputStream(new File(outputFile));
 		try {
 			Map<String, Object> paramMap = new HashMap<String, Object>();
@@ -479,18 +477,26 @@ public class WelcomeController {
 			paramMap.put("due", student.courseFee - paid);
 			paramMap.put("purpose", pt.purpose);
 			paramMap.put("amount", pt.amount);
+			paramMap.put("total", pt.amount);
 			paramMap.put("inWords", Currency.convertToIndianCurrency(pt.amount));
 			String date = pt.transactionDate.toString(dtfOut);
 			paramMap.put("date", date);
 			User user = userRepo.findByUsername(pt.acceptedBy);
 			paramMap.put("user", user.fullname);
+			// Populate Late fee details
+			if (pt.lateFeeAmount != -1) {
+				paramMap.put("secondSerial", "2.");
+				paramMap.put("latefee", "Late Fee");
+				paramMap.put("latefeeAmount", pt.lateFeeAmount);
+				paramMap.replace("total", pt.amount + pt.lateFeeAmount);
+				paramMap.replace("inWords", Currency.convertToIndianCurrency(pt.amount + pt.lateFeeAmount));
+			}
 			JasperPrint jasperPrint = JasperFillManager.fillReport(
 					jasperReport,
 					paramMap,
 					new JREmptyDataSource());
 			JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
 		} catch (JRException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		outputStream.flush();
@@ -531,7 +537,7 @@ public class WelcomeController {
 
 		List<Student> students = studRepo.findByCourseAndSession(course, session);
 		
-		String outputFileName = "C:\\Users\\polaris2\\" + "paydue.csv";
+		String outputFileName = "C:\\Users\\avik\\" + "paydue.csv";
 		File reportFile = new File(outputFileName);
 		  
 	    try {
@@ -559,8 +565,7 @@ public class WelcomeController {
 	        // closing writer connection 
 	        writer.close(); 
 	    } 
-	    catch (IOException e) { 
-	        // TODO Auto-generated catch block 
+	    catch (IOException e) {
 	        e.printStackTrace(); 
 	    } 
 		// Download section
@@ -588,7 +593,7 @@ public class WelcomeController {
 
 		List<Student> students = studRepo.findByCourseAndSession(course, session);
 
-		String outputFileName = "C:\\Users\\polaris2\\" + "allStudents.csv";
+		String outputFileName = "C:\\Users\\avik\\" + "allStudents.csv";
 		File reportFile = new File(outputFileName);
 
 	    try {
@@ -618,7 +623,6 @@ public class WelcomeController {
 	        writer.close();
 	    }
 	    catch (IOException e) {
-	        // TODO Auto-generated catch block
 	        e.printStackTrace();
 	    }
 		// Download section
@@ -714,7 +718,7 @@ public class WelcomeController {
 		to = to.withTimeAtStartOfDay().plusHours(24);
 		List<Student> students = studRepo.findByPaymentsTransactionDateBetween(from, to);
 
-		String outputFileName = "C:\\Users\\polaris2\\" + "collection.csv";
+		String outputFileName = "C:\\Users\\avik\\" + "collection.csv";
 		File reportFile = new File(outputFileName);
 
 	    try {
@@ -728,7 +732,7 @@ public class WelcomeController {
 	        List<String[]> data = new ArrayList<String[]>();
 	        data.add(new String[] { "StudentID", "Name", "Mobile", "Course",
 	        		"Session", "Money Receipt No", "Date", "Transaction ID",
-	        		"Mode", "Purpose", "Accepted By", "Amount"});
+	        		"Mode", "Purpose", "Accepted By", "Amount", "Late Fee", "Total"});
 	        double total = 0;
 	        for (Student st : students) {
 				ArrayList<Payment> payments = st.payments;
@@ -737,6 +741,7 @@ public class WelcomeController {
 						if (payment.transactionDate.isAfter(from) &&
 								payment.transactionDate.isBefore(to)) {
 							// Add Student Details
+							double lateFeeAmount = payment.lateFeeAmount != -1 ? payment.lateFeeAmount : 0;
 							data.add(new String[] {st.id,
 									st.name,
 									st.mobile,
@@ -748,21 +753,22 @@ public class WelcomeController {
 									payment.mode,
 									payment.purpose,
 									payment.acceptedBy,
-									Double.toString(payment.amount)});
-							total += payment.amount;
+									Double.toString(payment.amount),
+									Double.toString(lateFeeAmount),
+									Double.toString(lateFeeAmount + payment.amount)});
+							total += lateFeeAmount + payment.amount;
 						}
 					}
 				}
 			}
-	        data.add(new String[] {"", "", "", "", "", "", "", "", "", "", "", ""});
-	        data.add(new String[] {"Total", "", "", "", "", "", "", "", "", "", "", Double.toString(total)});
+	        data.add(new String[] {"", "", "", "", "", "", "", "", "", "", "", "", "", ""});
+	        data.add(new String[] {"Total", "", "", "", "", "", "", "", "", "", "", "", "", Double.toString(total)});
 	        writer.writeAll(data);
 
 	        // closing writer connection
 	        writer.close();
 	    }
 	    catch (IOException e) {
-	        // TODO Auto-generated catch block
 	        e.printStackTrace();
 	    }
 		// Download section
@@ -912,17 +918,15 @@ public class WelcomeController {
 		try {
 			design = JRXmlLoader.load(input);
 		} catch (JRException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		JasperReport jasperReport = null;
 		try {
 			jasperReport = JasperCompileManager.compileReport(design);
 		} catch (JRException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		String outputFile = "C:\\Users\\polaris2\\" + "JasperReportExample.pdf";
+		String outputFile = "C:\\Users\\avik\\" + "JasperReportExample.pdf";
 		OutputStream outputStream = new FileOutputStream(new File(outputFile));
 		try {
 			Map<String, Object> paramMap = new HashMap<String, Object>();
@@ -947,7 +951,6 @@ public class WelcomeController {
 					new JREmptyDataSource());
 			JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
 		} catch (JRException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		outputStream.flush();
@@ -1018,6 +1021,7 @@ public class WelcomeController {
 	@RequestMapping(value = "/remindDue", method=RequestMethod.GET)
 	String sendDueReminderSMS(Map<String, Object> model,
 			@RequestParam(name = "id") String studentId,
+			@RequestParam(name = "amount") double amount,
 			HttpServletRequest request) throws IOException {
 		populateCommonPageFields(model, request);
 		Student student = studRepo.findOne(studentId);
@@ -1032,13 +1036,12 @@ public class WelcomeController {
 
 		DueReminderBody drb = new DueReminderBody();
 		drb.mobiles = "91" + student.mobile;
-		drb.name = student.name;
-		drb.due = student.courseFee - GetPaid(student);
+		drb.college = collegeShortName;
+		drb.due = amount;
+		drb.date = DateTime.now().toString("dd-MM-yyyy");
 		template.recipients.add(drb);
 
-//		String msg = sms.send(template, smsEnabled, collegeShortName, smsProvisionCount, counterRepo);
-		String msg = "Reminder is being sent";
-		System.out.println(student.name);
+		String msg = sms.send(template, smsEnabled, collegeShortName, smsProvisionCount, counterRepo);
 		if (!msg.isEmpty()) {
 			model.put("alert", "alert alert-danger");
 			model.put("result", msg);

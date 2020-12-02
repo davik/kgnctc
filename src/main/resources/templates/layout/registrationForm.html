@@ -4,7 +4,7 @@
 	<legend>Student Deatils Modification Form</legend>
 	{{/isModification}}
 	{{^isModification}}
-	<legend>Student Registration Form</legend>
+	<legend>Quick Registration</legend>
 	{{/isModification}}
 	<form id="studRegForm">
 		<fieldset class="form-group">
@@ -26,10 +26,20 @@
 				</div>
 			</div>
 		</fieldset>
+		{{#isModification}}
 		<div class="form-group">
 			<label for="name">Name*</label>
 			<input type="text" class="form-control clearit" id="name" value="{{name}}">
 		</div>
+		{{/isModification}}
+		{{^isModification}}
+		<div class="form-row">
+		<div class="form-group col-md-6">
+			<label for="name">Name*</label>
+			<input type="text" class="form-control clearit" id="name" value="{{name}}">
+		</div>
+	</div>
+		{{/isModification}}
 		{{#isModification}}
 		<div class="form-row">
 			<div class="form-group col-md-6">
@@ -93,10 +103,18 @@
 		</div>
 		{{/isModification}}
 		<div class="form-row">
+			{{#isModification}}
 			<div class="form-group col-md-4">
 				<label for="mobile">Mobile Number*</label>
 				<input type="number" class="form-control clearit" id="mobile" value="{{mobile}}">
 			</div>
+			{{/isModification}}
+			{{^isModification}}
+			<div class="form-group col-md-6">
+				<label for="mobile">Mobile Number*</label>
+				<input type="number" class="form-control clearit" id="mobile" value="{{mobile}}">
+			</div>
+			{{/isModification}}
 			{{#isModification}}
 			<div class="form-group col-md-4">
 				<label for="email">Email Address</label>
@@ -135,14 +153,26 @@
 		</div>
 		{{/isModification}}
 		<div class="form-row">
-			<div class="form-group col-md-4">
+			<div class="form-group
+			 {{#isModification}}
+			 col-md-4 
+			 {{/isModification}}
+			 {{^isModification}}
+			 col-md-3
+			 {{/isModification}}">
 				<label for="type">Application Type</label>
 				<select id="type" class="form-control" data-applicationtype="{{applicationType}}">
 					<option value="Fresher">Fresher</option>
 					<option value="Deputed">Deputed</option>
 				</select>
 			</div>
-			<div class="form-group col-md-4">
+			<div class="form-group
+			 {{#isModification}}
+			 col-md-4 
+			 {{/isModification}}
+			 {{^isModification}}
+			 col-md-3
+			 {{/isModification}}">
 				<label for="sessionReg">Academic Session</label>
 				<select id="sessionReg" class="form-control" data-session="{{session}}">
 					<option value="2020-22">2020-22</option>
@@ -222,9 +252,15 @@
 			</div>
 		</div>
 		{{#isModification}}
-		<div class="form-group">
-			<label for="schoolName">Last School Name</label>
-			<input type="text" class="form-control clearit" id="schoolName" value="{{lastSchoolName}}">
+		<div class="form-row">
+			<div class="form-group col-md-6">
+				<label for="schoolName">Last School Name</label>
+				<input type="text" class="form-control clearit" id="schoolName" value="{{lastSchoolName}}">
+			</div>
+			<div class="form-group col-md-6">
+				<label for="referredBy">Referred By</label>
+				<input type="text" class="form-control clearit" id="referredBy" value="{{referredBy}}">
+			</div>
 		</div>
 		{{/isModification}}
 		<button type="submit" class="btn btn-primary" id="button" data-id={{id}}>Submit</button>

@@ -14,4 +14,5 @@ public class Payment {
 	public String purpose; // Course Fee, Exam Fee
 	public String acceptedBy = "admin";
 	public boolean isActive = true;  // Payments which are Reversed and the Reverse Payment are NOT Active
+	public double lateFeeAmount = -1; // If amount == -1 then late fee is not incurred
 }

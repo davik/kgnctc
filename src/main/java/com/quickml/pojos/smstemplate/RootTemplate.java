@@ -14,7 +14,8 @@ public class RootTemplate<T> {
 		PAYMENT,
 		NOTICE_ENG,
 		NOTICE_BNG,
-		DUE_REMINDER
+		DUE_REMINDER,
+		NOTICE_BENG_CHAR,
 	}
 	@JsonIgnore
 	public FlowType flowType;

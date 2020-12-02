@@ -38,6 +38,7 @@ function showPaymentForm() {
     $('html,body').animate({
         scrollTop: $("#paymentForm").offset().top
     }, 'slow');
+    $(".latefeeAmount").hide();
 }
 
 function downloadInvoice(paymentid) {
@@ -58,6 +59,9 @@ function createPayment(event) {
         mode: $("#mode").val(),
         purpose: $("#purpose").val()
     };
+    if ($("#checkLateFee").is(":checked")) {
+        payment["lateFeeAmount"] = $("#latefeeAmount").val();
+    }
 
     $.ajax({
         type: "POST",
@@ -245,6 +249,7 @@ function createStudent(e) {
         lastRegNo: $('#regLast').val(),
         subject: $('#subject').val(),
         lastSchoolName: $('#schoolName').val(),
+        referredBy: $('#referredBy').val(),
         courseFee: $('#courseFee').val(),
         familyIncome: $('#familyIncome').val()
     };
@@ -397,8 +402,32 @@ $(document).ready(function() {
         let amount = button.data('amount');
 
         let modal = $(this);
-        modal.find('.amount').text(amount);
-        modal.find('.reverse').attr({href: url});
+        modal.find('.amount').val(amount);
+        modal.find('.dueReminder').attr({href: url});
+    });
+
+    $("body").on('click', "#dueReminder", function(event) {
+        event.preventDefault();
+        console.log("Due Remider button clicked");
+        let url = $(this).attr('href');
+        let amount = $('#dueAmount').val();
+        url = url + "&amount=" + amount;
+        $(this).addClass('disabled');
+        $.ajax({
+            type: "GET",
+            url: url,
+            success: function(data) {
+                $("#dueMsg").show();
+                $('#dueMsg').html(data);
+                $('.clearit').val('');
+                setTimeout(function() {
+                    $("#dueMsg").hide();
+                    $('#changeStatusModal').modal('hide');
+                    $('.modal-backdrop').remove();
+                    $("#idSearch").click();
+                }, 3000);
+            }
+        });
     });
 
     $("body").on('show.bs.modal', "#changeStatusModal", function(event) {
@@ -472,5 +501,13 @@ $(document).ready(function() {
         }
 
           
+    });
+
+    $("body").on('change', "#checkLateFee", function(event) {
+        if ($(this).is(":checked")) {
+            $(".latefeeAmount").show();
+        } else {
+            $(".latefeeAmount").hide();
+        }
     });
 });

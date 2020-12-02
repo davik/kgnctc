@@ -43,6 +43,7 @@ public class Student {
 	public String lastRegNo = "";
 	public String subject = "";
 	public String lastSchoolName = "";
+	public String referredBy = "";
 	public String session = "";
 	public ArrayList<Payment> payments = new ArrayList<Payment>();
 	public double courseFee;
@@ -56,7 +57,7 @@ public class Student {
 				dob.toString(WelcomeController.dtfOut), gender, religion, category, mobile,
 				email, guardianContact, blood, language, nationality,
 				applicationType, aadhaar, address1, address2,
-				lastRegNo, subject, lastSchoolName, session, Double.toString(courseFee), status.toString()));
+				lastRegNo, subject, lastSchoolName, referredBy, session, Double.toString(courseFee), status.toString()));
 		for (Academic ac : academics) {
 			double percentage = 0;
 			double total = 0;

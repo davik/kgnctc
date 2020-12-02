@@ -18,7 +18,7 @@
 						</svg>
 					</a>
 				</span>
-				<span data-toggle="modal" data-target="#DueReminderModal" data-amount="&#x20b9; {{due}}"
+				<span data-toggle="modal" data-target="#DueReminderModal" data-amount="{{due}}"
 					data-url="/remindDue?id={{id}}">
 					<a href="#" data-placement="top" data-toggle="tooltip" title="Remind Due Fees" class="px-2"
 						disabled>
@@ -117,12 +117,12 @@
 			</div>
 			<div class="modal-body">
 				Are you sure, you want remind the student about clearing the dues?
-				<div class="pt-1">Due Amount: <span class="badge badge-warning amount"></span></div>
+				<div class="pt-1">Due Amount: <input type="text" class="form-control amount" id="dueAmount"></input></div>
 			</div>
-			<div id="reverseMsg" class="pt-1"></div>
+			<div id="dueMsg" class="pt-1"></div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-				<!-- <a class="btn btn-warning reverse" id="dueReminder">Send Reminder SMS</a> -->
+				<a class="btn btn-warning dueReminder" id="dueReminder">Send Reminder SMS</a>
 			</div>
 		</div>
 	</div>
@@ -224,6 +224,18 @@
 			<label for="amount">Amount</label>
 			<input type="text" class="form-control" id="amount" placeholder="0.00">
 		</div>
+	</div>
+	<div class="form-row">
+		<div class="form-check form-check-inline col-md-3">
+			<input type="checkbox" class="form-check-input" id="checkLateFee">
+			<label class="form-check-label" for="checkLateFee">Include Late Fee</label>
+		</div>
+		<div class="form-group col-md-3 latefeeAmount">
+			<label for="amount">Late Fee Amount</label>
+			<input type="text" class="form-control" id="latefeeAmount" placeholder="0.00">
+		</div>
+	</div>
+	<div class="form-row pt-3">
 		<button type="submit" class="btn btn-primary" id="paymentButton" onclick="createPayment();">Submit</button>
 	</div>
 	<form></form>
