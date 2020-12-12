@@ -70,13 +70,13 @@ public class Student {
 				}
 				arrayList.addAll(Arrays.asList(
 						ac.name, ac.board, ac.year,
-						null != ac.total ? Double.toString(total): "",
-						null != ac.marks ? Double.toString(marks): "",
+						Double.toString(total),
+						Double.toString(marks),
 					    String.format("%.2f", percentage)));
-			} catch (NumberFormatException e) {
+			} catch (Exception e) {
 				arrayList.addAll(Arrays.asList(
 						ac.name, ac.board, ac.year,
-						ac.total, ac.marks, Double.toString(percentage)));
+						"", "", ""));
 			}
 		}
 
