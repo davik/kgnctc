@@ -941,7 +941,7 @@ public class WelcomeController {
 			paramMap.put("id", student.id);
 			paramMap.put("course", student.course);
 			paramMap.put("session", student.session);
-			String dob = student.dob.toString(dtfOut);
+			String dob = student.dob != null ? student.dob.toString(dtfOut) : "";
 			paramMap.put("dob", dob);
 			paramMap.put("blood", student.blood);
 			paramMap.put("address1", student.address1);
