@@ -54,7 +54,7 @@ public class Student {
 
 	public String[] ToStringArray() {
 		ArrayList<String> arrayList = new ArrayList<> (Arrays.asList(id, course, name, father, mother,
-				dob.toString(WelcomeController.dtfOut), gender, religion, category, mobile,
+				dob != null ? dob.toString(WelcomeController.dtfOut) : "", gender, religion, category, mobile,
 				email, guardianContact, blood, language, nationality,
 				applicationType, aadhaar, address1, address2,
 				lastRegNo, subject, lastSchoolName, referredBy, session, Double.toString(courseFee), status.toString()));
