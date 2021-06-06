@@ -220,7 +220,7 @@ public class WelcomeController {
     		rb.course = savedEntity.course;
     		rb.session = savedEntity.session;
     		rb.fee = Double.toString(savedEntity.courseFee);
-    		rb.college = collegeShortName;
+    		rb.college = " ";
     		RootTemplate<RegistrationBody> template = new RootTemplate<RegistrationBody>();
     		template.flowType = RootTemplate.FlowType.REGISTRATION;
     		template.recipients = new ArrayList<RegistrationBody>();
@@ -402,7 +402,7 @@ public class WelcomeController {
 	    		pb.amount = Double.toString(payment.amount);
 	    		pb.mode = payment.mode;
 	    		pb.due = Double.toString(due);
-	    		pb.college = collegeShortName;
+	    		pb.college = " ";
 	    		RootTemplate<PaymentBody> template = new RootTemplate<PaymentBody>();
 	    		template.flowType = RootTemplate.FlowType.PAYMENT;
 	    		template.recipients = new ArrayList<PaymentBody>();
