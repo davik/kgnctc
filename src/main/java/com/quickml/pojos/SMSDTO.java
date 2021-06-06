@@ -6,5 +6,6 @@ public class SMSDTO {
 	public boolean onlyAddiNumbers;
 	public String additionalNumbers;
 	public String noticePrefix;
+	public int prefixLength;
 	public String message;
 }

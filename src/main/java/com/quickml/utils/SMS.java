@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.quickml.pojos.Counter;
 import com.quickml.pojos.smstemplate.RootTemplate;
+import com.quickml.pojos.smstemplate.RootTemplate.FlowType;
 import com.quickml.repository.CounterRepository;
 
 import okhttp3.MediaType;
@@ -32,6 +33,8 @@ public class SMS {
 		flowIdMap.put(RootTemplate.FlowType.PAYMENT, "5f701e4f0eb7f77937303f2e");
 		flowIdMap.put(RootTemplate.FlowType.NOTICE_ENG, "5f54c95a9723df6c7265715e");
 		flowIdMap.put(RootTemplate.FlowType.NOTICE_BNG, "5f701d19e6582708913a9b45");
+		flowIdMap.put(FlowType.DUE_REMINDER, "5fc251b7f132c655e75e537d");
+		flowIdMap.put(FlowType.NOTICE_BENG_CHAR, "5fc34f4bea6e4c6e6500defb");
 	}
 	
 	String post(String json) throws IOException {
@@ -51,6 +54,14 @@ public class SMS {
 			String senderId,
 			int smsProvisionCount,
 			CounterRepository counterRepo) {
+		return send(template, smsEnabled, senderId, smsProvisionCount, counterRepo, 1);
+	}
+	public String send(RootTemplate template,
+			String smsEnabled,
+			String senderId,
+			int smsProvisionCount,
+			CounterRepository counterRepo,
+			int perSMSCredit) {
 		System.out.println("SMS enabled" + smsEnabled);
 		if (!smsEnabled.equals("YES")) {
 			return "SMS is not enabled";
@@ -76,7 +87,7 @@ public class SMS {
 			try {
 				String rsp = post(json);
 				System.out.println(rsp);
-				smsCount.nextId = smsCount.nextId + template.recipients.size();
+				smsCount.nextId = smsCount.nextId + (template.recipients.size() * perSMSCredit);
 				counterRepo.save(smsCount);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

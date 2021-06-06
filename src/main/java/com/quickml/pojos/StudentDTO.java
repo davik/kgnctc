@@ -25,6 +25,7 @@ public class StudentDTO {
 	public String lastRegNo = "";
 	public String subject = "";
 	public String lastSchoolName = "";
+	public String referredBy = "";
 	public String session = "";
 	public double courseFee;
 	public double familyIncome;
@@ -57,7 +58,9 @@ public class StudentDTO {
 		this.name = st.name;
 		this.father = st.father;
 		this.mother = st.mother;
-		this.dob = st.dob.toString(DateTimeFormat.forPattern("YYYY-MM-dd"));
+		if (st.dob != null) {
+			this.dob = st.dob.toString(DateTimeFormat.forPattern("YYYY-MM-dd"));
+		}
 		this.gender = st.gender;
 		this.religion = st.religion;
 		this.category = st.category;
@@ -74,30 +77,39 @@ public class StudentDTO {
 		this.lastRegNo = st.lastRegNo;
 		this.subject = st.subject;
 		this.lastSchoolName = st.lastSchoolName;
+		this.referredBy = st.referredBy;
 		this.session = st.session;
 		this.courseFee = st.courseFee;
 		this.familyIncome = st.familyIncome;
 		
 		if (null != st.academics) {
-			this.mpboard = st.academics.get(0).board;
-			this.mpyear = st.academics.get(0).year;
-			this.mptotal = st.academics.get(0).total;
-			this.mpmarks = st.academics.get(0).marks;
+			if (st.academics.get(0).board != null) {
+				this.mpboard = st.academics.get(0).board;
+				this.mpyear = st.academics.get(0).year;
+				this.mptotal = st.academics.get(0).total;
+				this.mpmarks = st.academics.get(0).marks;
+			}
 			
-			this.hsboard = st.academics.get(1).board;
-			this.hsyear = st.academics.get(1).year;
-			this.hstotal = st.academics.get(1).total;
-			this.hsmarks = st.academics.get(1).marks;
+			if (st.academics.get(1).board != null) {
+				this.hsboard = st.academics.get(1).board;
+				this.hsyear = st.academics.get(1).year;
+				this.hstotal = st.academics.get(1).total;
+				this.hsmarks = st.academics.get(1).marks;
+			}
 			
-			this.gradboard = st.academics.get(2).board;
-			this.gradyear = st.academics.get(2).year;
-			this.gradtotal = st.academics.get(2).total;
-			this.gradmarks = st.academics.get(2).marks;
+			if (st.academics.get(2).board != null) {
+				this.gradboard = st.academics.get(2).board;
+				this.gradyear = st.academics.get(2).year;
+				this.gradtotal = st.academics.get(2).total;
+				this.gradmarks = st.academics.get(2).marks;
+			}
 			
-			this.pgboard = st.academics.get(3).board;
-			this.pgyear = st.academics.get(3).year;
-			this.pgtotal = st.academics.get(3).total;
-			this.pgmarks = st.academics.get(3).marks;
+			if (st.academics.get(3).board != null) {
+				this.pgboard = st.academics.get(3).board;
+				this.pgyear = st.academics.get(3).year;
+				this.pgtotal = st.academics.get(3).total;
+				this.pgmarks = st.academics.get(3).marks;
+			}
 		}
 		return this;
 	}

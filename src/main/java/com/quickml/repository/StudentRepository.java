@@ -21,7 +21,8 @@ public interface StudentRepository extends MongoRepository<Student, String> {
 					+ " 'payments.paymentId' : 1 , 'payments.transactionId' : 1,"
 					+ " 'payments.mode' : 1 , 'payments.purpose' : 1,"
 					+ " 'payments.acceptedBy' : 1 , 'payments.isActive' : 1,"
-					+ " 'payments.amount' : 1 , 'payments.transactionDate' : 1}")
+					+ " 'payments.amount' : 1 , 'payments.transactionDate' : 1,"
+					+ " 'payments.lateFeeAmount' : 1}")
 	List<Student> findByPaymentsTransactionDateBetween(DateTime from, DateTime to);
 }
 

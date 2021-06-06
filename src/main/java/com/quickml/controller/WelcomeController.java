@@ -42,6 +42,7 @@ import com.quickml.pojos.SMSDTO;
 import com.quickml.pojos.Student;
 import com.quickml.pojos.StudentDTO;
 import com.quickml.pojos.User;
+import com.quickml.pojos.smstemplate.DueReminderBody;
 import com.quickml.pojos.smstemplate.NoticeBody;
 import com.quickml.pojos.smstemplate.PaymentBody;
 import com.quickml.pojos.smstemplate.RegistrationBody;
@@ -114,7 +115,6 @@ public class WelcomeController {
 	@RequestMapping("/")
 	public String welcome(Map<String, Object> model, HttpServletRequest request) {
 		populateCommonPageFields(model, request);
-		// TODO : Delete the nest section
 		DateTime from = DateTime.now().withTimeAtStartOfDay();
 		DateTime to = DateTime.now().withTimeAtStartOfDay().plusHours(24);
 		List<Student> students = studRepo.findByPaymentsTransactionDateBetween(from, to);
@@ -135,10 +135,11 @@ public class WelcomeController {
 						dedInvoiceCount++;
 						ded = true;
 					}
+					double lateFeeAmount = pt.lateFeeAmount != -1 ? pt.lateFeeAmount : 0;
 					if (bed) {
-						bedAmount =  bedAmount + pt.amount;
+						bedAmount =  bedAmount + pt.amount + lateFeeAmount;
 					} else if (ded) {
-						dedAmount =  dedAmount + pt.amount;
+						dedAmount =  dedAmount + pt.amount + lateFeeAmount;
 					}
 				}
 			}
@@ -167,11 +168,8 @@ public class WelcomeController {
 		populateCommonPageFields(model, request);
 
 		if (student.name.isEmpty() ||
-				student.father.isEmpty() ||
-				student.mother.isEmpty() ||
 				student.mobile.isEmpty() ||
-				student.email.isEmpty()	 ||
-				student.aadhaar.isEmpty() ||
+		    		student.subject.isEmpty() ||
 				student.courseFee == 0) {
 			model.put("alert", "alert alert-danger");
 			model.put("result", "Please fill the mandatory fields!");
@@ -222,7 +220,7 @@ public class WelcomeController {
     		rb.course = savedEntity.course;
     		rb.session = savedEntity.session;
     		rb.fee = Double.toString(savedEntity.courseFee);
-    		rb.college = collegeShortName;
+    		rb.college = " ";
     		RootTemplate<RegistrationBody> template = new RootTemplate<RegistrationBody>();
     		template.flowType = RootTemplate.FlowType.REGISTRATION;
     		template.recipients = new ArrayList<RegistrationBody>();
@@ -324,19 +322,8 @@ public class WelcomeController {
 			model.put("alert", "alert alert-danger");
 			model.put("result", "Student not found!");
 		} else {
-			ArrayList<Payment> payments = student.payments;
-			double paid = 0;
-			if (null != payments) {
-				for (Payment payment : payments) {
-					if (payment.purpose.equals("Examination Fee") ||
-						payment.purpose.equals("Registration Fee") ||
-						payment.purpose.equals("Concession")) {
-						continue;
-					}
-					paid += payment.amount;
-				}
-			}
-			model.put("due", student.courseFee - paid);
+			
+			model.put("due", student.courseFee - GetPaid(student));
 			model.put("student", student);
 		}
 		return "paymentDetails";
@@ -406,7 +393,7 @@ public class WelcomeController {
 					}
 					paid += pt.amount;
 				}
-				due = savedEntity.courseFee - paid;
+				due = savedEntity.courseFee - GetPaid(savedEntity);
 
 	    		PaymentBody pb = new PaymentBody();
 	    		pb.mobiles = "91" + savedEntity.mobile;
@@ -415,7 +402,7 @@ public class WelcomeController {
 	    		pb.amount = Double.toString(payment.amount);
 	    		pb.mode = payment.mode;
 	    		pb.due = Double.toString(due);
-	    		pb.college = collegeShortName;
+	    		pb.college = " ";
 	    		RootTemplate<PaymentBody> template = new RootTemplate<PaymentBody>();
 	    		template.flowType = RootTemplate.FlowType.PAYMENT;
 	    		template.recipients = new ArrayList<PaymentBody>();
@@ -442,14 +429,18 @@ public class WelcomeController {
 			return;
 		}
 		Payment pt = null;
-		double paid = 0;
 		for(Payment p : student.payments) {
-			paid += p.amount;
 			if (paymentId.equals(p.paymentId)) {
 				pt = p;
 				break;
 			}
 		}
+		if (null == pt) {
+			model.put("alert", "alert alert-danger");
+			model.put("result", "Payment Info not found!");
+			return;
+		}
+		double paid = GetPaid(student);
 		
 		Resource resource = new ClassPathResource("InvoiceA4.jrxml");
 		InputStream input = resource.getInputStream();
@@ -457,17 +448,15 @@ public class WelcomeController {
 		try {
 			design = JRXmlLoader.load(input);
 		} catch (JRException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		JasperReport jasperReport = null;
 		try {
 			jasperReport = JasperCompileManager.compileReport(design);
 		} catch (JRException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		String outputFile = "C:\\Users\\polaris2\\" + "JasperReportExample.pdf";
+		String outputFile = "C:\\Users\\avik\\" + "JasperReportExample.pdf";
 		OutputStream outputStream = new FileOutputStream(new File(outputFile));
 		try {
 			Map<String, Object> paramMap = new HashMap<String, Object>();
@@ -488,18 +477,26 @@ public class WelcomeController {
 			paramMap.put("due", student.courseFee - paid);
 			paramMap.put("purpose", pt.purpose);
 			paramMap.put("amount", pt.amount);
+			paramMap.put("total", pt.amount);
 			paramMap.put("inWords", Currency.convertToIndianCurrency(pt.amount));
 			String date = pt.transactionDate.toString(dtfOut);
 			paramMap.put("date", date);
 			User user = userRepo.findByUsername(pt.acceptedBy);
 			paramMap.put("user", user.fullname);
+			// Populate Late fee details
+			if (pt.lateFeeAmount != -1) {
+				paramMap.put("secondSerial", "2.");
+				paramMap.put("latefee", "Late Fee");
+				paramMap.put("latefeeAmount", pt.lateFeeAmount);
+				paramMap.replace("total", pt.amount + pt.lateFeeAmount);
+				paramMap.replace("inWords", Currency.convertToIndianCurrency(pt.amount + pt.lateFeeAmount));
+			}
 			JasperPrint jasperPrint = JasperFillManager.fillReport(
 					jasperReport,
 					paramMap,
 					new JREmptyDataSource());
 			JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
 		} catch (JRException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		outputStream.flush();
@@ -540,7 +537,7 @@ public class WelcomeController {
 
 		List<Student> students = studRepo.findByCourseAndSession(course, session);
 		
-		String outputFileName = "C:\\Users\\polaris2\\" + "paydue.csv";
+		String outputFileName = "C:\\Users\\avik\\" + "paydue.csv";
 		File reportFile = new File(outputFileName);
 		  
 	    try {
@@ -554,17 +551,7 @@ public class WelcomeController {
 	        List<String[]> data = new ArrayList<String[]>(); 
 	        data.add(new String[] { "StudentID", "Name", "Mobile", "CourseFee", "Paid", "Due" });
 	        for (Student st : students) {
-				ArrayList<Payment> payments = st.payments;
-				double paid = 0;
-				if (null != payments) {
-					for (Payment payment : payments) {
-						if (payment.purpose.equals("Examination Fee") ||
-							payment.purpose.equals("Registration Fee")) {
-							continue;
-						}
-						paid += payment.amount;
-					}
-				}
+				double paid = GetPaid(st);
 				// Add Student Details
 				data.add(new String[] {st.id,
 						st.name,
@@ -578,8 +565,7 @@ public class WelcomeController {
 	        // closing writer connection 
 	        writer.close(); 
 	    } 
-	    catch (IOException e) { 
-	        // TODO Auto-generated catch block 
+	    catch (IOException e) {
 	        e.printStackTrace(); 
 	    } 
 		// Download section
@@ -607,7 +593,7 @@ public class WelcomeController {
 
 		List<Student> students = studRepo.findByCourseAndSession(course, session);
 
-		String outputFileName = "C:\\Users\\polaris2\\" + "allStudents.csv";
+		String outputFileName = "C:\\Users\\avik\\" + "allStudents.csv";
 		File reportFile = new File(outputFileName);
 
 	    try {
@@ -637,7 +623,6 @@ public class WelcomeController {
 	        writer.close();
 	    }
 	    catch (IOException e) {
-	        // TODO Auto-generated catch block
 	        e.printStackTrace();
 	    }
 		// Download section
@@ -733,7 +718,7 @@ public class WelcomeController {
 		to = to.withTimeAtStartOfDay().plusHours(24);
 		List<Student> students = studRepo.findByPaymentsTransactionDateBetween(from, to);
 
-		String outputFileName = "C:\\Users\\polaris2\\" + "collection.csv";
+		String outputFileName = "C:\\Users\\avik\\" + "collection.csv";
 		File reportFile = new File(outputFileName);
 
 	    try {
@@ -747,7 +732,7 @@ public class WelcomeController {
 	        List<String[]> data = new ArrayList<String[]>();
 	        data.add(new String[] { "StudentID", "Name", "Mobile", "Course",
 	        		"Session", "Money Receipt No", "Date", "Transaction ID",
-	        		"Mode", "Purpose", "Accepted By", "Amount"});
+	        		"Mode", "Purpose", "Accepted By", "Amount", "Late Fee", "Total"});
 	        double total = 0;
 	        for (Student st : students) {
 				ArrayList<Payment> payments = st.payments;
@@ -756,6 +741,7 @@ public class WelcomeController {
 						if (payment.transactionDate.isAfter(from) &&
 								payment.transactionDate.isBefore(to)) {
 							// Add Student Details
+							double lateFeeAmount = payment.lateFeeAmount != -1 ? payment.lateFeeAmount : 0;
 							data.add(new String[] {st.id,
 									st.name,
 									st.mobile,
@@ -767,21 +753,22 @@ public class WelcomeController {
 									payment.mode,
 									payment.purpose,
 									payment.acceptedBy,
-									Double.toString(payment.amount)});
-							total += payment.amount;
+									Double.toString(payment.amount),
+									Double.toString(lateFeeAmount),
+									Double.toString(lateFeeAmount + payment.amount)});
+							total += lateFeeAmount + payment.amount;
 						}
 					}
 				}
 			}
-	        data.add(new String[] {"", "", "", "", "", "", "", "", "", "", "", ""});
-	        data.add(new String[] {"Total", "", "", "", "", "", "", "", "", "", "", Double.toString(total)});
+	        data.add(new String[] {"", "", "", "", "", "", "", "", "", "", "", "", "", ""});
+	        data.add(new String[] {"Total", "", "", "", "", "", "", "", "", "", "", "", "", Double.toString(total)});
 	        writer.writeAll(data);
 
 	        // closing writer connection
 	        writer.close();
 	    }
 	    catch (IOException e) {
-	        // TODO Auto-generated catch block
 	        e.printStackTrace();
 	    }
 		// Download section
@@ -931,17 +918,15 @@ public class WelcomeController {
 		try {
 			design = JRXmlLoader.load(input);
 		} catch (JRException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		JasperReport jasperReport = null;
 		try {
 			jasperReport = JasperCompileManager.compileReport(design);
 		} catch (JRException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		String outputFile = "C:\\Users\\polaris2\\" + "JasperReportExample.pdf";
+		String outputFile = "C:\\Users\\avik\\" + "JasperReportExample.pdf";
 		OutputStream outputStream = new FileOutputStream(new File(outputFile));
 		try {
 			Map<String, Object> paramMap = new HashMap<String, Object>();
@@ -956,7 +941,7 @@ public class WelcomeController {
 			paramMap.put("id", student.id);
 			paramMap.put("course", student.course);
 			paramMap.put("session", student.session);
-			String dob = student.dob.toString(dtfOut);
+			String dob = student.dob != null ? student.dob.toString(dtfOut) : "";
 			paramMap.put("dob", dob);
 			paramMap.put("blood", student.blood);
 			paramMap.put("address1", student.address1);
@@ -966,7 +951,6 @@ public class WelcomeController {
 					new JREmptyDataSource());
 			JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
 		} catch (JRException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		outputStream.flush();
@@ -1005,10 +989,12 @@ public class WelcomeController {
 				return "message";
 			}
 			for (Student st : students) {
-				NoticeBody nb = new NoticeBody();
-				nb.mobiles = "91" + st.mobile;
-				nb.message = smsDTO.message;
-				template.recipients.add(nb);
+				if (st.status == Student.Status.ACTIVE) {
+					NoticeBody nb = new NoticeBody();
+					nb.mobiles = "91" + st.mobile;
+					nb.message = smsDTO.message;
+					template.recipients.add(nb);
+				}
 			}
 		}
 		String[] additionalNumbers = smsDTO.additionalNumbers.split(",");
@@ -1018,6 +1004,43 @@ public class WelcomeController {
 			nb.message = smsDTO.message;
 			template.recipients.add(nb);
 		}
+		int perSMSCredit = ((smsDTO.prefixLength + smsDTO.message.length()) / 160) + 1;
+		String msg = sms.send(template, smsEnabled, collegeShortName,
+				smsProvisionCount, counterRepo, perSMSCredit);
+		if (!msg.isEmpty()) {
+			model.put("alert", "alert alert-danger");
+			model.put("result", msg);
+			return "message";
+		}
+
+		model.put("alert", "alert alert-success");
+    	model.put("result", "SMSs are being sent");
+    	return "message";
+	}
+
+	@RequestMapping(value = "/remindDue", method=RequestMethod.GET)
+	String sendDueReminderSMS(Map<String, Object> model,
+			@RequestParam(name = "id") String studentId,
+			@RequestParam(name = "amount") double amount,
+			HttpServletRequest request) throws IOException {
+		populateCommonPageFields(model, request);
+		Student student = studRepo.findOne(studentId);
+		if (null == student) {
+			model.put("alert", "alert alert-danger");
+			model.put("result", "Student not found!");
+			return "message";
+		}
+		RootTemplate<DueReminderBody> template = new RootTemplate<DueReminderBody>();
+	    template.flowType = RootTemplate.FlowType.DUE_REMINDER;
+		template.recipients = new ArrayList<DueReminderBody>();
+
+		DueReminderBody drb = new DueReminderBody();
+		drb.mobiles = "91" + student.mobile;
+		drb.college = collegeShortName;
+		drb.due = amount;
+		drb.date = DateTime.now().toString("dd-MM-yyyy");
+		template.recipients.add(drb);
+
 		String msg = sms.send(template, smsEnabled, collegeShortName, smsProvisionCount, counterRepo);
 		if (!msg.isEmpty()) {
 			model.put("alert", "alert alert-danger");
@@ -1028,5 +1051,43 @@ public class WelcomeController {
 		model.put("alert", "alert alert-success");
     	model.put("result", "SMSs are being sent");
     	return "message";
+	}
+
+	@RequestMapping(value = "/changeStatus", method=RequestMethod.GET)
+	String changeStatus(Map<String, Object> model,
+			@RequestParam(name = "id") String studentId,
+			@RequestParam(name = "status") Student.Status status,
+			HttpServletRequest request) throws IOException {
+		populateCommonPageFields(model, request);
+		Student student = studRepo.findOne(studentId);
+		if (null == student) {
+			model.put("alert", "alert alert-danger");
+			model.put("result", "Student not found!");
+			return "message";
+		}
+		student.status = status;
+		studRepo.save(student);
+
+		model.put("alert", "alert alert-success");
+    	model.put("result", "Status Changed");
+    	return "message";
+	}
+
+	public double GetPaid(Student student) {
+		ArrayList<Payment> payments = student.payments;
+		double paid = 0;
+		if (null != payments) {
+			for (Payment payment : payments) {
+				if (payment.purpose.equals("Examination Fee") ||
+					payment.purpose.equals("Registration Fee") ||
+					payment.purpose.equals("Concession") ||
+                                        payment.purpose.equals("Online Application Fee") ||
+                                        payment.purpose.equals("Late Fee")) {
+					continue;
+				}
+				paid += payment.amount;
+			}
+		}
+		return paid;
 	}
 }
