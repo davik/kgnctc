@@ -393,7 +393,7 @@ public class WelcomeController {
 					}
 					paid += pt.amount;
 				}
-				due = savedEntity.courseFee - paid;
+				due = savedEntity.courseFee - GetPaid(savedEntity);
 
 	    		PaymentBody pb = new PaymentBody();
 	    		pb.mobiles = "91" + savedEntity.mobile;
