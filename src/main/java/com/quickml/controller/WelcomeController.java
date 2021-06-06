@@ -407,7 +407,7 @@ public class WelcomeController {
 	    		template.flowType = RootTemplate.FlowType.PAYMENT;
 	    		template.recipients = new ArrayList<PaymentBody>();
 	    		template.recipients.add(pb);
-	    		sms.send(template, smsEnabled, collegeShortName, smsProvisionCount, counterRepo);
+	    		sms.send(template, smsEnabled, collegeShortName, smsProvisionCount, counterRepo, 2);
 	    	}
 		}
 		model.put("alert", "alert alert-success");
