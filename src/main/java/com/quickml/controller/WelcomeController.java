@@ -63,14 +63,10 @@ import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
 
-
-
 @Controller
 public class WelcomeController {
 
-	public WelcomeController(StudentRepository studRepo,
-			CounterRepository counterRepo,
-			UserRepository userRepo) {
+	public WelcomeController(StudentRepository studRepo, CounterRepository counterRepo, UserRepository userRepo) {
 		super();
 		this.studRepo = studRepo;
 		this.counterRepo = counterRepo;
@@ -83,25 +79,25 @@ public class WelcomeController {
 
 	@Value("${app.college.shortname}")
 	private String collegeShortName = "";
-	
+
 	@Value("${app.college.address1}")
 	private String collegeAddress1 = "";
-	
+
 	@Value("${app.college.address2}")
 	private String collegeAddress2 = "";
-	
+
 	@Value("${app.college.contact}")
 	private String collegeContact = "";
-	
+
 	@Value("${app.college.email}")
 	private String collegeEmail = "";
-	
+
 	@Value("${app.college.sms}")
 	private String smsEnabled = "";
 
 	@Value("${app.college.smscount}")
 	private int smsProvisionCount = 0;
-	
+
 	@Autowired
 	public final StudentRepository studRepo;
 	@Autowired
@@ -122,24 +118,22 @@ public class WelcomeController {
 		int bedInvoiceCount = 0, dedInvoiceCount = 0;
 		double bedAmount = 0, dedAmount = 0;
 		for (Student st : students) {
-			boolean bed = false, ded = false; 
+			boolean bed = false, ded = false;
 
 			for (Payment pt : st.payments) {
-				if (pt.transactionDate.isAfter(from) &&
-						pt.transactionDate.isBefore(to) &&
-						pt.isActive) {
+				if (pt.transactionDate.isAfter(from) && pt.transactionDate.isBefore(to) && pt.isActive) {
 					if (st.course.equalsIgnoreCase("B.Ed")) {
 						bedInvoiceCount++;
 						bed = true;
-					} else if (st.course.equalsIgnoreCase("D.El.Ed")){
+					} else if (st.course.equalsIgnoreCase("D.El.Ed")) {
 						dedInvoiceCount++;
 						ded = true;
 					}
 					double lateFeeAmount = pt.lateFeeAmount != -1 ? pt.lateFeeAmount : 0;
 					if (bed) {
-						bedAmount =  bedAmount + pt.amount + lateFeeAmount;
+						bedAmount = bedAmount + pt.amount + lateFeeAmount;
 					} else if (ded) {
-						dedAmount =  dedAmount + pt.amount + lateFeeAmount;
+						dedAmount = dedAmount + pt.amount + lateFeeAmount;
 					}
 				}
 			}
@@ -150,7 +144,7 @@ public class WelcomeController {
 		model.put("bedInvoiceCount", bedInvoiceCount);
 		model.put("dedInvoiceCount", dedInvoiceCount);
 		model.put("totalInvoiceCount", bedInvoiceCount + dedInvoiceCount);
-		
+
 		return "welcome";
 	}
 
@@ -159,18 +153,13 @@ public class WelcomeController {
 	public String ServiceUnavailable() {
 		throw new RuntimeException("ABC");
 	}
-	
-	
-	@RequestMapping(value = "/create", method=RequestMethod.POST)
-    String create(Map<String, Object> model,
-    		@RequestBody Student student,
-    		HttpServletRequest request) throws IOException{
+
+	@RequestMapping(value = "/create", method = RequestMethod.POST)
+	String create(Map<String, Object> model, @RequestBody Student student, HttpServletRequest request)
+			throws IOException {
 		populateCommonPageFields(model, request);
 
-		if (student.name.isEmpty() ||
-				student.mobile.isEmpty() ||
-		    		student.subject.isEmpty() ||
-				student.courseFee == 0) {
+		if (student.name.isEmpty() || student.mobile.isEmpty() || student.subject.isEmpty() || student.courseFee == 0) {
 			model.put("alert", "alert alert-danger");
 			model.put("result", "Please fill the mandatory fields!");
 			return "create";
@@ -184,7 +173,8 @@ public class WelcomeController {
 		}
 
 		String id_prefix = student.session.substring(0, 4);
-		// Counter is used to get the next id to be assigned for a new student based on session and course
+		// Counter is used to get the next id to be assigned for a new student based on
+		// session and course
 		Counter ct = null;
 		if (student.course.equalsIgnoreCase("b.ed")) {
 			id_prefix = id_prefix + "01";
@@ -209,50 +199,46 @@ public class WelcomeController {
 		ch.time = DateTime.now();
 		ch.user = request.getRemoteUser();
 		ch.operationType = ChangeHistory.Operation.CREATED;
-		
+
 		student.changeHistory.add(ch);
-    	Student savedEntity = studRepo.save(student);
-    	if (null != savedEntity) {
-    		RegistrationBody rb = new RegistrationBody();
-    		rb.id = savedEntity.id;
-    		rb.name = savedEntity.name;
-    		rb.mobiles = "91" + savedEntity.mobile;
-    		rb.course = savedEntity.course;
-    		rb.session = savedEntity.session;
-    		rb.fee = Double.toString(savedEntity.courseFee);
-    		rb.college = " ";
-    		RootTemplate<RegistrationBody> template = new RootTemplate<RegistrationBody>();
-    		template.flowType = RootTemplate.FlowType.REGISTRATION;
-    		template.recipients = new ArrayList<RegistrationBody>();
-    		template.recipients.add(rb);
-    		sms.send(template, smsEnabled, collegeShortName, smsProvisionCount, counterRepo);
-    	}
-    	
-    	model.put("alert", "alert alert-success");
-    	model.put("result", "Student Registered Successfully!");
-    	return "create";
-    }
-	
-	@RequestMapping(value = "/registration", method=RequestMethod.GET)
-    String registration(Map<String, Object> model,
-    		HttpServletRequest request) throws IOException{
+		Student savedEntity = studRepo.save(student);
+		if (null != savedEntity) {
+			RegistrationBody rb = new RegistrationBody();
+			rb.id = savedEntity.id;
+			rb.name = savedEntity.name;
+			rb.mobiles = "91" + savedEntity.mobile;
+			rb.course = savedEntity.course;
+			rb.session = savedEntity.session;
+			rb.fee = Double.toString(savedEntity.courseFee);
+			rb.college = " ";
+			RootTemplate<RegistrationBody> template = new RootTemplate<RegistrationBody>();
+			template.flowType = RootTemplate.FlowType.REGISTRATION;
+			template.recipients = new ArrayList<RegistrationBody>();
+			template.recipients.add(rb);
+			sms.send(template, smsEnabled, collegeShortName, smsProvisionCount, counterRepo);
+		}
+
+		model.put("alert", "alert alert-success");
+		model.put("result", "Student Registered Successfully!");
+		return "create";
+	}
+
+	@RequestMapping(value = "/registration", method = RequestMethod.GET)
+	String registration(Map<String, Object> model, HttpServletRequest request) throws IOException {
 		populateCommonPageFields(model, request);
 		model.put("result", "Result will be displayed here!");
 		model.put("student", new StudentDTO());
 		return "registration";
-    }
-	
-	
-	@RequestMapping(value = "/contact", method=RequestMethod.GET)
-	String getContactPage(Map<String, Object> model,
-			HttpServletRequest request) throws IOException {
+	}
+
+	@RequestMapping(value = "/contact", method = RequestMethod.GET)
+	String getContactPage(Map<String, Object> model, HttpServletRequest request) throws IOException {
 		populateCommonPageFields(model, request);
 		return "contact";
 	}
-	
-	@RequestMapping(value = "/students", method=RequestMethod.GET)
-	String getStudentsPage(Map<String, Object> model,
-			HttpServletRequest request,
+
+	@RequestMapping(value = "/students", method = RequestMethod.GET)
+	String getStudentsPage(Map<String, Object> model, HttpServletRequest request,
 			@RequestParam(value = "course", defaultValue = "B.Ed") String course,
 			@RequestParam(value = "session", defaultValue = "2018-20") String session) throws IOException {
 		populateCommonPageFields(model, request);
@@ -262,11 +248,10 @@ public class WelcomeController {
 		return "students";
 	}
 
-	@RequestMapping(value = "/studentList", method=RequestMethod.GET)
-	String getStudentList(Map<String, Object> model,
-			HttpServletRequest request,
-			@RequestParam(value = "course") String course,
-			@RequestParam(value = "session") String session) throws IOException {
+	@RequestMapping(value = "/studentList", method = RequestMethod.GET)
+	String getStudentList(Map<String, Object> model, HttpServletRequest request,
+			@RequestParam(value = "course") String course, @RequestParam(value = "session") String session)
+			throws IOException {
 		populateCommonPageFields(model, request);
 
 		List<Student> students;
@@ -279,23 +264,20 @@ public class WelcomeController {
 		return "studentList";
 	}
 
-	@RequestMapping(value = "/payment", method=RequestMethod.GET)
-	String getPaymentPage(Map<String, Object> model,
-			HttpServletRequest request) throws IOException {
+	@RequestMapping(value = "/payment", method = RequestMethod.GET)
+	String getPaymentPage(Map<String, Object> model, HttpServletRequest request) throws IOException {
 		populateCommonPageFields(model, request);
 		return "payment";
 	}
 
-	@RequestMapping(value = "/report", method=RequestMethod.GET)
-	String getReportPage(Map<String, Object> model,
-			HttpServletRequest request) throws IOException {
+	@RequestMapping(value = "/report", method = RequestMethod.GET)
+	String getReportPage(Map<String, Object> model, HttpServletRequest request) throws IOException {
 		populateCommonPageFields(model, request);
 		return "report";
 	}
 
-	@RequestMapping(value = "/communication", method=RequestMethod.GET)
-	String getCommPage(Map<String, Object> model,
-			HttpServletRequest request) throws IOException {
+	@RequestMapping(value = "/communication", method = RequestMethod.GET)
+	String getCommPage(Map<String, Object> model, HttpServletRequest request) throws IOException {
 		populateCommonPageFields(model, request);
 
 		Counter ct = counterRepo.findOne("SMS");
@@ -310,10 +292,9 @@ public class WelcomeController {
 		model.put("balanceSMS", smsProvisionCount - ct.nextId);
 		return "communication";
 	}
-	
-	@RequestMapping(value = "/paymentDetails", method=RequestMethod.GET)
-	String getPaymentDetailsSec(Map<String, Object> model,
-			@RequestParam(name = "id") String studentId,
+
+	@RequestMapping(value = "/paymentDetails", method = RequestMethod.GET)
+	String getPaymentDetailsSec(Map<String, Object> model, @RequestParam(name = "id") String studentId,
 			HttpServletRequest request) throws IOException, ParseException {
 		populateCommonPageFields(model, request);
 
@@ -322,20 +303,18 @@ public class WelcomeController {
 			model.put("alert", "alert alert-danger");
 			model.put("result", "Student not found!");
 		} else {
-			
+
 			model.put("due", student.courseFee - GetPaid(student));
 			model.put("student", student);
 		}
 		return "paymentDetails";
 	}
 
-	@RequestMapping(value = "/createPayment", method=RequestMethod.POST)
-	String setPaymentDetails(Map<String, Object> model,
-			@RequestParam(name = "id") String studentId,
-			@RequestBody Payment payment,
-			HttpServletRequest request) throws IOException {
+	@RequestMapping(value = "/createPayment", method = RequestMethod.POST)
+	String setPaymentDetails(Map<String, Object> model, @RequestParam(name = "id") String studentId,
+			@RequestBody Payment payment, HttpServletRequest request) throws IOException {
 		populateCommonPageFields(model, request);
-		
+
 		Student student = studRepo.findOne(studentId);
 		if (null == student) {
 			model.put("alert", "alert alert-danger");
@@ -359,10 +338,10 @@ public class WelcomeController {
 			Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("IST"));
 			// Fetch the Payment or Money Receipt ID counter
 			int year = getFiscalYear(calendar);
-			Counter ct = counterRepo.findOne(year + "-" + String.valueOf(year+1).substring(2));
+			Counter ct = counterRepo.findOne(year + "-" + String.valueOf(year + 1).substring(2));
 			if (null == ct) {
 				ct = new Counter();
-				ct.id = year + "-" + String.valueOf(year+1).substring(2);
+				ct.id = year + "-" + String.valueOf(year + 1).substring(2);
 				ct.nextId++;
 			}
 			if (payment.purpose.equals("Concession")) {
@@ -379,7 +358,7 @@ public class WelcomeController {
 			payment.transactionDate = (DateTime) DateTime.now().withZone(DateTimeZone.forID("Asia/Kolkata"));
 			payment.acceptedBy = request.getRemoteUser();
 			payments.add(payment);
-			
+
 			ct.nextId++;
 			counterRepo.save(ct);
 			Student savedEntity = studRepo.save(student);
@@ -395,31 +374,29 @@ public class WelcomeController {
 				}
 				due = savedEntity.courseFee - GetPaid(savedEntity);
 
-	    		PaymentBody pb = new PaymentBody();
-	    		pb.mobiles = "91" + savedEntity.mobile;
-	    		pb.paymentId = payment.paymentId;
-	    		pb.purpose = payment.purpose;
-	    		pb.amount = Double.toString(payment.amount);
-	    		pb.mode = payment.mode;
-	    		pb.due = Double.toString(due);
-	    		pb.college = " ";
-	    		RootTemplate<PaymentBody> template = new RootTemplate<PaymentBody>();
-	    		template.flowType = RootTemplate.FlowType.PAYMENT;
-	    		template.recipients = new ArrayList<PaymentBody>();
-	    		template.recipients.add(pb);
-	    		sms.send(template, smsEnabled, collegeShortName, smsProvisionCount, counterRepo, 2);
-	    	}
+				PaymentBody pb = new PaymentBody();
+				pb.mobiles = "91" + savedEntity.mobile;
+				pb.paymentId = payment.paymentId;
+				pb.purpose = payment.purpose;
+				pb.amount = Double.toString(payment.amount);
+				pb.mode = payment.mode;
+				pb.due = Double.toString(due);
+				pb.college = " ";
+				RootTemplate<PaymentBody> template = new RootTemplate<PaymentBody>();
+				template.flowType = RootTemplate.FlowType.PAYMENT;
+				template.recipients = new ArrayList<PaymentBody>();
+				template.recipients.add(pb);
+				sms.send(template, smsEnabled, collegeShortName, smsProvisionCount, counterRepo, 2);
+			}
 		}
 		model.put("alert", "alert alert-success");
-    	model.put("result", "Payment Information Recorded Successfully!");
+		model.put("result", "Payment Information Recorded Successfully!");
 		return "paymentDetails";
 	}
-	
-	@RequestMapping(value = "/invoice", method=RequestMethod.GET)
-	void downloadInvoice(Map<String, Object> model,
-			@RequestParam(name = "id") String studentId,
-			@RequestParam(name = "paymentId") String paymentId,
-			HttpServletResponse response,
+
+	@RequestMapping(value = "/invoice", method = RequestMethod.GET)
+	void downloadInvoice(Map<String, Object> model, @RequestParam(name = "id") String studentId,
+			@RequestParam(name = "paymentId") String paymentId, HttpServletResponse response,
 			HttpServletRequest request) throws IOException {
 		populateCommonPageFields(model, request);
 		Student student = studRepo.findOne(studentId);
@@ -429,7 +406,7 @@ public class WelcomeController {
 			return;
 		}
 		Payment pt = null;
-		for(Payment p : student.payments) {
+		for (Payment p : student.payments) {
 			if (paymentId.equals(p.paymentId)) {
 				pt = p;
 				break;
@@ -441,7 +418,7 @@ public class WelcomeController {
 			return;
 		}
 		double paid = GetPaid(student);
-		
+
 		Resource resource = new ClassPathResource("InvoiceA4.jrxml");
 		InputStream input = resource.getInputStream();
 		JasperDesign design = null;
@@ -491,10 +468,7 @@ public class WelcomeController {
 				paramMap.replace("total", pt.amount + pt.lateFeeAmount);
 				paramMap.replace("inWords", Currency.convertToIndianCurrency(pt.amount + pt.lateFeeAmount));
 			}
-			JasperPrint jasperPrint = JasperFillManager.fillReport(
-					jasperReport,
-					paramMap,
-					new JREmptyDataSource());
+			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, paramMap, new JREmptyDataSource());
 			JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
 		} catch (JRException e) {
 			e.printStackTrace();
@@ -505,131 +479,67 @@ public class WelcomeController {
 		File invoiceFile = new File(outputFile);
 		String mimeType = "application/pdf";
 		response.setContentType(mimeType);
-		String invoiceFileName = student.id+"_"+pt.paymentId.substring(8)+".pdf";
-		response.setHeader("Content-Disposition", String.format("inline; filename=\""+invoiceFileName+"\""));
+		String invoiceFileName = student.id + "_" + pt.paymentId.substring(8) + ".pdf";
+		response.setHeader("Content-Disposition", String.format("inline; filename=\"" + invoiceFileName + "\""));
 		response.setContentLength((int) invoiceFile.length());
 		InputStream inputStream = new BufferedInputStream(new FileInputStream(invoiceFile));
 
 		FileCopyUtils.copy(inputStream, response.getOutputStream());
 		response.flushBuffer();
 	}
-	
+
 	public int getFiscalYear(Calendar calendar) {
-        int month = calendar.get(Calendar.MONTH);
-        int year = calendar.get(Calendar.YEAR);
-        return (month > Calendar.MARCH) ? year : year - 1;
-    }
-	
+		int month = calendar.get(Calendar.MONTH);
+		int year = calendar.get(Calendar.YEAR);
+		return (month > Calendar.MARCH) ? year : year - 1;
+	}
+
 	public void populateCommonPageFields(Map<String, Object> model, HttpServletRequest request) {
 		model.put("title", collegeShortName);
 		model.put("message", collegeLongName);
 		model.put("collegeLongName", collegeLongName);
 		model.put("user", request.getRemoteUser());
 	}
-	
-	@RequestMapping(value = "/payDueReport", method=RequestMethod.GET)
-	void generatePayDueReport(Map<String, Object> model,
-			@RequestParam(name = "session") String session,
-			@RequestParam(name = "course") String course,
-			HttpServletResponse response,
-			HttpServletRequest request) throws IOException {
+
+	@RequestMapping(value = "/payDueReport", method = RequestMethod.GET)
+	void generatePayDueReport(Map<String, Object> model, @RequestParam(name = "session") String session,
+			@RequestParam(name = "course") String course, HttpServletResponse response, HttpServletRequest request)
+			throws IOException {
 		populateCommonPageFields(model, request);
 
 		List<Student> students = studRepo.findByCourseAndSession(course, session);
-		
+
 		String outputFileName = "C:\\Users\\avik\\" + "paydue.csv";
 		File reportFile = new File(outputFileName);
-		  
-	    try {
-	        // create FileWriter object with file as parameter
-	        FileWriter outputfile = new FileWriter(reportFile);
 
-	        // create CSVWriter object filewriter object as parameter
-	        CSVWriter writer = new CSVWriter(outputfile);
+		try {
+			// create FileWriter object with file as parameter
+			FileWriter outputfile = new FileWriter(reportFile);
 
-	        // create a List which contains String array 
-	        List<String[]> data = new ArrayList<String[]>(); 
-	        data.add(new String[] { "StudentID", "Name", "Mobile", "CourseFee", "Paid", "Due" });
-	        for (Student st : students) {
+			// create CSVWriter object filewriter object as parameter
+			CSVWriter writer = new CSVWriter(outputfile);
+
+			// create a List which contains String array
+			List<String[]> data = new ArrayList<String[]>();
+			data.add(new String[] { "StudentID", "Name", "Mobile", "CourseFee", "Paid", "Due" });
+			for (Student st : students) {
 				double paid = GetPaid(st);
 				// Add Student Details
-				data.add(new String[] {st.id,
-						st.name,
-						st.mobile,
-						Double.toString(st.courseFee),
-						Double.toString(paid),
-						Double.toString(st.courseFee-paid)});
+				data.add(new String[] { st.id, st.name, st.mobile, Double.toString(st.courseFee), Double.toString(paid),
+						Double.toString(st.courseFee - paid) });
 			}
-	        writer.writeAll(data); 
-	  
-	        // closing writer connection 
-	        writer.close(); 
-	    } 
-	    catch (IOException e) {
-	        e.printStackTrace(); 
-	    } 
+			writer.writeAll(data);
+
+			// closing writer connection
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		// Download section
 		String mimeType = "text/csv";
 		response.setContentType(mimeType);
-		String reportFileName = "DueList"+"_"+course+"_"+session.substring(0, 4)+".csv";
-		response.setHeader("Content-Disposition", String.format("attachment; filename=\""+reportFileName+"\""));
-		response.setContentLength((int) reportFile.length());
-		InputStream inputStream = new BufferedInputStream(new FileInputStream(reportFile));
-
-		FileCopyUtils.copy(inputStream, response.getOutputStream());
-		response.flushBuffer();
-
-		model.put("alert", "alert alert-success");
-    	model.put("result", "Report Generated Successfully!");
-	}
-
-	@RequestMapping(value = "/allStudents", method=RequestMethod.GET)
-	void downloadAllStudents(Map<String, Object> model,
-			@RequestParam(name = "session") String session,
-			@RequestParam(name = "course") String course,
-			HttpServletResponse response,
-			HttpServletRequest request) throws IOException {
-		populateCommonPageFields(model, request);
-
-		List<Student> students = studRepo.findByCourseAndSession(course, session);
-
-		String outputFileName = "C:\\Users\\avik\\" + "allStudents.csv";
-		File reportFile = new File(outputFileName);
-
-	    try {
-	        // create FileWriter object with file as parameter
-	        FileWriter outputfile = new FileWriter(reportFile);
-	        // create CSVWriter object filewriter object as parameter
-	        CSVWriter writer = new CSVWriter(outputfile);
-	        // create a List which contains String array
-	        List<String[]> data = new ArrayList<String[]>();
-	        data.add(new String[] { "StudentID", "Course", "Name", "Father's Name",
-	        		"Mother's Name", "Date of Birth", "Gender", "Religion", "Category",
-	        		"Mobile", "Email Address", "Guardian Contact", "Blood Group", "Language",
-	        		"Nationality", "Application Type", "Aadhaar Number", "Address",
-	        		"Alternate Address", "Last Registration Number", "Subject",
-	        		"Last School Name", "Session", "Course Fee", "Status",
-	        		"Degree", "Board", "Year", "Total Marks", "Marks Obtained", "Percentage",
-                    "Degree", "Board", "Year", "Total Marks", "Marks Obtained", "Percentage",
-                    "Degree", "Board", "Year", "Total Marks", "Marks Obtained", "Percentage",
-                    "Degree", "Board", "Year", "Total Marks", "Marks Obtained", "Percentage"});
-	        for (Student st : students) {
-				// Add Student Details
-				data.add(st.ToStringArray());
-			}
-	        writer.writeAll(data);
-
-	        // closing writer connection
-	        writer.close();
-	    }
-	    catch (IOException e) {
-	        e.printStackTrace();
-	    }
-		// Download section
-		String mimeType = "text/csv";
-		response.setContentType(mimeType);
-		String reportFileName = "All_Students"+"_"+course+"_"+session.substring(0, 4)+".csv";
-		response.setHeader("Content-Disposition", String.format("attachment; filename=\""+reportFileName+"\""));
+		String reportFileName = "DueList" + "_" + course + "_" + session.substring(0, 4) + ".csv";
+		response.setHeader("Content-Disposition", String.format("attachment; filename=\"" + reportFileName + "\""));
 		response.setContentLength((int) reportFile.length());
 		InputStream inputStream = new BufferedInputStream(new FileInputStream(reportFile));
 
@@ -640,11 +550,61 @@ public class WelcomeController {
 		model.put("result", "Report Generated Successfully!");
 	}
 
-	@RequestMapping(value = "/reverse", method=RequestMethod.GET)
-	public String revertTransaction(Map<String, Object> model,
-			@RequestParam(name = "id") String studentId,
-			@RequestParam(name = "paymentId") String paymentId,
-			HttpServletResponse response,
+	@RequestMapping(value = "/allStudents", method = RequestMethod.GET)
+	void downloadAllStudents(Map<String, Object> model, @RequestParam(name = "session") String session,
+			@RequestParam(name = "course") String course, HttpServletResponse response, HttpServletRequest request)
+			throws IOException {
+		populateCommonPageFields(model, request);
+
+		List<Student> students = studRepo.findByCourseAndSession(course, session);
+
+		String outputFileName = "C:\\Users\\avik\\" + "allStudents.csv";
+		File reportFile = new File(outputFileName);
+
+		try {
+			// create FileWriter object with file as parameter
+			FileWriter outputfile = new FileWriter(reportFile);
+			// create CSVWriter object filewriter object as parameter
+			CSVWriter writer = new CSVWriter(outputfile);
+			// create a List which contains String array
+			List<String[]> data = new ArrayList<String[]>();
+			data.add(new String[] { "StudentID", "Course", "Name", "Father's Name", "Mother's Name", "Date of Birth",
+					"Gender", "Religion", "Category", "Mobile", "Email Address", "Guardian Contact", "Blood Group",
+					"Language", "Nationality", "Application Type", "Aadhaar Number", "Address", "Alternate Address",
+					"Last Registration Number", "Subject", "Last School Name", "Session", "Course Fee", "Status",
+					"Degree", "Board", "Year", "Total Marks", "Marks Obtained", "Percentage", "Degree", "Board", "Year",
+					"Total Marks", "Marks Obtained", "Percentage", "Degree", "Board", "Year", "Total Marks",
+					"Marks Obtained", "Percentage", "Degree", "Board", "Year", "Total Marks", "Marks Obtained",
+					"Percentage" });
+			for (Student st : students) {
+				// Add Student Details
+				data.add(st.ToStringArray());
+			}
+			writer.writeAll(data);
+
+			// closing writer connection
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		// Download section
+		String mimeType = "text/csv";
+		response.setContentType(mimeType);
+		String reportFileName = "All_Students" + "_" + course + "_" + session.substring(0, 4) + ".csv";
+		response.setHeader("Content-Disposition", String.format("attachment; filename=\"" + reportFileName + "\""));
+		response.setContentLength((int) reportFile.length());
+		InputStream inputStream = new BufferedInputStream(new FileInputStream(reportFile));
+
+		FileCopyUtils.copy(inputStream, response.getOutputStream());
+		response.flushBuffer();
+
+		model.put("alert", "alert alert-success");
+		model.put("result", "Report Generated Successfully!");
+	}
+
+	@RequestMapping(value = "/reverse", method = RequestMethod.GET)
+	public String revertTransaction(Map<String, Object> model, @RequestParam(name = "id") String studentId,
+			@RequestParam(name = "paymentId") String paymentId, HttpServletResponse response,
 			HttpServletRequest request) throws IOException {
 		populateCommonPageFields(model, request);
 		Student student = studRepo.findOne(studentId);
@@ -654,7 +614,7 @@ public class WelcomeController {
 			return "create";
 		}
 		Payment pt = null;
-		for(Payment p : student.payments) {
+		for (Payment p : student.payments) {
 			if (paymentId.equals(p.paymentId)) {
 				pt = p;
 			}
@@ -670,10 +630,10 @@ public class WelcomeController {
 		Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("IST"));
 		// Fetch the Payment or Money Receipt ID counter
 		int year = getFiscalYear(calendar);
-		Counter ct = counterRepo.findOne(year + "-" + String.valueOf(year+1).substring(2));
+		Counter ct = counterRepo.findOne(year + "-" + String.valueOf(year + 1).substring(2));
 		if (null == ct) {
 			ct = new Counter();
-			ct.id = year + "-" + String.valueOf(year+1).substring(2);
+			ct.id = year + "-" + String.valueOf(year + 1).substring(2);
 			ct.nextId++;
 		}
 
@@ -706,12 +666,11 @@ public class WelcomeController {
 		return "paymentDetails";
 	}
 
-	@RequestMapping(value = "/collectionReport", method=RequestMethod.GET)
+	@RequestMapping(value = "/collectionReport", method = RequestMethod.GET)
 	void generateCollectionReport(Map<String, Object> model,
-			@RequestParam(name = "from") @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd") DateTime from,
-			@RequestParam(name = "to") @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd") DateTime to,
-			HttpServletResponse response,
-			HttpServletRequest request) throws IOException {
+			@RequestParam(name = "from") @org.springframework.format.annotation.DateTimeFormat(pattern = "yyyy-MM-dd") DateTime from,
+			@RequestParam(name = "to") @org.springframework.format.annotation.DateTimeFormat(pattern = "yyyy-MM-dd") DateTime to,
+			HttpServletResponse response, HttpServletRequest request) throws IOException {
 		populateCommonPageFields(model, request);
 
 		from = from.withTimeAtStartOfDay();
@@ -721,63 +680,49 @@ public class WelcomeController {
 		String outputFileName = "C:\\Users\\avik\\" + "collection.csv";
 		File reportFile = new File(outputFileName);
 
-	    try {
-	        // create FileWriter object with file as parameter
-	        FileWriter outputfile = new FileWriter(reportFile);
+		try {
+			// create FileWriter object with file as parameter
+			FileWriter outputfile = new FileWriter(reportFile);
 
-	        // create CSVWriter object filewriter object as parameter
-	        CSVWriter writer = new CSVWriter(outputfile);
+			// create CSVWriter object filewriter object as parameter
+			CSVWriter writer = new CSVWriter(outputfile);
 
-	        // create a List which contains String array
-	        List<String[]> data = new ArrayList<String[]>();
-	        data.add(new String[] { "StudentID", "Name", "Mobile", "Course",
-	        		"Session", "Money Receipt No", "Date", "Transaction ID",
-	        		"Mode", "Purpose", "Accepted By", "Amount", "Late Fee", "Total"});
-	        double total = 0;
-	        for (Student st : students) {
+			// create a List which contains String array
+			List<String[]> data = new ArrayList<String[]>();
+			data.add(new String[] { "StudentID", "Name", "Mobile", "Course", "Session", "Money Receipt No", "Date",
+					"Transaction ID", "Mode", "Purpose", "Accepted By", "Amount", "Late Fee", "Total" });
+			double total = 0;
+			for (Student st : students) {
 				ArrayList<Payment> payments = st.payments;
 				if (null != payments) {
 					for (Payment payment : payments) {
-						if (payment.transactionDate.isAfter(from) &&
-								payment.transactionDate.isBefore(to)) {
+						if (payment.transactionDate.isAfter(from) && payment.transactionDate.isBefore(to)) {
 							// Add Student Details
 							double lateFeeAmount = payment.lateFeeAmount != -1 ? payment.lateFeeAmount : 0;
-							data.add(new String[] {st.id,
-									st.name,
-									st.mobile,
-									st.course,
-									st.session,
-									payment.paymentId,
-									payment.transactionDate.toString(dtfOut),
-									payment.transactionId,
-									payment.mode,
-									payment.purpose,
-									payment.acceptedBy,
-									Double.toString(payment.amount),
-									Double.toString(lateFeeAmount),
-									Double.toString(lateFeeAmount + payment.amount)});
+							data.add(new String[] { st.id, st.name, st.mobile, st.course, st.session, payment.paymentId,
+									payment.transactionDate.toString(dtfOut), payment.transactionId, payment.mode,
+									payment.purpose, payment.acceptedBy, Double.toString(payment.amount),
+									Double.toString(lateFeeAmount), Double.toString(lateFeeAmount + payment.amount) });
 							total += lateFeeAmount + payment.amount;
 						}
 					}
 				}
 			}
-	        data.add(new String[] {"", "", "", "", "", "", "", "", "", "", "", "", "", ""});
-	        data.add(new String[] {"Total", "", "", "", "", "", "", "", "", "", "", "", "", Double.toString(total)});
-	        writer.writeAll(data);
+			data.add(new String[] { "", "", "", "", "", "", "", "", "", "", "", "", "", "" });
+			data.add(new String[] { "Total", "", "", "", "", "", "", "", "", "", "", "", "", Double.toString(total) });
+			writer.writeAll(data);
 
-	        // closing writer connection
-	        writer.close();
-	    }
-	    catch (IOException e) {
-	        e.printStackTrace();
-	    }
+			// closing writer connection
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		// Download section
 		String mimeType = "text/csv";
 		response.setContentType(mimeType);
-		String reportFileName = "Collection"+"_"+
-				from.getDayOfMonth() + "_"+ from.getMonthOfYear() + "_" +
-				to.minusHours(24).getDayOfMonth()+"_"+to.getMonthOfYear()+".csv";
-		response.setHeader("Content-Disposition", String.format("attachment; filename=\""+reportFileName+"\""));
+		String reportFileName = "Collection" + "_" + from.getDayOfMonth() + "_" + from.getMonthOfYear() + "_"
+				+ to.minusHours(24).getDayOfMonth() + "_" + to.getMonthOfYear() + ".csv";
+		response.setHeader("Content-Disposition", String.format("attachment; filename=\"" + reportFileName + "\""));
 		response.setContentLength((int) reportFile.length());
 		InputStream inputStream = new BufferedInputStream(new FileInputStream(reportFile));
 
@@ -788,9 +733,8 @@ public class WelcomeController {
 		model.put("result", "Report Generated Successfully!");
 	}
 
-	@RequestMapping(value = "/studentDetails", method=RequestMethod.GET)
-	String getStudentDetails(Map<String, Object> model,
-			@RequestParam(name = "id") String studentId,
+	@RequestMapping(value = "/studentDetails", method = RequestMethod.GET)
+	String getStudentDetails(Map<String, Object> model, @RequestParam(name = "id") String studentId,
 			HttpServletRequest request) throws IOException, ParseException {
 		populateCommonPageFields(model, request);
 
@@ -806,11 +750,9 @@ public class WelcomeController {
 		return "layout/registrationForm";
 	}
 
-	@RequestMapping(value = "/modifyStudentDetails", method=RequestMethod.POST)
-	String modifyStudentDetails(Map<String, Object> model,
-			@RequestParam(name = "id") String studentId,
-			@RequestBody Student newStudent,
-			HttpServletRequest request) throws IOException, ParseException {
+	@RequestMapping(value = "/modifyStudentDetails", method = RequestMethod.POST)
+	String modifyStudentDetails(Map<String, Object> model, @RequestParam(name = "id") String studentId,
+			@RequestBody Student newStudent, HttpServletRequest request) throws IOException, ParseException {
 		populateCommonPageFields(model, request);
 
 		Student oldStudent = studRepo.findOne(studentId);
@@ -819,13 +761,9 @@ public class WelcomeController {
 			model.put("result", "Student not found!");
 			return "create";
 		}
-		if (newStudent.name.isEmpty() ||
-				newStudent.father.isEmpty() ||
-				newStudent.mother.isEmpty() ||
-				newStudent.mobile.isEmpty() ||
-				newStudent.email.isEmpty()	 ||
-				newStudent.aadhaar.isEmpty() ||
-				newStudent.courseFee == 0) {
+		if (newStudent.name.isEmpty() || newStudent.father.isEmpty() || newStudent.mother.isEmpty()
+				|| newStudent.mobile.isEmpty() || newStudent.email.isEmpty() || newStudent.aadhaar.isEmpty()
+				|| newStudent.courseFee == 0) {
 			model.put("alert", "alert alert-danger");
 			model.put("result", "Please fill the mandatory fields!");
 			return "create";
@@ -837,8 +775,7 @@ public class WelcomeController {
 		ch.user = request.getRemoteUser();
 		ch.operationType = ChangeHistory.Operation.MODIFIED;
 
-		if (!newStudent.session.equals(oldStudent.session) ||
-				!newStudent.course.equals(oldStudent.course)) {
+		if (!newStudent.session.equals(oldStudent.session) || !newStudent.course.equals(oldStudent.course)) {
 
 			if (!newStudent.session.equals(oldStudent.session)) {
 				ch.message = "Session Modified from " + oldStudent.session + " to " + newStudent.session;
@@ -848,7 +785,8 @@ public class WelcomeController {
 			}
 			// Change in ID
 			String id_prefix = newStudent.session.substring(0, 4);
-			// Counter is used to get the next id to be assigned for a new student based on session and course
+			// Counter is used to get the next id to be assigned for a new student based on
+			// session and course
 			Counter ct = null;
 			if (newStudent.course.equalsIgnoreCase("b.ed")) {
 				id_prefix = id_prefix + "01";
@@ -882,10 +820,10 @@ public class WelcomeController {
 		} else {
 			if (idChanged) {
 				model.put("alert", "alert alert-warning");
-		    	model.put("result", "Student Information Modified, ID is changed to " + newStudent.id );
+				model.put("result", "Student Information Modified, ID is changed to " + newStudent.id);
 			} else {
 				model.put("alert", "alert alert-success");
-		    	model.put("result", "Student Information Modified Successfully!");
+				model.put("result", "Student Information Modified Successfully!");
 			}
 		}
 		newStudent.changeHistory = new ArrayList<>(oldStudent.changeHistory);
@@ -899,11 +837,9 @@ public class WelcomeController {
 		return "create";
 	}
 
-	@RequestMapping(value = "/icard", method=RequestMethod.GET)
-	void downloadICard(Map<String, Object> model,
-			@RequestParam(name = "id") String studentId,
-			HttpServletResponse response,
-			HttpServletRequest request) throws IOException {
+	@RequestMapping(value = "/icard", method = RequestMethod.GET)
+	void downloadICard(Map<String, Object> model, @RequestParam(name = "id") String studentId,
+			HttpServletResponse response, HttpServletRequest request) throws IOException {
 		populateCommonPageFields(model, request);
 		Student student = studRepo.findOne(studentId);
 		if (null == student) {
@@ -911,7 +847,7 @@ public class WelcomeController {
 			model.put("result", "Student not found!");
 			return;
 		}
-		
+
 		Resource resource = new ClassPathResource("ICard.jrxml");
 		InputStream input = resource.getInputStream();
 		JasperDesign design = null;
@@ -945,10 +881,7 @@ public class WelcomeController {
 			paramMap.put("dob", dob);
 			paramMap.put("blood", student.blood);
 			paramMap.put("address1", student.address1);
-			JasperPrint jasperPrint = JasperFillManager.fillReport(
-					jasperReport,
-					paramMap,
-					new JREmptyDataSource());
+			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, paramMap, new JREmptyDataSource());
 			JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
 		} catch (JRException e) {
 			e.printStackTrace();
@@ -959,8 +892,8 @@ public class WelcomeController {
 		File invoiceFile = new File(outputFile);
 		String mimeType = "application/pdf";
 		response.setContentType(mimeType);
-		String icard = student.id+".pdf";
-		response.setHeader("Content-Disposition", String.format("inline; filename=\""+icard+"\""));
+		String icard = student.id + ".pdf";
+		response.setHeader("Content-Disposition", String.format("inline; filename=\"" + icard + "\""));
 		response.setContentLength((int) invoiceFile.length());
 		InputStream inputStream = new BufferedInputStream(new FileInputStream(invoiceFile));
 
@@ -968,10 +901,9 @@ public class WelcomeController {
 		response.flushBuffer();
 	}
 
-	@RequestMapping(value = "/sendSMS", method=RequestMethod.POST)
-	String sendSMS(Map<String, Object> model,
-			@RequestBody SMSDTO smsDTO,
-			HttpServletRequest request) throws IOException {
+	@RequestMapping(value = "/sendSMS", method = RequestMethod.POST)
+	String sendSMS(Map<String, Object> model, @RequestBody SMSDTO smsDTO, HttpServletRequest request)
+			throws IOException {
 		populateCommonPageFields(model, request);
 		RootTemplate<NoticeBody> template = new RootTemplate<NoticeBody>();
 		if (smsDTO.noticePrefix.equals("1")) {
@@ -1005,8 +937,7 @@ public class WelcomeController {
 			template.recipients.add(nb);
 		}
 		int perSMSCredit = ((smsDTO.prefixLength + smsDTO.message.length()) / 160) + 1;
-		String msg = sms.send(template, smsEnabled, collegeShortName,
-				smsProvisionCount, counterRepo, perSMSCredit);
+		String msg = sms.send(template, smsEnabled, collegeShortName, smsProvisionCount, counterRepo, perSMSCredit);
 		if (!msg.isEmpty()) {
 			model.put("alert", "alert alert-danger");
 			model.put("result", msg);
@@ -1014,15 +945,13 @@ public class WelcomeController {
 		}
 
 		model.put("alert", "alert alert-success");
-    	model.put("result", "SMSs are being sent");
-    	return "message";
+		model.put("result", "SMSs are being sent");
+		return "message";
 	}
 
-	@RequestMapping(value = "/remindDue", method=RequestMethod.GET)
-	String sendDueReminderSMS(Map<String, Object> model,
-			@RequestParam(name = "id") String studentId,
-			@RequestParam(name = "amount") double amount,
-			HttpServletRequest request) throws IOException {
+	@RequestMapping(value = "/remindDue", method = RequestMethod.GET)
+	String sendDueReminderSMS(Map<String, Object> model, @RequestParam(name = "id") String studentId,
+			@RequestParam(name = "amount") double amount, HttpServletRequest request) throws IOException {
 		populateCommonPageFields(model, request);
 		Student student = studRepo.findOne(studentId);
 		if (null == student) {
@@ -1031,7 +960,7 @@ public class WelcomeController {
 			return "message";
 		}
 		RootTemplate<DueReminderBody> template = new RootTemplate<DueReminderBody>();
-	    template.flowType = RootTemplate.FlowType.DUE_REMINDER;
+		template.flowType = RootTemplate.FlowType.DUE_REMINDER;
 		template.recipients = new ArrayList<DueReminderBody>();
 
 		DueReminderBody drb = new DueReminderBody();
@@ -1049,15 +978,13 @@ public class WelcomeController {
 		}
 
 		model.put("alert", "alert alert-success");
-    	model.put("result", "SMSs are being sent");
-    	return "message";
+		model.put("result", "SMSs are being sent");
+		return "message";
 	}
 
-	@RequestMapping(value = "/changeStatus", method=RequestMethod.GET)
-	String changeStatus(Map<String, Object> model,
-			@RequestParam(name = "id") String studentId,
-			@RequestParam(name = "status") Student.Status status,
-			HttpServletRequest request) throws IOException {
+	@RequestMapping(value = "/changeStatus", method = RequestMethod.GET)
+	String changeStatus(Map<String, Object> model, @RequestParam(name = "id") String studentId,
+			@RequestParam(name = "status") Student.Status status, HttpServletRequest request) throws IOException {
 		populateCommonPageFields(model, request);
 		Student student = studRepo.findOne(studentId);
 		if (null == student) {
@@ -1069,8 +996,8 @@ public class WelcomeController {
 		studRepo.save(student);
 
 		model.put("alert", "alert alert-success");
-    	model.put("result", "Status Changed");
-    	return "message";
+		model.put("result", "Status Changed");
+		return "message";
 	}
 
 	public double GetPaid(Student student) {
@@ -1078,11 +1005,9 @@ public class WelcomeController {
 		double paid = 0;
 		if (null != payments) {
 			for (Payment payment : payments) {
-				if (payment.purpose.equals("Examination Fee") ||
-					payment.purpose.equals("Registration Fee") ||
-					payment.purpose.equals("Concession") ||
-                                        payment.purpose.equals("Online Application Fee") ||
-                                        payment.purpose.equals("Late Fee")) {
+				if (payment.purpose.equals("Examination Fee") || payment.purpose.equals("Registration Fee")
+						|| payment.purpose.equals("Concession") || payment.purpose.equals("Online Application Fee")
+						|| payment.purpose.equals("Late Fee") || payment.purpose.equals("Reverse")) {
 					continue;
 				}
 				paid += payment.amount;
