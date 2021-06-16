@@ -1005,9 +1005,12 @@ public class WelcomeController {
 		double paid = 0;
 		if (null != payments) {
 			for (Payment payment : payments) {
+				if (!payment.isActive) {
+					continue;
+				}
 				if (payment.purpose.equals("Examination Fee") || payment.purpose.equals("Registration Fee")
 						|| payment.purpose.equals("Concession") || payment.purpose.equals("Online Application Fee")
-						|| payment.purpose.equals("Late Fee") || payment.purpose.equals("Reverse")) {
+						|| payment.purpose.equals("Late Fee")) {
 					continue;
 				}
 				paid += payment.amount;
