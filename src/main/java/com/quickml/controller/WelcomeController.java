@@ -507,7 +507,7 @@ public class WelcomeController {
 			throws IOException {
 		populateCommonPageFields(model, request);
 
-		List<Student> students = studRepo.findByCourseAndSession(course, session);
+		List<Student> students = studRepo.findByCourseAndSessionAndStatus(course, session, Student.Status.ACTIVE);
 
 		String outputFileName = "C:\\Users\\avik\\" + "paydue.csv";
 		File reportFile = new File(outputFileName);
