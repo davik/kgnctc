@@ -117,6 +117,7 @@ public class WelcomeController {
 
 		int bedInvoiceCount = 0, dedInvoiceCount = 0;
 		double bedAmount = 0, dedAmount = 0;
+		double cash = 0, cheque = 0, dd = 0, netBanking = 0, pos = 0, bankDeposit = 0;
 		for (Student st : students) {
 			boolean bed = false, ded = false;
 
@@ -135,6 +136,27 @@ public class WelcomeController {
 					} else if (ded) {
 						dedAmount = dedAmount + pt.amount + lateFeeAmount;
 					}
+
+					switch (pt.mode) {
+						case "Cash":
+							cash = cash + pt.amount;
+							break;
+						case "Cheque":
+							cheque = cheque + pt.amount;
+							break;
+						case "DD":
+							dd = dd + pt.amount;
+							break;
+						case "Net Banking":
+							netBanking = netBanking + pt.amount;
+							break;
+						case "POS":
+							pos = pos + pt.amount;
+							break;
+						case "Bank Deposit":
+							bankDeposit = bankDeposit + pt.amount;
+							break;
+					}
 				}
 			}
 		}
@@ -144,6 +166,13 @@ public class WelcomeController {
 		model.put("bedInvoiceCount", bedInvoiceCount);
 		model.put("dedInvoiceCount", dedInvoiceCount);
 		model.put("totalInvoiceCount", bedInvoiceCount + dedInvoiceCount);
+
+		model.put("cash", cash);
+		model.put("cheque", cheque);
+		model.put("dd", dd);
+		model.put("netBanking", netBanking);
+		model.put("pos", pos);
+		model.put("bankDeposit", bankDeposit);
 
 		return "welcome";
 	}

@@ -177,12 +177,10 @@ function onPaymentCh() {
        $('.alert').show();
        $('.alert').addClass('show');
        $('#mode').attr("disabled", "disabled");
-       $('#transactionId').attr("readonly", true);
     } else {
         $('.alert').hide();
         $('.alert').removeClass('show');
         $('#mode').removeAttr("disabled");
-        $('#transactionId').removeAttr("readonly");
     }
 }
 

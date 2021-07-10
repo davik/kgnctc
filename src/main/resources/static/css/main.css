@@ -2,28 +2,34 @@ ul {
   list-style-type: none;
 }
 .container {
-	width: 100%;
+  width: 100%;
 }
 
 #login .container #login-row #login-column #login-box {
   margin-top: 120px;
   max-width: 600px;
   height: 320px;
-  border: 1px solid #9C9C9C;
-  background-color: #EAEAEA;
+  border: 1px solid #9c9c9c;
+  background-color: #eaeaea;
 }
 #login .container #login-row #login-column #login-box #login-form {
   padding: 20px;
 }
-#login .container #login-row #login-column #login-box #login-form #register-link {
+#login
+  .container
+  #login-row
+  #login-column
+  #login-box
+  #login-form
+  #register-link {
   margin-top: -85px;
 }
 
 .modal-open {
-    overflow: scroll;
+  overflow: scroll;
 }
 
-input[type=number] {
+input[type="number"] {
   -moz-appearance: textfield;
 }
 
@@ -37,4 +43,11 @@ input::-webkit-inner-spin-button {
   float: right;
   padding: 0.1rem 0 0 0;
   font-size: 0.875rem;
+}
+
+pre {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 16px;
 }
