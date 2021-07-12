@@ -139,22 +139,22 @@ public class WelcomeController {
 
 					switch (pt.mode) {
 						case "Cash":
-							cash = cash + pt.amount;
+							cash = cash + pt.amount + lateFeeAmount;
 							break;
 						case "Cheque":
-							cheque = cheque + pt.amount;
+							cheque = cheque + pt.amount + lateFeeAmount;
 							break;
 						case "DD":
-							dd = dd + pt.amount;
+							dd = dd + pt.amount + lateFeeAmount;
 							break;
 						case "Net Banking":
-							netBanking = netBanking + pt.amount;
+							netBanking = netBanking + pt.amount + lateFeeAmount;
 							break;
 						case "POS":
-							pos = pos + pt.amount;
+							pos = pos + pt.amount + lateFeeAmount;
 							break;
 						case "Bank Deposit":
-							bankDeposit = bankDeposit + pt.amount;
+							bankDeposit = bankDeposit + pt.amount + lateFeeAmount;
 							break;
 					}
 				}

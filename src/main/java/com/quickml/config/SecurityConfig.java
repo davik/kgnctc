@@ -16,36 +16,23 @@ import com.quickml.AuthUserDetailsService;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-	
+
 	@Override
-	  protected void configure(HttpSecurity http) throws Exception {
-	    http
-	    	.authorizeRequests()
-	          .antMatchers("/login", "/error", "/css/main.css", "/js/utility.js").permitAll()
-	          .antMatchers("/**").authenticated()
-	          .and()
-	        .formLogin()
-	          .loginPage("/login")
-	          .permitAll()
-	          .and()
-	        .logout()
-	          .clearAuthentication(true)
-	          .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-	          .logoutSuccessUrl("/login")
-	          .invalidateHttpSession(true)
-	          .deleteCookies("JSESSIONID")
-	          .permitAll();
+	protected void configure(HttpSecurity http) throws Exception {
+		http.authorizeRequests().antMatchers("/login", "/error", "/css/main.css", "/js/utility.js").permitAll()
+				.antMatchers("/**").authenticated().and().formLogin().loginPage("/login").permitAll().and().logout()
+				.clearAuthentication(true).logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+				.logoutSuccessUrl("/login").invalidateHttpSession(true).deleteCookies("JSESSIONID").permitAll();
 	}
-	
+
 	@Autowired
-    AuthUserDetailsService userDetailsService ;
-	
+	AuthUserDetailsService userDetailsService;
+
 	@Autowired
-    public void configAuthBuilder(AuthenticationManagerBuilder builder) throws Exception {
-        builder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder()); 
-    }
-	
-	
+	public void configAuthBuilder(AuthenticationManagerBuilder builder) throws Exception {
+		builder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+	}
+
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
