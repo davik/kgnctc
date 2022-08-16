@@ -1,4 +1,5 @@
 {{>layout/header}}
+
 <body>
 	<div class="wrapper">
 		<div class="container">
@@ -7,7 +8,7 @@
 			</div>
 			<div class="row">
 				{{>layout/sidebar}}
-				
+
 				<!-- responsive equal width cols, can be sm, md, lg, or xl -->
 				<div class="col-md-10">
 					<div class="row">
@@ -17,12 +18,12 @@
 									Daily Collection Summary
 								</h5>
 								<div class="card-body">
-									<p>B.Ed -  &#x20b9; {{bedAmount}}</p>
-									<p>D.Ed -  &#x20b9; {{dedAmount}}</p>
+									<p>B.Ed - &#x20b9; {{bedAmount}}</p>
+									<p>D.Ed - &#x20b9; {{dedAmount}}</p>
 								</div>
 								<div class="card-footer">
-      								<strong class="text-muted">Total -  &#x20b9; {{totalAmount}}</strong>
-    							</div>
+									<strong class="text-muted">Total - &#x20b9; {{totalAmount}}</strong>
+								</div>
 							</div>
 						</div>
 						<div class="col-md-6">
@@ -35,8 +36,8 @@
 									<p>D.Ed - {{dedInvoiceCount}} Invoice(s)</p>
 								</div>
 								<div class="card-footer">
-      								<strong class="text-muted">Total - {{totalInvoiceCount}} Invoice(s)</strong>
-    							</div>
+									<strong class="text-muted">Total - {{totalInvoiceCount}} Invoice(s)</strong>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -55,8 +56,8 @@
 									<pre>Bank Deposit  - &#x20b9; {{bankDeposit}}</pre>
 								</div>
 								<div class="card-footer">
-      								<strong class="text-muted">Total - &#x20b9; {{totalAmount}} </strong>
-    							</div>
+									<strong class="text-muted">Total - &#x20b9; {{totalAmount}} </strong>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -67,7 +68,8 @@
 									Month wise Fees Collection
 								</h5>
 								<div class="card-body embed-responsive embed-responsive-4by3">
-									<iframe class="embed-responsive-item" src="https://charts.mongodb.com/charts-project-0-fidxu/embed/charts?id=5e6589fb-9a73-4d33-919f-b896dc36fa2f&theme=light"></iframe>
+									<iframe class="embed-responsive-item"
+										src="https://charts.mongodb.com/charts-project-0-fidxu/embed/charts?id=5e6589fb-9a73-4d33-919f-b896dc36fa2f&theme=light"></iframe>
 								</div>
 
 							</div>
@@ -78,14 +80,15 @@
 									Course wise Fees Collection
 								</h5>
 								<div class="card-body embed-responsive embed-responsive-4by3">
-									<iframe class="embed-responsive-item" src="https://charts.mongodb.com/charts-project-0-fidxu/embed/charts?id=813ad458-2e42-41c5-84b5-92027507c8ac&theme=light"></iframe>
+									<iframe class="embed-responsive-item"
+										src="https://charts.mongodb.com/charts-project-0-fidxu/embed/charts?id=813ad458-2e42-41c5-84b5-92027507c8ac&theme=light"></iframe>
 								</div>
 
 							</div>
 						</div>
 					</div>
 				</div>
-				
+
 			</div>
 		</div>
 	</div>

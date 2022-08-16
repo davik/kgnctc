@@ -123,6 +123,13 @@ public class WelcomeController {
 
 			for (Payment pt : st.payments) {
 				if (pt.transactionDate.isAfter(from) && pt.transactionDate.isBefore(to) && pt.isActive) {
+					double amount = 0;
+					if (pt.purpose.contains("Course Fee Refund")) {
+						amount = -pt.amount;
+					} else {
+						amount = pt.amount;
+					}
+
 					if (st.course.equalsIgnoreCase("B.Ed")) {
 						bedInvoiceCount++;
 						bed = true;
@@ -132,29 +139,29 @@ public class WelcomeController {
 					}
 					double lateFeeAmount = pt.lateFeeAmount != -1 ? pt.lateFeeAmount : 0;
 					if (bed) {
-						bedAmount = bedAmount + pt.amount + lateFeeAmount;
+						bedAmount = bedAmount + amount + lateFeeAmount;
 					} else if (ded) {
-						dedAmount = dedAmount + pt.amount + lateFeeAmount;
+						dedAmount = dedAmount + amount + lateFeeAmount;
 					}
 
 					switch (pt.mode) {
 						case "Cash":
-							cash = cash + pt.amount + lateFeeAmount;
+							cash = cash + amount + lateFeeAmount;
 							break;
 						case "Cheque":
-							cheque = cheque + pt.amount + lateFeeAmount;
+							cheque = cheque + amount + lateFeeAmount;
 							break;
 						case "DD":
-							dd = dd + pt.amount + lateFeeAmount;
+							dd = dd + amount + lateFeeAmount;
 							break;
 						case "Net Banking":
-							netBanking = netBanking + pt.amount + lateFeeAmount;
+							netBanking = netBanking + amount + lateFeeAmount;
 							break;
 						case "POS":
-							pos = pos + pt.amount + lateFeeAmount;
+							pos = pos + amount + lateFeeAmount;
 							break;
 						case "Bank Deposit":
-							bankDeposit = bankDeposit + pt.amount + lateFeeAmount;
+							bankDeposit = bankDeposit + amount + lateFeeAmount;
 							break;
 					}
 				}
@@ -365,14 +372,32 @@ public class WelcomeController {
 				payments = new ArrayList<Payment>();
 			}
 			Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("IST"));
+
 			// Fetch the Payment or Money Receipt ID counter
 			int year = getFiscalYear(calendar);
-			Counter ct = counterRepo.findOne(year + "-" + String.valueOf(year + 1).substring(2));
-			if (null == ct) {
-				ct = new Counter();
-				ct.id = year + "-" + String.valueOf(year + 1).substring(2);
-				ct.nextId++;
+			Counter ct = null;
+			if (payment.purpose.equals("Miscellaneous Fee")) {
+				payment.purpose = payment.purpose + " (" + payment.transactionId + ")";
+				ct = counterRepo.findOne("MISC/" + year + "-" + String.valueOf(year + 1).substring(2));
+				if (null == ct) {
+					ct = new Counter();
+					ct.id = "MISC/" + year + "-" + String.valueOf(year + 1).substring(2);
+					ct.nextId++;
+				}
+				payment.transactionId = "";
+			} else {
+				ct = counterRepo.findOne(year + "-" + String.valueOf(year + 1).substring(2));
+				if (null == ct) {
+					ct = new Counter();
+					ct.id = year + "-" + String.valueOf(year + 1).substring(2);
+					ct.nextId++;
+				}
 			}
+
+			if (payment.purpose.equals("Course Fee Refund")) {
+				// payment.amount = -payment.amount;
+			}
+
 			if (payment.purpose.equals("Concession")) {
 				student.courseFee -= payment.amount;
 				payment.isActive = false;
@@ -732,7 +757,13 @@ public class WelcomeController {
 									payment.transactionDate.toString(dtfOut), payment.transactionId, payment.mode,
 									payment.purpose, payment.acceptedBy, Double.toString(payment.amount),
 									Double.toString(lateFeeAmount), Double.toString(lateFeeAmount + payment.amount) });
-							total += lateFeeAmount + payment.amount;
+
+							if (payment.purpose.contains("Course Fee Refund")) {
+								total -= lateFeeAmount + payment.amount;
+							} else {
+								total += lateFeeAmount + payment.amount;
+							}
+
 						}
 					}
 				}
@@ -1040,6 +1071,13 @@ public class WelcomeController {
 				if (payment.purpose.equals("Examination Fee") || payment.purpose.equals("Registration Fee")
 						|| payment.purpose.equals("Concession") || payment.purpose.equals("Online Application Fee")
 						|| payment.purpose.equals("Late Fee")) {
+					continue;
+				}
+				if (payment.purpose.contains("Miscellaneous Fee")) {
+					continue;
+				}
+				if (payment.purpose.contains("Course Fee Refund")) {
+					paid -= payment.amount;
 					continue;
 				}
 				paid += payment.amount;
