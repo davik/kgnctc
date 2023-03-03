@@ -33,8 +33,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.opencsv.CSVWriter;
+import com.quickml.pojos.Attendance;
+import com.quickml.pojos.AttendanceDTO;
 import com.quickml.pojos.ChangeHistory;
 import com.quickml.pojos.Counter;
 import com.quickml.pojos.Payment;
@@ -47,6 +50,7 @@ import com.quickml.pojos.smstemplate.NoticeBody;
 import com.quickml.pojos.smstemplate.PaymentBody;
 import com.quickml.pojos.smstemplate.RegistrationBody;
 import com.quickml.pojos.smstemplate.RootTemplate;
+import com.quickml.repository.AttendanceRepsitory;
 import com.quickml.repository.CounterRepository;
 import com.quickml.repository.StudentRepository;
 import com.quickml.repository.UserRepository;
@@ -66,11 +70,13 @@ import net.sf.jasperreports.engine.xml.JRXmlLoader;
 @Controller
 public class WelcomeController {
 
-	public WelcomeController(StudentRepository studRepo, CounterRepository counterRepo, UserRepository userRepo) {
+	public WelcomeController(StudentRepository studRepo, CounterRepository counterRepo, UserRepository userRepo,
+			AttendanceRepsitory attendanceRepo) {
 		super();
 		this.studRepo = studRepo;
 		this.counterRepo = counterRepo;
 		this.userRepo = userRepo;
+		this.attendanceRepo = attendanceRepo;
 	}
 
 	// inject via application.properties
@@ -104,6 +110,8 @@ public class WelcomeController {
 	public final CounterRepository counterRepo;
 	@Autowired
 	public final UserRepository userRepo;
+	@Autowired
+	public final AttendanceRepsitory attendanceRepo;
 	public static final DateTimeFormatter dtfOut = DateTimeFormat.forPattern("MM/dd/yyyy");
 
 	SMS sms = new SMS();
@@ -1084,5 +1092,33 @@ public class WelcomeController {
 			}
 		}
 		return paid;
+	}
+
+	/* App related funtions starts here */
+	// Get Student Details
+	@RequestMapping(value = "/getStudentDetails", method = RequestMethod.GET)
+	@ResponseBody
+	public Student getStudentDetails(@RequestParam(name = "id") String studentId) {
+		Student student = studRepo.findOne(studentId);
+		return student;
+	}
+
+	// Register Attendance with location
+	@RequestMapping(value = "/registerAttendance", method = RequestMethod.POST)
+	@ResponseBody
+	public String registerAttendance(@RequestBody AttendanceDTO attendanceDTO) {
+		Student student = studRepo.findOne(attendanceDTO.studentId);
+		if (null == student) {
+			return "Student not found!";
+		}
+		Attendance attendance = new Attendance();
+		attendance.studentId = attendanceDTO.studentId;
+		attendance.course = attendanceDTO.course;
+		attendance.session = attendanceDTO.session;
+		attendance.time = (DateTime) DateTime.now().withZone(DateTimeZone.forID("Asia/Kolkata"));
+		attendance.latitude = attendanceDTO.latitude;
+		attendance.longitude = attendanceDTO.longitude;
+		attendanceRepo.save(attendance);
+		return "Attendance Registered";
 	}
 }
