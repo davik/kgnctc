@@ -1099,7 +1099,7 @@ public class WelcomeController {
 	@RequestMapping(value = "/getStudentDetails", method = RequestMethod.GET)
 	@ResponseBody
 	public Student getStudentDetails(@RequestParam(name = "id") String studentId) {
-		Student student = studRepo.findOne(studentId);
+		Student student = studRepo.findByEmail(studentId);
 		return student;
 	}
 
