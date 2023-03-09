@@ -1,4 +1,5 @@
 {{>layout/header}}
+
 <body>
 	<div class="wrapper">
 		<div class="container">
@@ -7,19 +8,23 @@
 			</div>
 			<div class="row">
 				{{>layout/sidebar}}
-				
+
 				<!-- responsive equal width cols, can be sm, md, lg, or xl -->
-				
+
 				<div class="col-md-10">
 					<nav>
 						<div class="nav nav-tabs" id="nav-tab" role="tablist">
-							<a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Due Payment</a>
-							<a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Student List</a>
-							<a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Collection</a>
+							<a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home"
+								role="tab" aria-controls="nav-home" aria-selected="true">Due Payment</a>
+							<a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile"
+								role="tab" aria-controls="nav-profile" aria-selected="false">Student List</a>
+							<a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact"
+								role="tab" aria-controls="nav-contact" aria-selected="false">Collection</a>
 						</div>
 					</nav>
 					<div class="tab-content" id="nav-tabContent">
-						<div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+						<div class="tab-pane fade show active" id="nav-home" role="tabpanel"
+							aria-labelledby="nav-home-tab">
 							<form class="form-inline pt-4">
 								<div class="col-md-4">
 									<div class="input-group mb-3">
@@ -32,6 +37,8 @@
 											<option value="2020-22">2020-22</option>
 											<option value="2021-23">2021-23</option>
 											<option value="2022-24">2022-24</option>
+											<option value="2023-25">2023-25</option>
+											<option value="2024-26">2024-26</option>
 										</select>
 									</div>
 								</div>
@@ -47,7 +54,8 @@
 									</div>
 								</div>
 								<div class="col-md-2">
-									<a class="btn btn-primary mb-3" id="paydue" target="_blank" href="/payDueReport?course=B.Ed&session=2018-20">Generate Report</a>
+									<a class="btn btn-primary mb-3" id="paydue" target="_blank"
+										href="/payDueReport?course=B.Ed&session=2018-20">Generate Report</a>
 								</div>
 							</form>
 							<div id="msg" class="py-4"></div>
@@ -59,12 +67,15 @@
 										<div class="input-group-prepend">
 											<label class="input-group-text" for="session">Session</label>
 										</div>
-										<select class="custom-select" id="r2session" onchange="changeAncAttSessStudentDetails();">
+										<select class="custom-select" id="r2session"
+											onchange="changeAncAttSessStudentDetails();">
 											<option value="2018-20">2018-20</option>
 											<option value="2019-21">2019-21</option>
 											<option value="2020-22">2020-22</option>
 											<option value="2021-23">2021-23</option>
 											<option value="2022-24">2022-24</option>
+											<option value="2023-25">2023-25</option>
+											<option value="2024-26">2024-26</option>
 										</select>
 									</div>
 								</div>
@@ -73,14 +84,16 @@
 										<div class="input-group-prepend">
 											<label class="input-group-text" for="course">Course</label>
 										</div>
-										<select class="custom-select" id="r2course" onchange="changeAncAttSessStudentDetails();">
+										<select class="custom-select" id="r2course"
+											onchange="changeAncAttSessStudentDetails();">
 											<option value="B.Ed">B.Ed</option>
 											<option value="D.El.Ed">D.El.Ed</option>
 										</select>
 									</div>
 								</div>
 								<div class="col-md-2">
-									<a class="btn btn-primary mb-3" id="studentDetail" target="_blank" href="/allStudents?course=B.Ed&session=2018-20">Download Students Detail</a>
+									<a class="btn btn-primary mb-3" id="studentDetail" target="_blank"
+										href="/allStudents?course=B.Ed&session=2018-20">Download Students Detail</a>
 								</div>
 							</form>
 						</div>
@@ -91,7 +104,8 @@
 										<div class="input-group-prepend">
 											<label class="input-group-text" for="from">Start Date</label>
 										</div>
-										<input type="date" class="form-control clearit" id="from" onchange="changeAncAttDailyCollection();">
+										<input type="date" class="form-control clearit" id="from"
+											onchange="changeAncAttDailyCollection();">
 									</div>
 								</div>
 								<div class="col-md-4">
@@ -99,18 +113,20 @@
 										<div class="input-group-prepend">
 											<label class="input-group-text" for="to">End Date</label>
 										</div>
-										<input type="date" class="form-control clearit" id="to" onchange="changeAncAttDailyCollection();">
+										<input type="date" class="form-control clearit" id="to"
+											onchange="changeAncAttDailyCollection();">
 									</div>
 								</div>
 								<div class="col-md-2">
-									<a class="btn btn-primary mb-3 disabled" id="collectionReport" target="_blank" href="">Generate Collection Report</a>
+									<a class="btn btn-primary mb-3 disabled" id="collectionReport" target="_blank"
+										href="">Generate Collection Report</a>
 								</div>
 							</form>
 							<div id="msg" class="py-4"></div>
 						</div>
 					</div>
 				</div>
-				
+
 			</div>
 		</div>
 	</div>

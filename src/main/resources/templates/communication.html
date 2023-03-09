@@ -1,4 +1,5 @@
 {{>layout/header}}
+
 <body>
 	<div class="wrapper">
 		<div class="container">
@@ -7,9 +8,9 @@
 			</div>
 			<div class="row">
 				{{>layout/sidebar}}
-				
+
 				<!-- responsive equal width cols, can be sm, md, lg, or xl -->
-				
+
 				<div class="col-md-10">
 					<button type="button" class="btn btn-warning">
 						SMS Balance <span class="badge badge-light">{{balanceSMS}}</span>
@@ -17,14 +18,16 @@
 					<button type="button" class="btn btn-success">
 						SMS Sent <span class="badge badge-light">{{sentSMS}}</span>
 					</button>
-					
+
 					<nav class="pt-2">
 						<div class="nav nav-tabs" id="nav-tab" role="tablist">
-							<a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Send Notice</a>
+							<a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home"
+								role="tab" aria-controls="nav-home" aria-selected="true">Send Notice</a>
 						</div>
 					</nav>
 					<div class="tab-content" id="nav-tabContent">
-						<div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+						<div class="tab-pane fade show active" id="nav-home" role="tabpanel"
+							aria-labelledby="nav-home-tab">
 							<form class="form-inline pt-4">
 								<div class="col-md-4">
 									<div class="input-group mb-3">
@@ -37,6 +40,8 @@
 											<option value="2020-22">2020-22</option>
 											<option value="2021-23">2021-23</option>
 											<option value="2022-24">2022-24</option>
+											<option value="2023-25">2023-25</option>
+											<option value="2024-26">2024-26</option>
 										</select>
 									</div>
 								</div>
@@ -53,7 +58,8 @@
 								</div>
 							</form>
 							<div class="form-check">
-								<input class="form-check-input ml-1" type="checkbox" value="" id="onlyAddiNumbers" onchange="handleAddiNumChk();">
+								<input class="form-check-input ml-1" type="checkbox" value="" id="onlyAddiNumbers"
+									onchange="handleAddiNumChk();">
 								<label class="form-check-label ml-4" for="onlyAddiNumbers">
 									Send only to the Additional Numbers
 								</label>
@@ -62,7 +68,8 @@
 								<div class="input-group-prepend">
 									<span class="input-group-text">Additional Numbers</span>
 								</div>
-								<textarea class="form-control" aria-label="With textarea" id="additionalNumbers" placeholder="Comma Separated Numbers. Example: 9012345678, 8765432109"></textarea>
+								<textarea class="form-control" aria-label="With textarea" id="additionalNumbers"
+									placeholder="Comma Separated Numbers. Example: 9012345678, 8765432109"></textarea>
 							</div>
 							<div class="input-group col-md-8 mt-3">
 								<div class="input-group-prepend">
@@ -84,15 +91,16 @@
 								<span> SMS Credit)</span>
 							</div>
 							<div class="input-group col-md-2">
-								<button type="submit" class="btn btn-primary mt-3" id="smsButton" onclick="sendSMS();">Send SMS</button>
+								<button type="submit" class="btn btn-primary mt-3" id="smsButton"
+									onclick="sendSMS();">Send SMS</button>
 							</div>
 
-							
+
 							<div id="msg" class="py-4"></div>
 						</div>
 					</div>
 				</div>
-				
+
 			</div>
 		</div>
 	</div>
