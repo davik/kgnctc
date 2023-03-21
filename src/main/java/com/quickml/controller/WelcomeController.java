@@ -123,7 +123,8 @@ public class WelcomeController {
 		DateTime to = DateTime.now().withTimeAtStartOfDay().plusHours(24);
 		List<Student> students = studRepo.findByPaymentsTransactionDateBetween(from, to);
 
-		int bedInvoiceCount = 0, dedInvoiceCount = 0;
+		int bedInvoiceCount = 0, dedInvoiceCount = 0, prospectusCount = 0;
+		double propectusAmount = 0;
 		double bedAmount = 0, dedAmount = 0;
 		double cash = 0, cheque = 0, dd = 0, netBanking = 0, pos = 0, bankDeposit = 0;
 		for (Student st : students) {
@@ -136,6 +137,12 @@ public class WelcomeController {
 						amount = -pt.amount;
 					} else {
 						amount = pt.amount;
+					}
+
+					if (pt.purpose.contains("Prospectus Fee")) {
+						prospectusCount++;
+						propectusAmount = propectusAmount + amount;
+						continue;
 					}
 
 					if (st.course.equalsIgnoreCase("B.Ed")) {
@@ -177,10 +184,12 @@ public class WelcomeController {
 		}
 		model.put("bedAmount", bedAmount);
 		model.put("dedAmount", dedAmount);
-		model.put("totalAmount", bedAmount + dedAmount);
+		model.put("prospectusAmount", propectusAmount);
+		model.put("totalAmount", bedAmount + dedAmount + propectusAmount);
 		model.put("bedInvoiceCount", bedInvoiceCount);
 		model.put("dedInvoiceCount", dedInvoiceCount);
-		model.put("totalInvoiceCount", bedInvoiceCount + dedInvoiceCount);
+		model.put("prospectusCount", prospectusCount);
+		model.put("totalInvoiceCount", bedInvoiceCount + dedInvoiceCount + prospectusCount);
 
 		model.put("cash", cash);
 		model.put("cheque", cheque);
@@ -1078,7 +1087,7 @@ public class WelcomeController {
 				}
 				if (payment.purpose.equals("Examination Fee") || payment.purpose.equals("Registration Fee")
 						|| payment.purpose.equals("Concession") || payment.purpose.equals("Online Application Fee")
-						|| payment.purpose.equals("Late Fee")) {
+						|| payment.purpose.equals("Late Fee") || payment.purpose.equals("Prospectus Fee")) {
 					continue;
 				}
 				if (payment.purpose.contains("Miscellaneous Fee")) {
