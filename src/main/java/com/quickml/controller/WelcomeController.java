@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -44,16 +46,20 @@ import com.quickml.pojos.Payment;
 import com.quickml.pojos.SMSDTO;
 import com.quickml.pojos.Student;
 import com.quickml.pojos.StudentDTO;
+import com.quickml.pojos.TeachingSchool;
+import com.quickml.pojos.Notice;
 import com.quickml.pojos.User;
 import com.quickml.pojos.smstemplate.DueReminderBody;
 import com.quickml.pojos.smstemplate.NoticeBody;
 import com.quickml.pojos.smstemplate.PaymentBody;
 import com.quickml.pojos.smstemplate.RegistrationBody;
 import com.quickml.pojos.smstemplate.RootTemplate;
-import com.quickml.repository.AttendanceRepsitory;
+import com.quickml.repository.AttendanceRepository;
 import com.quickml.repository.CounterRepository;
 import com.quickml.repository.StudentRepository;
 import com.quickml.repository.UserRepository;
+import com.quickml.repository.TeachingSchoolRepository;
+import com.quickml.repository.NoticeRepository;
 import com.quickml.utils.Currency;
 import com.quickml.utils.SMS;
 
@@ -71,12 +77,14 @@ import net.sf.jasperreports.engine.xml.JRXmlLoader;
 public class WelcomeController {
 
 	public WelcomeController(StudentRepository studRepo, CounterRepository counterRepo, UserRepository userRepo,
-			AttendanceRepsitory attendanceRepo) {
+			AttendanceRepository attendanceRepo, TeachingSchoolRepository teachingSchoolRepo, NoticeRepository noticeRepo) {
 		super();
 		this.studRepo = studRepo;
 		this.counterRepo = counterRepo;
 		this.userRepo = userRepo;
 		this.attendanceRepo = attendanceRepo;
+		this.teachingSchoolRepo = teachingSchoolRepo;
+		this.noticeRepo = noticeRepo;
 	}
 
 	// inject via application.properties
@@ -111,7 +119,11 @@ public class WelcomeController {
 	@Autowired
 	public final UserRepository userRepo;
 	@Autowired
-	public final AttendanceRepsitory attendanceRepo;
+	public final AttendanceRepository attendanceRepo;
+	@Autowired
+	public final TeachingSchoolRepository teachingSchoolRepo;
+	@Autowired
+	public final NoticeRepository noticeRepo;
 	public static final DateTimeFormatter dtfOut = DateTimeFormat.forPattern("MM/dd/yyyy");
 
 	SMS sms = new SMS();
@@ -343,7 +355,18 @@ public class WelcomeController {
 		}
 		model.put("sentSMS", ct.nextId);
 		model.put("balanceSMS", smsProvisionCount - ct.nextId);
+		model.put("notices", noticeRepo.findAll().stream().sorted((n1, n2) -> n2.date.compareTo(n1.date))
+				.collect(Collectors.toList()));
 		return "communication";
+	}
+
+	@RequestMapping(value = "/teachingSchool", method = RequestMethod.GET)
+	String getTeachingSchoolPage(Map<String, Object> model, HttpServletRequest request) throws IOException {
+		populateCommonPageFields(model, request);
+
+		List<TeachingSchool> schools = teachingSchoolRepo.findAll();
+		model.put("schools", schools);
+		return "teachingSchool";
 	}
 
 	@RequestMapping(value = "/paymentDetails", method = RequestMethod.GET)
@@ -359,6 +382,7 @@ public class WelcomeController {
 
 			model.put("due", student.courseFee - GetPaid(student));
 			model.put("student", student);
+			model.put("schools", teachingSchoolRepo.findAll().stream().map(s -> s.name).collect(Collectors.toList()));
 		}
 		return "paymentDetails";
 	}
@@ -463,6 +487,20 @@ public class WelcomeController {
 		model.put("alert", "alert alert-success");
 		model.put("result", "Payment Information Recorded Successfully!");
 		return "paymentDetails";
+	}
+
+	// Update Teaching School for a student
+	@RequestMapping(value = "/updateTeachingSchool", method = RequestMethod.POST)
+	@ResponseBody
+	String updateTeachingSchool(Map<String, Object> model, @RequestParam(name = "id") String studentId, @RequestParam(name = "schoolName") String schoolName) {
+		Student student = studRepo.findOne(studentId);
+		if (null == student) {
+			return "Student not found!";
+		} else {
+			student.teachingSchool = schoolName;
+			Student savedEntity = studRepo.save(student);
+		}
+		return "Saved Successfully!";
 	}
 
 	@RequestMapping(value = "/invoice", method = RequestMethod.GET)
@@ -1101,6 +1139,72 @@ public class WelcomeController {
 			}
 		}
 		return paid;
+	}
+
+	// Post Teaching School details
+	@RequestMapping(value = "/postTeachingSchool", method = RequestMethod.POST)
+	@ResponseBody
+	public String postTeachingSchool(@RequestBody TeachingSchool teachingSchool) {
+		// Check if name not empty and latitiude and longitude not 0
+		if (teachingSchool.name.isEmpty() || teachingSchool.latitude == 0 || teachingSchool.longitude == 0) {
+			return "Teaching School details not saved!";
+		}
+		// Check if Teaching School already exists
+		TeachingSchool ts = teachingSchoolRepo.findByName(teachingSchool.name);
+		if (null != ts) {
+			return "Teaching School details already exist!";
+		}
+		
+		teachingSchoolRepo.save(teachingSchool);
+		return "Teaching School details saved successfully!";
+	}
+
+	// Get all Teaching School details
+	@RequestMapping(value = "/getTeachingSchools", method = RequestMethod.GET)
+	@ResponseBody
+	public List<TeachingSchool> getTeachingSchools() {
+		List<TeachingSchool> teachingSchools = teachingSchoolRepo.findAll();
+		return teachingSchools;
+	}
+
+	// Get Teaching School details by name
+	@RequestMapping(value = "/getTeachingSchool", method = RequestMethod.GET)
+	@ResponseBody
+	public TeachingSchool getTeachingSchool(@RequestParam(name = "name") String name) {
+		TeachingSchool teachingSchool = teachingSchoolRepo.findByName(name);
+		return teachingSchool;
+	}
+
+	// Post Notice details
+	@RequestMapping(value = "/postNotice", method = RequestMethod.POST)
+	@ResponseBody
+	public String postNotice(@RequestBody Notice notice) {
+		// Check if course, session and content is not empty
+		if (notice.course.isEmpty() || notice.session.isEmpty() || notice.content.isEmpty()) {
+			return "Notice details missing!";
+		}
+		notice.date = (DateTime) DateTime.now().withZone(DateTimeZone.forID("Asia/Kolkata"));
+		
+		noticeRepo.save(notice);
+		return "Notice details saved successfully!";
+	}
+
+	// Get Notice Page
+	@RequestMapping(value = "/getNoticePage", method = RequestMethod.GET)
+	String getNoticePage(Map<String, Object> model, HttpServletRequest request) throws IOException {
+		populateCommonPageFields(model, request);
+		List<Notice> notices = noticeRepo.findAll();
+		model.put("notices", notices);
+		return "notice";
+	}
+
+	// Get Notice by course and Session
+	@RequestMapping(value = "/getNotices", method = RequestMethod.GET)
+	@ResponseBody
+	public List<Notice> getNotices(@RequestParam(name = "course") String course,
+			@RequestParam(name = "session") String session) {
+		List<Notice> notices = noticeRepo.findByCourseAndSession(course, session);
+		return notices;
 	}
 
 	/* App related funtions starts here */

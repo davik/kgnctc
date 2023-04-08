@@ -49,6 +49,7 @@ public class Student {
 	public double courseFee;
 	public double familyIncome;
 	public Status status = Status.ACTIVE;
+	public String teachingSchool = "";
 	
 	public ArrayList<ChangeHistory> changeHistory= new ArrayList<>();
 

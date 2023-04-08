@@ -12,22 +12,28 @@
 				<!-- responsive equal width cols, can be sm, md, lg, or xl -->
 
 				<div class="col-md-10">
-					<button type="button" class="btn btn-warning">
-						SMS Balance <span class="badge badge-light">{{balanceSMS}}</span>
-					</button>
-					<button type="button" class="btn btn-success">
-						SMS Sent <span class="badge badge-light">{{sentSMS}}</span>
-					</button>
+
 
 					<nav class="pt-2">
 						<div class="nav nav-tabs" id="nav-tab" role="tablist">
-							<a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home"
-								role="tab" aria-controls="nav-home" aria-selected="true">Send Notice</a>
+							<a class="nav-item nav-link active" id="nav-sms-tab" data-toggle="tab" href="#nav-sms"
+								role="tab" aria-controls="nav-sms" aria-selected="true">SMS Notice</a>
+							<a class="nav-item nav-link" id="nav-app-tab" data-toggle="tab" href="#nav-app" role="tab"
+								aria-controls="nav-app" aria-selected="false">App Notice</a>
+							<a class="nav-item nav-link" id="nav-notice-tab" data-toggle="tab" href="#nav-notice"
+								role="tab" aria-controls="nav-notice" aria-selected="false">Previous Notices</a>
 						</div>
 					</nav>
 					<div class="tab-content" id="nav-tabContent">
-						<div class="tab-pane fade show active" id="nav-home" role="tabpanel"
-							aria-labelledby="nav-home-tab">
+						<div class="tab-pane fade show active" id="nav-sms" role="tabpanel"
+							aria-labelledby="nav-sms-tab">
+							<div class="blank pt-4"></div>
+							<button type="button" class="btn btn-warning">
+								SMS Balance <span class="badge badge-light">{{balanceSMS}}</span>
+							</button>
+							<button type="button" class="btn btn-success">
+								SMS Sent <span class="badge badge-light">{{sentSMS}}</span>
+							</button>
 							<form class="form-inline pt-4">
 								<div class="col-md-4">
 									<div class="input-group mb-3">
@@ -97,6 +103,74 @@
 
 
 							<div id="msg" class="py-4"></div>
+						</div>
+						<div class="tab-pane fade" id="nav-app" role="tabpanel" aria-labelledby="nav-app-tab">
+							<form class="form-inline pt-4">
+								<div class="col-md-4">
+									<div class="input-group mb-3">
+										<div class="input-group-prepend">
+											<label class="input-group-text" for="appSession">Session</label>
+										</div>
+										<select class="custom-select" id="appSession" onchange="changeAncAttSess();">
+											<option value="2018-20">2018-20</option>
+											<option value="2019-21">2019-21</option>
+											<option value="2020-22">2020-22</option>
+											<option value="2021-23">2021-23</option>
+											<option value="2022-24">2022-24</option>
+											<option value="2023-25">2023-25</option>
+											<option value="2024-26">2024-26</option>
+										</select>
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="input-group mb-3">
+										<div class="input-group-prepend">
+											<label class="input-group-text" for="appCourse">Course</label>
+										</div>
+										<select class="custom-select" id="appCourse" onchange="changeAncAttSess();">
+											<option value="B.Ed">B.Ed</option>
+											<option value="D.El.Ed">D.El.Ed</option>
+										</select>
+									</div>
+								</div>
+							</form>
+							<div class="form-group col-md-8 mt-3">
+								<label for="appNoticeBody">Notice Content</label>
+								<textarea class="form-control" aria-label="With textarea" id="appNoticeBody"></textarea>
+							</div>
+							<div class="input-group col-md-2">
+								<button type="submit" class="btn btn-primary mt-3" id="appNoticeButton"
+									onclick="sendAppNotice();">Send Notice</button>
+							</div>
+							<div id="appNoticeMsg" class="py-4"></div>
+						</div>
+						<div class="tab-pane fade" id="nav-notice" role="tabpanel" aria-labelledby="nav-notice-tab">
+							<div class="pb-4 pt-4 row row-list">
+								<div class="input-group col-md-6">
+									<input type="text" class="form-control" placeholder="Search.." id="noticeSearch">
+								</div>
+							</div>
+
+							<table class="table table-striped">
+								<thead>
+									<tr>
+										<th>Date</th>
+										<th>Course</th>
+										<th>Session</th>
+										<th>Notice Content</th>
+									</tr>
+								</thead>
+								<tbody id="noticeTable">
+									{{#notices}}
+									<tr>
+										<td class="convertTime">{{date}}</td>
+										<td>{{course}}</td>
+										<td>{{session}}</td>
+										<td>{{content}}</td>
+									</tr>
+									{{/notices}}
+								</tbody>
+							</table>
 						</div>
 					</div>
 				</div>

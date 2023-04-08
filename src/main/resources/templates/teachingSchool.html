@@ -1,0 +1,104 @@
+{{>layout/header}}
+
+<body>
+	<div class="wrapper">
+		<div class="container">
+			<div class="row">
+				{{>layout/navbar}}
+			</div>
+			<div class="row">
+				{{>layout/sidebar}}
+
+				<!-- responsive equal width cols, can be sm, md, lg, or xl -->
+
+				<div class="col-md-10">
+
+					<nav class="pt-2">
+						<div class="nav nav-tabs" id="nav-tab" role="tablist">
+							<a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home"
+								role="tab" aria-controls="nav-home" aria-selected="true">Practice Teaching Schools</a>
+							<a class="nav-item nav-link" id="nav-entry-tab" data-toggle="tab" href="#nav-entry"
+								role="tab" aria-controls="nav-entry" aria-selected="false">New Teaching School</a>
+						</div>
+					</nav>
+					<div class="tab-content" id="nav-tabContent">
+						<div class="tab-pane fade show active" id="nav-home" role="tabpanel"
+							aria-labelledby="nav-home-tab">
+							<div class="pb-4 pt-4 row row-list">
+								<div class="input-group col-md-6">
+									<input type="text" class="form-control" placeholder="Search.." id="schoolSearch">
+								</div>
+							</div>
+
+							<table class="table table-striped">
+								<thead>
+									<tr>
+										<th>Name</th>
+										<th>Course</th>
+										<th>Latitude</th>
+										<th>Longitude</th>
+									</tr>
+								</thead>
+								<tbody id="schoolTable">
+									{{#schools}}
+									<tr>
+										<td>{{name}}</td>
+										<td>{{course}}</td>
+										<td>{{latitude}}</td>
+										<td>{{longitude}}</td>
+									</tr>
+									{{/schools}}
+								</tbody>
+							</table>
+						</div>
+
+						<div class="tab-pane fade" id="nav-entry" role="tabpanel" aria-labelledby="nav-entry-tab">
+							<form class="form-inline pt-4">
+								<div class="col-md-4">
+									<div class="input-group mb-3">
+										<div class="input-group-prepend">
+											<label class="input-group-text" for="course">Course</label>
+										</div>
+										<select class="custom-select" id="course">
+											<option value="B.Ed">B.Ed</option>
+											<option value="D.El.Ed">D.El.Ed</option>
+										</select>
+									</div>
+								</div>
+							</form>
+							<!-- School name and Address -->
+							<div class="form-group col-md-4">
+								<label for="name">School Name</label>
+								<input type="text" class="form-control" id="name" placeholder="School Name">
+							</div>
+							<div class="form-group col-md-4">
+								<label for="address">School Address</label>
+								<textarea type="text" class="form-control" id="address"
+									placeholder="School Address"> </textarea>
+							</div>
+							<!-- Latitudinal and longitudinal coordinates of the school -->
+							<div class="form-group col-md-4">
+								<label for="latitude">Latitude</label>
+								<input type="text" class="form-control" id="latitude" placeholder="Latitude">
+							</div>
+							<div class="form-group col-md-4">
+								<label for="longitude">Longitude</label>
+								<input type="text" class="form-control" id="longitude" placeholder="Longitude">
+							</div>
+							<div class="input-group col-md-2">
+								<button type="submit" class="btn btn-primary mt-3" id="smsButton"
+									onclick="postTeachingSchool();">Save</button>
+							</div>
+
+
+							<div id="msg" class="py-4"></div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<!-- /.container -->
+</body>
+{{>layout/footer}}

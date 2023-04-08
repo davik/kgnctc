@@ -1,10 +1,37 @@
 
 $.ajaxSetup({
-    beforeSend: function(xhr) {
+    beforeSend: function (xhr) {
         var token = $("meta[name='_csrf']").attr("content");
         xhr.setRequestHeader('X-CSRF-TOKEN', token);
     }
 });
+
+function postTeachingSchool() {
+    // Data to be sent to server name, address, course, latitude and longitude
+    var name = $('#name').val();
+    var address = $('#address').val();
+    var course = $('#course').val();
+    var latitude = $('#latitude').val();
+    var longitude = $('#longitude').val();
+    var data = {
+        name: name,
+        address: address,
+        course: course,
+        latitude: latitude,
+        longitude: longitude
+    };
+    $.ajax({
+        type: "POST",
+        url: "/postTeachingSchool",
+        data: JSON.stringify(data),
+        success: function (data) {
+            $('#msg').html(data);
+            $('#msg').show();
+        },
+        dataType: "text",
+        contentType: "application/json"
+    });
+}
 
 function fetchPaymentDetail(id) {
     $('#nav-profile-tab').trigger('click');
@@ -23,7 +50,7 @@ function call(e, path) {
     $.ajax({
         type: "GET",
         url: path,
-        success: function(data) {
+        success: function (data) {
             $("#main_portion").html(data)
         },
         dataType: "text",
@@ -43,16 +70,16 @@ function showPaymentForm() {
 
 function downloadInvoice(paymentid) {
     $.ajax({
-            type: "POST",
-            url: '/invoice?' + $.param({
-                id: $('#id').val(),
-                paymentId: paymentid
-            })
-        });
+        type: "POST",
+        url: '/invoice?' + $.param({
+            id: $('#id').val(),
+            paymentId: paymentid
+        })
+    });
 }
 
 function createPayment(event) {
-	$('#paymentButton').prop('disabled', true);
+    $('#paymentButton').prop('disabled', true);
     let payment = {
         transactionId: $("#transactionId").val(),
         amount: $("#amount").val(),
@@ -69,13 +96,13 @@ function createPayment(event) {
             id: $('#id').val()
         }),
         data: JSON.stringify(payment),
-        success: function(data) {
+        success: function (data) {
             $("#msgPayment").show();
             $('#msgPayment').html(data);
             $('html,body').animate({
                 scrollTop: $("#msgPayment").offset().top
             }, 'slow');
-            setTimeout(function() {
+            setTimeout(function () {
                 $("#msgPayment").hide();
                 $('#idSearch').click();
             }, 3000);
@@ -112,14 +139,40 @@ function sendSMS() {
         type: "POST",
         url: "/sendSMS",
         data: JSON.stringify(sms),
-        success: function(data) {
+        success: function (data) {
             $("#msg").show();
             $('#msg').html(data);
             $('html,body').animate({
                 scrollTop: $("#msg").offset().top
             }, 'slow');
-            setTimeout(function() {
+            setTimeout(function () {
                 $("#msg").hide();
+            }, 3000);
+        },
+        contentType: "application/json"
+    });
+}
+
+function sendAppNotice() {
+    $('#appNoticeButton').prop('disabled', true);
+    let notice = {
+        course: $("#appCourse").val(),
+        session: $("#appSession").val(),
+        content: $("#appNoticeBody").val()
+    };
+
+    $.ajax({
+        type: "POST",
+        url: "/postNotice",
+        data: JSON.stringify(notice),
+        success: function (data) {
+            $("#appNoticeMsg").show();
+            $('#appNoticeMsg').html(data);
+            $('html,body').animate({
+                scrollTop: $("#appNoticeMsg").offset().top
+            }, 'slow');
+            setTimeout(function () {
+                $("#appNoticeMsg").hide();
             }, 3000);
         },
         contentType: "application/json"
@@ -128,44 +181,44 @@ function sendSMS() {
 
 function changeAncAttSess() {
     let url = '/payDueReport?' + $.param({
-                course: $('#course').val(),
-                session: $('#session').val()
-            });
-    $('#paydue').attr({target: '_blank', href: url});
+        course: $('#course').val(),
+        session: $('#session').val()
+    });
+    $('#paydue').attr({ target: '_blank', href: url });
 }
 
 function changeAncAttSessStudentDetails() {
     let url = '/allStudents?' + $.param({
-                course: $('#r2course').val(),
-                session: $('#r2session').val()
-            });
-    $('#studentDetail').attr({target: '_blank', href: url});
+        course: $('#r2course').val(),
+        session: $('#r2session').val()
+    });
+    $('#studentDetail').attr({ target: '_blank', href: url });
 }
 
 function changeAncAttDailyCollection() {
-    $('#to').attr({min: $('#from').val()});
-    $('#to').attr({max: $('#from').attr('max')});
+    $('#to').attr({ min: $('#from').val() });
+    $('#to').attr({ max: $('#from').attr('max') });
     if ($('#from').val() && $('#to').val()) {
         $('#collectionReport').removeClass("disabled");
     } else {
         $('#collectionReport').addClass("disabled");
     }
     let url = '/collectionReport?' + $.param({
-                from: $('#from').val(),
-                to: $('#to').val()
-            });
-    $('#collectionReport').attr({target: '_blank', href: url});
+        from: $('#from').val(),
+        to: $('#to').val()
+    });
+    $('#collectionReport').attr({ target: '_blank', href: url });
 }
 
 function fetchStudents() {
     let url = '/studentList?' + $.param({
-                course: $('#course').val(),
-                session: $('#session').val()
-            });
+        course: $('#course').val(),
+        session: $('#session').val()
+    });
     $.ajax({
         type: "GET",
         url: url,
-        success: function(data) {
+        success: function (data) {
             $(".table").html(data);
         },
         contentType: "application/json"
@@ -174,9 +227,9 @@ function fetchStudents() {
 
 function onPaymentCh() {
     if ($('#purpose').val() == 'Concession') {
-       $('.alert').show();
-       $('.alert').addClass('show');
-       $('#mode').attr("disabled", "disabled");
+        $('.alert').show();
+        $('.alert').addClass('show');
+        $('#mode').attr("disabled", "disabled");
     } else {
         $('.alert').hide();
         $('.alert').removeClass('show');
@@ -257,21 +310,21 @@ function createStudent(e) {
         url = "/create"
     } else {
         url = "modifyStudentDetails?" + $.param({
-                id: $('#button').data('id')
-            })
+            id: $('#button').data('id')
+        })
     }
     $.ajax({
         type: "POST",
         url: url,
         data: JSON.stringify(student),
-        success: function(data) {
+        success: function (data) {
             $("#msg").show();
             $('#msg').html(data);
             $('html,body').animate({
                 scrollTop: $("#msg").offset().top
             }, 'slow');
             $('.clearit').val('');
-            setTimeout(function() {
+            setTimeout(function () {
                 $("#msg").hide();
             }, 3000);
         },
@@ -279,35 +332,44 @@ function createStudent(e) {
     });
 }
 
-$(document).ready(function() {
+$(document).ready(function () {
     $("body").tooltip({ selector: '[data-toggle=tooltip]' });
     $('[data-toggle="tooltip"]').tooltip({
-        trigger : 'hover'
+        trigger: 'hover'
     });
     // Listen to click event on the submit button
     $('#button').click(createStudent);
 
-    $('#idSearch').click(function(e) {
+    $(".convertTime").each(function () {
+        let utcDate = $(this).text();
+        let localDate = new Date(utcDate);
+        let x = localDate.toLocaleDateString('en-GB', {
+            day: '2-digit', month: 'short', year: 'numeric'
+        }).replace(/ /g, '-');
+        $(this).text(x);
+    });
+
+    $('#idSearch').click(function (e) {
         e.preventDefault();
         $.ajax({
             type: "GET",
             url: '/paymentDetails?' + $.param({
                 id: $('#id').val()
             }),
-            success: function(data) {
+            success: function (data) {
                 $('#paymentDetail').html(data);
-                $(".convertTime").each(function() {
+                $(".convertTime").each(function () {
                     let utcDate = $(this).text();
                     let localDate = new Date(utcDate);
                     let x = localDate.toLocaleDateString('en-GB', {
                         day: '2-digit', month: 'short', year: 'numeric'
-                      }).replace(/ /g, '-');
+                    }).replace(/ /g, '-');
                     $(this).text(x);
                 });
                 $('#paymentForm').hide();
                 if ($('#studentStatus').text() == "ACTIVE") {
                     $('#studentStatus').addClass("badge-success");
-                } else if ($('#studentStatus').text() == "DROPOUT"){
+                } else if ($('#studentStatus').text() == "DROPOUT") {
                     $('#studentStatus').addClass("badge-danger");
                 } else {
                     $('#studentStatus').addClass("badge-warning");
@@ -317,35 +379,35 @@ $(document).ready(function() {
         });
     });
 
-    $('#idSearchEdit').click(function(e) {
+    $('#idSearchEdit').click(function (e) {
         e.preventDefault();
         $.ajax({
             type: "GET",
             url: '/studentDetails?' + $.param({
                 id: $('#idStudent').val()
             }),
-            success: function(data) {
+            success: function (data) {
                 $('#studentDetail').html(data);
                 // Select gender
-                let findString = 'option[value="'+$('#gender').data('gender')+'"]';
-                $('#gender').find(findString).attr("selected",true);
+                let findString = 'option[value="' + $('#gender').data('gender') + '"]';
+                $('#gender').find(findString).attr("selected", true);
                 // Select Religion
-                findString = 'option[value="'+$('#religion').data('religion')+'"]';
-                $('#religion').find(findString).attr("selected",true);
+                findString = 'option[value="' + $('#religion').data('religion') + '"]';
+                $('#religion').find(findString).attr("selected", true);
                 // Select Category
-                findString = 'option[value="'+$('#category').data('category')+'"]';
-                $('#category').find(findString).attr("selected",true);
+                findString = 'option[value="' + $('#category').data('category') + '"]';
+                $('#category').find(findString).attr("selected", true);
                 // Select Blood
-                findString = 'option[value="'+$('#blood').data('blood')+'"]';
-                $('#blood').find(findString).attr("selected",true);
+                findString = 'option[value="' + $('#blood').data('blood') + '"]';
+                $('#blood').find(findString).attr("selected", true);
                 // Select Application Type
-                findString = 'option[value="'+$('#type').data('applicationtype')+'"]';
-                $('#type').find(findString).attr("selected",true);
+                findString = 'option[value="' + $('#type').data('applicationtype') + '"]';
+                $('#type').find(findString).attr("selected", true);
                 // Select Session
-                findString = 'option[value="'+$('#sessionReg').data('session')+'"]';
-                $('#sessionReg').find(findString).attr("selected",true);
+                findString = 'option[value="' + $('#sessionReg').data('session') + '"]';
+                $('#sessionReg').find(findString).attr("selected", true);
                 // Select Course
-                $('input[value="'+$("#course").data("course")+'"]').attr("checked",true);
+                $('input[value="' + $("#course").data("course") + '"]').attr("checked", true);
                 // Listen to click event on the submit button
                 $('#button').click(createStudent);
             },
@@ -353,14 +415,28 @@ $(document).ready(function() {
         });
     });
 
-    $("#studentSearch").on("keyup", function() {
+    $("#studentSearch").on("keyup", function () {
         let value = $(this).val().toLowerCase();
-        $("#studentTable tr").filter(function() {
-          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        $("#studentTable tr").filter(function () {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
         });
-      });
+    });
 
-    $("body").on('show.bs.modal', "#exampleModal", function(event) {
+    $("#schoolSearch").on("keyup", function () {
+        let value = $(this).val().toLowerCase();
+        $("#schoolTable tr").filter(function () {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+
+    $("#noticeSearch").on("keyup", function () {
+        let value = $(this).val().toLowerCase();
+        $("#noticeTable tr").filter(function () {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+
+    $("body").on('show.bs.modal', "#exampleModal", function (event) {
         $('#reverseMsg').hide();
         let button = $(event.relatedTarget); // Button that triggered the modal
         let url = button.data('url'); // Extract info from data-* attributes
@@ -368,22 +444,22 @@ $(document).ready(function() {
 
         let modal = $(this);
         modal.find('.amount').text(amount);
-        modal.find('.reverse').attr({href: url});
+        modal.find('.reverse').attr({ href: url });
     });
 
 
-    $("body").on('click', "#reverse", function(event) {
+    $("body").on('click', "#reverse", function (event) {
         event.preventDefault();
         let url = $(this).attr('href');
         $(this).addClass('disabled');
         $.ajax({
             type: "GET",
             url: url,
-            success: function(data) {
+            success: function (data) {
                 $("#reverseMsg").show();
                 $('#reverseMsg').html(data);
                 $('.clearit').val('');
-                setTimeout(function() {
+                setTimeout(function () {
                     $("#reverseMsg").hide();
                     $('#exampleModal').modal('hide');
                     $('.modal-backdrop').remove();
@@ -393,7 +469,7 @@ $(document).ready(function() {
         });
     });
 
-    $("body").on('show.bs.modal', "#DueReminderModal", function(event) {
+    $("body").on('show.bs.modal', "#DueReminderModal", function (event) {
         $('#reverseMsg').hide();
         let button = $(event.relatedTarget); // Button that triggered the modal
         let url = button.data('url'); // Extract info from data-* attributes
@@ -401,10 +477,10 @@ $(document).ready(function() {
 
         let modal = $(this);
         modal.find('.amount').val(amount);
-        modal.find('.dueReminder').attr({href: url});
+        modal.find('.dueReminder').attr({ href: url });
     });
 
-    $("body").on('click', "#dueReminder", function(event) {
+    $("body").on('click', "#dueReminder", function (event) {
         event.preventDefault();
         console.log("Due Remider button clicked");
         let url = $(this).attr('href');
@@ -414,11 +490,11 @@ $(document).ready(function() {
         $.ajax({
             type: "GET",
             url: url,
-            success: function(data) {
+            success: function (data) {
                 $("#dueMsg").show();
                 $('#dueMsg').html(data);
                 $('.clearit').val('');
-                setTimeout(function() {
+                setTimeout(function () {
                     $("#dueMsg").hide();
                     $('#changeStatusModal').modal('hide');
                     $('.modal-backdrop').remove();
@@ -428,17 +504,17 @@ $(document).ready(function() {
         });
     });
 
-    $("body").on('show.bs.modal', "#changeStatusModal", function(event) {
+    $("body").on('show.bs.modal', "#changeStatusModal", function (event) {
         $('#reverseMsg').hide();
         let button = $(event.relatedTarget); // Button that triggered the modal
         let id = button.data('id'); // Extract info from data-* attributes
         let url = "/changeStatus?id=" + id;
 
         let modal = $(this);
-        modal.find('.change').attr({href: url});
+        modal.find('.change').attr({ href: url });
     });
 
-    $("body").on('click', "#changeStatus", function(event) {
+    $("body").on('click', "#changeStatus", function (event) {
         event.preventDefault();
         let url = $(this).attr('href');
         let status = $('#status').val();
@@ -447,11 +523,11 @@ $(document).ready(function() {
         $.ajax({
             type: "GET",
             url: url,
-            success: function(data) {
+            success: function (data) {
                 $("#statusMsg").show();
                 $('#statusMsg').html(data);
                 $('.clearit').val('');
-                setTimeout(function() {
+                setTimeout(function () {
                     $("#statusMsg").hide();
                     $('#changeStatusModal').modal('hide');
                     $('.modal-backdrop').remove();
@@ -461,47 +537,84 @@ $(document).ready(function() {
         });
     });
 
-    $("#from").attr({max: function(){
-        let today = new Date();
-        let dd = today.getDate(); // Today is allowed
-        let mm = today.getMonth()+1; //January is 0!
-        let yyyy = today.getFullYear();
-         if(dd<10){
-                dd='0'+ dd
+    $("body").on('show.bs.modal', "#teachingSchoolModal", function (event) {
+        $('#reverseMsg').hide();
+        let button = $(event.relatedTarget); // Button that triggered the modal
+        let id = button.data('id'); // Extract info from data-* attributes
+        let url = "/updateTeachingSchool?id=" + id;
+
+        let modal = $(this);
+        modal.find('.change').attr({ href: url });
+    });
+
+    // Update teaching school
+    $("body").on('click', "#updatePracticeTeachingSchool", function (event) {
+        event.preventDefault();
+        let url = $(this).attr('href');
+        let school = $('#schoolName').val();
+        url = url + "&schoolName=" + school;
+        $(this).addClass('disabled');
+        $.ajax({
+            type: "POST",
+            url: url,
+            success: function (data) {
+                $("#schoolMsg").show();
+                $('#schoolMsg').html(data);
+                $('.clearit').val('');
+                setTimeout(function () {
+                    $("#schoolMsg").hide();
+                    $('#teachingSchoolModal').modal('hide');
+                    $('.modal-backdrop').remove();
+                    $("#idSearch").click();
+                }, 3000);
             }
-            if(mm<10){
-                mm='0'+ mm
+        });
+    });
+
+
+    $("#from").attr({
+        max: function () {
+            let today = new Date();
+            let dd = today.getDate(); // Today is allowed
+            let mm = today.getMonth() + 1; //January is 0!
+            let yyyy = today.getFullYear();
+            if (dd < 10) {
+                dd = '0' + dd
+            }
+            if (mm < 10) {
+                mm = '0' + mm
             }
 
-        today = yyyy+'-'+mm+'-'+dd;
-        return today;
-    }});
+            today = yyyy + '-' + mm + '-' + dd;
+            return today;
+        }
+    });
 
-    
-    $('#smsBody').keyup(function() {
+
+    $('#smsBody').keyup(function () {
         let characterCount = $('#noticePrefix option:selected').text().length + $(this).val().length,
-          current = $('#current'),
-          maximum = $('#maximum'),
-          theCount = $('#the-count'),
-          credit = $('#credit');
+            current = $('#current'),
+            maximum = $('#maximum'),
+            theCount = $('#the-count'),
+            credit = $('#credit');
 
         current.text(characterCount);
-        credit.text(Math.ceil(characterCount/160));
+        credit.text(Math.ceil(characterCount / 160));
 
         if (characterCount > 160) {
             maximum.css('color', '#8f0001');
             current.css('color', '#8f0001');
-            theCount.css('font-weight','bold');
+            theCount.css('font-weight', 'bold');
         } else {
             maximum.css('color', '#666');
             current.css('color', '#666');
-            theCount.css('font-weight','normal');
+            theCount.css('font-weight', 'normal');
         }
 
-          
+
     });
 
-    $("body").on('change', "#checkLateFee", function(event) {
+    $("body").on('change', "#checkLateFee", function (event) {
         if ($(this).is(":checked")) {
             $(".latefeeAmount").show();
         } else {
