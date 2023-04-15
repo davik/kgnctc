@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -241,18 +242,21 @@ public class WelcomeController {
 		// Counter is used to get the next id to be assigned for a new student based on
 		// session and course
 		Counter ct = null;
+		Optional<Counter> oct = null;
 		if (student.course.equalsIgnoreCase("b.ed")) {
 			id_prefix = id_prefix + "01";
-			ct = counterRepo.findOne(id_prefix);
+			oct = counterRepo.findById(id_prefix);
 		} else {
 			id_prefix = id_prefix + "02";
-			ct = counterRepo.findOne(id_prefix);
+			oct = counterRepo.findById(id_prefix);
 		}
 		// If counter config not exists, create one
-		if (ct == null) {
+		if (!oct.isPresent()) {
 			ct = new Counter();
 			ct.id = id_prefix;
 			ct.nextId++;
+		} else{
+			ct = oct.get();
 		}
 		// Increment and save the counter config
 		id_prefix = id_prefix + String.format("%03d", ct.nextId);
@@ -345,13 +349,16 @@ public class WelcomeController {
 	String getCommPage(Map<String, Object> model, HttpServletRequest request) throws IOException {
 		populateCommonPageFields(model, request);
 
-		Counter ct = counterRepo.findOne("SMS");
-		if (null == ct) {
+		Counter ct = null;
+		Optional<Counter> oct = counterRepo.findById("SMS");
+		if (!oct.isPresent()) {
 			model.put("sentSMS", 0);
 			ct = new Counter();
 			ct.id = "SMS";
 			ct.nextId = 0;
 			counterRepo.save(ct);
+		} else {
+			ct = oct.get();
 		}
 		model.put("sentSMS", ct.nextId);
 		model.put("balanceSMS", smsProvisionCount - ct.nextId);
@@ -374,12 +381,12 @@ public class WelcomeController {
 			HttpServletRequest request) throws IOException, ParseException {
 		populateCommonPageFields(model, request);
 
-		Student student = studRepo.findOne(studentId);
-		if (null == student) {
+		Optional<Student> oStudent = studRepo.findById(studentId);
+		if (!oStudent.isPresent()) {
 			model.put("alert", "alert alert-danger");
 			model.put("result", "Student not found!");
 		} else {
-
+			Student student = oStudent.get();
 			model.put("due", student.courseFee - GetPaid(student));
 			model.put("student", student);
 			model.put("schools", teachingSchoolRepo.findAll().stream().map(s -> s.name).collect(Collectors.toList()));
@@ -392,12 +399,13 @@ public class WelcomeController {
 			@RequestBody Payment payment, HttpServletRequest request) throws IOException {
 		populateCommonPageFields(model, request);
 
-		Student student = studRepo.findOne(studentId);
-		if (null == student) {
+		Optional<Student> oStudent = studRepo.findById(studentId);
+		if (!oStudent.isPresent()) {
 			model.put("alert", "alert alert-danger");
 			model.put("result", "Student not found!");
 			return "create";
 		} else {
+			Student student = oStudent.get();
 			if (payment.amount == 0) {
 				model.put("alert", "alert alert-danger");
 				model.put("result", "Please fill the mandatory field Amount!");
@@ -419,19 +427,23 @@ public class WelcomeController {
 			Counter ct = null;
 			if (payment.purpose.equals("Miscellaneous Fee")) {
 				payment.purpose = payment.purpose + " (" + payment.transactionId + ")";
-				ct = counterRepo.findOne("MISC/" + year + "-" + String.valueOf(year + 1).substring(2));
-				if (null == ct) {
+				Optional<Counter> oct = counterRepo.findById("MISC/" + year + "-" + String.valueOf(year + 1).substring(2));
+				if (!oct.isPresent()) {
 					ct = new Counter();
 					ct.id = "MISC/" + year + "-" + String.valueOf(year + 1).substring(2);
 					ct.nextId++;
+				} else {
+					ct = oct.get();
 				}
 				payment.transactionId = "";
 			} else {
-				ct = counterRepo.findOne(year + "-" + String.valueOf(year + 1).substring(2));
-				if (null == ct) {
+				Optional<Counter> oct = counterRepo.findById(year + "-" + String.valueOf(year + 1).substring(2));
+				if (!oct.isPresent()) {
 					ct = new Counter();
 					ct.id = year + "-" + String.valueOf(year + 1).substring(2);
 					ct.nextId++;
+				} else {
+					ct = oct.get();
 				}
 			}
 
@@ -493,10 +505,11 @@ public class WelcomeController {
 	@RequestMapping(value = "/updateTeachingSchool", method = RequestMethod.POST)
 	@ResponseBody
 	String updateTeachingSchool(Map<String, Object> model, @RequestParam(name = "id") String studentId, @RequestParam(name = "schoolName") String schoolName) {
-		Student student = studRepo.findOne(studentId);
-		if (null == student) {
+		Optional<Student> oStudent = studRepo.findById(studentId);
+		if (!oStudent.isPresent()) {
 			return "Student not found!";
 		} else {
+			Student student = oStudent.get();
 			student.teachingSchool = schoolName;
 			Student savedEntity = studRepo.save(student);
 		}
@@ -508,12 +521,13 @@ public class WelcomeController {
 			@RequestParam(name = "paymentId") String paymentId, HttpServletResponse response,
 			HttpServletRequest request) throws IOException {
 		populateCommonPageFields(model, request);
-		Student student = studRepo.findOne(studentId);
-		if (null == student) {
+		Optional<Student> oStudent = studRepo.findById(studentId);
+		if (!oStudent.isPresent()) {
 			model.put("alert", "alert alert-danger");
 			model.put("result", "Student not found!");
 			return;
 		}
+		Student student = oStudent.get();
 		Payment pt = null;
 		for (Payment p : student.payments) {
 			if (paymentId.equals(p.paymentId)) {
@@ -716,12 +730,13 @@ public class WelcomeController {
 			@RequestParam(name = "paymentId") String paymentId, HttpServletResponse response,
 			HttpServletRequest request) throws IOException {
 		populateCommonPageFields(model, request);
-		Student student = studRepo.findOne(studentId);
-		if (null == student) {
+		Optional<Student> oStudent = studRepo.findById(studentId);
+		if (!oStudent.isPresent()) {
 			model.put("alert", "alert alert-danger");
 			model.put("result", "Student not found!");
 			return "create";
 		}
+		Student student = oStudent.get();
 		Payment pt = null;
 		for (Payment p : student.payments) {
 			if (paymentId.equals(p.paymentId)) {
@@ -739,11 +754,14 @@ public class WelcomeController {
 		Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("IST"));
 		// Fetch the Payment or Money Receipt ID counter
 		int year = getFiscalYear(calendar);
-		Counter ct = counterRepo.findOne(year + "-" + String.valueOf(year + 1).substring(2));
-		if (null == ct) {
+		Counter ct = null;
+		Optional<Counter> oct = counterRepo.findById(year + "-" + String.valueOf(year + 1).substring(2));
+		if (!oct.isPresent()) {
 			ct = new Counter();
 			ct.id = year + "-" + String.valueOf(year + 1).substring(2);
 			ct.nextId++;
+		} else {
+			ct = oct.get();
 		}
 
 		if (pt.purpose.equals("Concession")) {
@@ -853,11 +871,12 @@ public class WelcomeController {
 			HttpServletRequest request) throws IOException, ParseException {
 		populateCommonPageFields(model, request);
 
-		Student student = studRepo.findOne(studentId);
-		if (null == student) {
+		Optional<Student> oStudent = studRepo.findById(studentId);
+		if (!oStudent.isPresent()) {
 			model.put("alert", "alert alert-danger");
 			model.put("result", "Student not found!");
 		} else {
+			Student student = oStudent.get();
 			StudentDTO st = new StudentDTO().replicate(student);
 			st.isModification = true;
 			model.put("student", st);
@@ -870,12 +889,13 @@ public class WelcomeController {
 			@RequestBody Student newStudent, HttpServletRequest request) throws IOException, ParseException {
 		populateCommonPageFields(model, request);
 
-		Student oldStudent = studRepo.findOne(studentId);
-		if (null == oldStudent) {
+		Optional<Student> oOldStudent = studRepo.findById(studentId);
+		if (!oOldStudent.isPresent()) {
 			model.put("alert", "alert alert-danger");
 			model.put("result", "Student not found!");
 			return "create";
 		}
+		Student oldStudent = oOldStudent.get();
 		if (newStudent.name.isEmpty() || newStudent.father.isEmpty() || newStudent.mother.isEmpty()
 				|| newStudent.mobile.isEmpty() || newStudent.email.isEmpty() || newStudent.aadhaar.isEmpty()
 				|| newStudent.courseFee == 0) {
@@ -903,18 +923,21 @@ public class WelcomeController {
 			// Counter is used to get the next id to be assigned for a new student based on
 			// session and course
 			Counter ct = null;
+			Optional<Counter> oct = null;
 			if (newStudent.course.equalsIgnoreCase("b.ed")) {
 				id_prefix = id_prefix + "01";
-				ct = counterRepo.findOne(id_prefix);
+				oct = counterRepo.findById(id_prefix);
 			} else {
 				id_prefix = id_prefix + "02";
-				ct = counterRepo.findOne(id_prefix);
+				oct = counterRepo.findById(id_prefix);
 			}
 			// If counter config not exists, create one
-			if (ct == null) {
+			if (!oct.isPresent()) {
 				ct = new Counter();
 				ct.id = id_prefix;
 				ct.nextId++;
+			} else {
+				ct = oct.get();
 			}
 			// Increment and save the counter config
 			id_prefix = id_prefix + String.format("%03d", ct.nextId);
@@ -956,12 +979,13 @@ public class WelcomeController {
 	void downloadICard(Map<String, Object> model, @RequestParam(name = "id") String studentId,
 			HttpServletResponse response, HttpServletRequest request) throws IOException {
 		populateCommonPageFields(model, request);
-		Student student = studRepo.findOne(studentId);
-		if (null == student) {
+		Optional<Student> oStudent = studRepo.findById(studentId);
+		if (!oStudent.isPresent()) {
 			model.put("alert", "alert alert-danger");
 			model.put("result", "Student not found!");
 			return;
 		}
+		Student student = oStudent.get();
 
 		Resource resource = new ClassPathResource("ICard.jrxml");
 		InputStream input = resource.getInputStream();
@@ -1068,12 +1092,13 @@ public class WelcomeController {
 	String sendDueReminderSMS(Map<String, Object> model, @RequestParam(name = "id") String studentId,
 			@RequestParam(name = "amount") double amount, HttpServletRequest request) throws IOException {
 		populateCommonPageFields(model, request);
-		Student student = studRepo.findOne(studentId);
-		if (null == student) {
+		Optional<Student> oStudent = studRepo.findById(studentId);
+		if (!oStudent.isPresent()) {
 			model.put("alert", "alert alert-danger");
 			model.put("result", "Student not found!");
 			return "message";
 		}
+		Student student = oStudent.get();
 		RootTemplate<DueReminderBody> template = new RootTemplate<DueReminderBody>();
 		template.flowType = RootTemplate.FlowType.DUE_REMINDER;
 		template.recipients = new ArrayList<DueReminderBody>();
@@ -1101,12 +1126,13 @@ public class WelcomeController {
 	String changeStatus(Map<String, Object> model, @RequestParam(name = "id") String studentId,
 			@RequestParam(name = "status") Student.Status status, HttpServletRequest request) throws IOException {
 		populateCommonPageFields(model, request);
-		Student student = studRepo.findOne(studentId);
-		if (null == student) {
+		Optional<Student> oStudent = studRepo.findById(studentId);
+		if (!oStudent.isPresent()) {
 			model.put("alert", "alert alert-danger");
 			model.put("result", "Student not found!");
 			return "message";
 		}
+		Student student = oStudent.get();
 		student.status = status;
 		studRepo.save(student);
 
@@ -1220,10 +1246,11 @@ public class WelcomeController {
 	@RequestMapping(value = "/registerAttendance", method = RequestMethod.POST)
 	@ResponseBody
 	public String registerAttendance(@RequestBody AttendanceDTO attendanceDTO) {
-		Student student = studRepo.findOne(attendanceDTO.studentId);
-		if (null == student) {
+		Optional<Student> oStudent = studRepo.findById(attendanceDTO.studentId);
+		if (!oStudent.isPresent()) {
 			return "Student not found!";
 		}
+		Student student = oStudent.get();
 		Attendance attendance = new Attendance();
 		attendance.studentId = attendanceDTO.studentId;
 		attendance.course = attendanceDTO.course;

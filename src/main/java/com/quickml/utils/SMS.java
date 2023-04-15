@@ -2,6 +2,7 @@ package com.quickml.utils;
 
 import java.io.IOException;
 import java.util.EnumMap;
+import java.util.Optional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -66,11 +67,14 @@ public class SMS {
 		if (!smsEnabled.equals("YES")) {
 			return "SMS is not enabled";
 		}
-		Counter smsCount = counterRepo.findOne("SMS");
-		if (null == smsCount) {
+		Counter smsCount = null;
+		Optional<Counter> oSmsCount = counterRepo.findById("SMS");
+		if (!oSmsCount.isPresent()) {
 			smsCount = new Counter();
 			smsCount.id = "SMS";
 			smsCount.nextId = 0;
+		} else {
+			smsCount = oSmsCount.get();
 		}
 		if (smsProvisionCount - smsCount.nextId <= 0) {
 			return "SMS limit exhausted. Provisioned: " + smsProvisionCount
