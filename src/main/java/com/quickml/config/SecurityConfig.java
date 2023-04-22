@@ -21,13 +21,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
 				.antMatchers("/login", "/error", "/css/main.css", "/js/utility.js", "/getStudentDetails",
-						"/registerAttendance")
+						"/registerAttendance", "/getTeachingSchools", "/getNotices")
 				.permitAll()
 				.antMatchers("/**").authenticated().and().formLogin().loginPage("/login").permitAll().and().logout()
 				.clearAuthentication(true).logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
 				.logoutSuccessUrl("/login").invalidateHttpSession(true).deleteCookies("JSESSIONID").permitAll();
 		http.csrf().ignoringAntMatchers("/getStudentDetails",
-				"/registerAttendance");
+				"/registerAttendance", "/getTeachingSchools", "/getNotices");
 	}
 
 	@Autowired

@@ -1237,22 +1237,35 @@ public class WelcomeController {
 	// Get Student Details
 	@RequestMapping(value = "/getStudentDetails", method = RequestMethod.GET)
 	@ResponseBody
-	public Student getStudentDetails(@RequestParam(name = "id") String studentId) {
+	public Map<String, Object> getStudentDetails(@RequestParam(name = "id") String studentId) {
 		Student student = studRepo.findByEmail(studentId);
-		return student;
+		// Check if student exists
+		if(student == null) {
+			return null;
+		}
+		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("student", student);
+		model.put("due", student.courseFee - GetPaid(student));
+		model.put("teachingSchool", teachingSchoolRepo.findByName(student.teachingSchool));
+		// send last 5 notices based on course and session
+		model.put("notices", noticeRepo.findTop5ByCourseAndSessionOrderByDateDesc(student.course, student.session));
+		// Send last 5 attendance
+		model.put("attendance", attendanceRepo.findTop5ByStudentIdOrderByTimeDesc(studentId));
+		return model;
 	}
 
 	// Register Attendance with location
 	@RequestMapping(value = "/registerAttendance", method = RequestMethod.POST)
 	@ResponseBody
 	public String registerAttendance(@RequestBody AttendanceDTO attendanceDTO) {
-		Optional<Student> oStudent = studRepo.findById(attendanceDTO.studentId);
-		if (!oStudent.isPresent()) {
+		Student student = studRepo.findByEmail(attendanceDTO.studentId);
+		if (student == null) {
 			return "Student not found!";
 		}
-		Student student = oStudent.get();
 		Attendance attendance = new Attendance();
 		attendance.studentId = attendanceDTO.studentId;
+		attendance.school = attendanceDTO.school;
+		attendance.schoolName = attendanceDTO.schoolName;
 		attendance.course = attendanceDTO.course;
 		attendance.session = attendanceDTO.session;
 		attendance.time = (DateTime) DateTime.now().withZone(DateTimeZone.forID("Asia/Kolkata"));
