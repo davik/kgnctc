@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Payment Receipt</title>
+
+    <style>
+        .invoice-box {
+            /* max-width: 800px;
+            margin: auto;
+            padding: 30px;
+            border: 1px solid #eee;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.15); */
+            font-size: 16px;
+            line-height: 24px;
+            font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+            color: #555;
+        }
+
+        .invoice-box table {
+            width: 100%;
+            line-height: inherit;
+            text-align: left;
+        }
+
+        .invoice-box table td {
+            padding: 5px;
+            vertical-align: top;
+        }
+
+        .invoice-box table tr td:nth-child(2) {
+            text-align: right;
+        }
+
+        /* .invoice-box table tr.top table td {
+            padding-bottom: 20px;
+        } */
+
+        .invoice-box table tr.top table td.title {
+            font-size: 45px;
+            line-height: 45px;
+            color: #333;
+        }
+
+        /* .invoice-box table tr.information table td {
+            padding-bottom: 40px;
+        } */
+
+        .invoice-box table tr.heading td {
+            background: #eee;
+            border-bottom: 1px solid #ddd;
+            font-weight: bold;
+        }
+
+        .invoice-box table tr.details td {
+            padding-bottom: 20px;
+        }
+
+        .invoice-box table tr.item td {
+            border-bottom: 1px solid #eee;
+        }
+
+        .invoice-box table tr.item.last td {
+            border-bottom: none;
+        }
+
+        .invoice-box table tr.total {
+            border-top: 2px solid #eee;
+            font-weight: bold;
+        }
+
+        @media only screen and (max-width: 600px) {
+            .invoice-box table tr.top table td {
+                width: 100%;
+                display: block;
+                text-align: center;
+            }
+
+            .invoice-box table tr.information table td {
+                width: 100%;
+                display: block;
+                text-align: center;
+            }
+        }
+
+        /* @page {
+            size: 7in 9.25in;
+            margin: 27mm 16mm 27mm 16mm;
+        } */
+
+        @media print {
+            body {
+                width: 21cm;
+                height: 29.7cm;
+                margin: 5mm 5mm 5mm 5mm;
+                /* change the margins as you want them to be. */
+            }
+        }
+
+        /** RTL **/
+        .invoice-box.rtl {
+            direction: rtl;
+            font-family: Tahoma, 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+        }
+
+        .invoice-box.rtl table {
+            text-align: right;
+        }
+
+        .invoice-box.rtl table tr td:nth-child(2) {
+            text-align: left;
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="invoice-box">
+        <table cellpadding="0" cellspacing="0">
+            <tr class="top">
+                <td colspan="2">
+                    <table>
+                        <tr>
+                            <td class="title">
+                                {{>layout/logo}} <!-- Path: kgnctc/src/main/resources/templates/layout/logo.html -->
+                            </td>
+
+                            <td>
+                                Office Copy<br />
+                                <span class="bold">{{collegeLongName}}</span><br />
+                                {{collegeAddress1}}<br />
+                                {{collegeAddress2}}<br />
+                                {{collegeContact}}<br />
+                                {{collegeEmail}}
+                            </td>
+
+
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+            <tr class="information">
+                <td colspan="2">
+                    <table>
+                        <tr>
+                            <td>
+                                <span class="bold">{{name}}</span><br />
+                                {{id}}<br />
+                                {{course}}<br />
+                                {{session}}
+                            </td>
+                            <td>
+                                Payment Receipt ID: {{paymentId}}<br />
+                                Transaction ID: {{transactionId}}<br />
+                                Created: {{date}}<br />
+                                <span class="bold">Due Amount: {{due}}</span><br />
+                                Payment Method: {{transactionMode}}
+                            </td>
+
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+            <!-- <tr class="heading">
+                <td>Payment Method</td>
+
+                <td>Check #</td>
+            </tr>
+
+            <tr class="details">
+                <td>Check</td>
+
+                <td>1000</td>
+            </tr> -->
+
+            <tr class="heading">
+                <td>Particulars</td>
+
+                <td>Amount</td>
+            </tr>
+
+            <tr class="item">
+                <td>{{purpose}}</td>
+
+                <td>{{amount}}</td>
+            </tr>
+            {{#isLateFee}}
+            <tr class="item">
+                <td>{{latefee}}</td>
+
+                <td>{{latefeeAmount}}</td>
+            </tr>
+            {{/isLateFee}}
+
+            <tr class="total">
+                <td>{{inWords}}</td>
+
+                <td>Total: {{total}}</td>
+            </tr>
+            <!-- Box for student signature and authority signature with SVG reactangle -->
+            <tr>
+                <td>
+                    <svg width="300" height="100" viewBox="0 0 300 100" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="0" y="0" width="100%" height="100%" fill="none" stroke="black"></rect>
+                        <text x="75" y="85" font-family="Verdana" font-size="15">Student's signature</text>
+
+                    </svg>
+                </td>
+                <td>
+                    <svg width="300" height="100" viewBox="0 0 300 100" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="0" y="0" width="100%" height="100%" fill="none" stroke="black"></rect>
+                        <text x="75" y="15" font-family="Verdana" font-size="15">For {{collegeShortName}}</text>
+                        <text x="75" y="85" font-family="Verdana" font-size="15">Authorised Signatory</text>
+                    </svg>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>Payment accepted by {{user}}</td>
+            </tr>
+        </table>
+    </div>
+    <hr style="border-top: dotted 1px;" />
+    <!-- Student Copy-->
+    <div class="invoice-box">
+        <table cellpadding="0" cellspacing="0">
+            <tr class="top">
+                <td colspan="2">
+                    <table>
+                        <tr>
+                            <td class="title">
+                                {{>layout/logo}} <!-- Path: kgnctc/src/main/resources/templates/layout/logo.html -->
+                            </td>
+
+                            <td>
+                                Student Copy<br />
+                                <span class="bold">{{collegeLongName}}</span><br />
+                                {{collegeAddress1}}<br />
+                                {{collegeAddress2}}<br />
+                                {{collegeContact}}<br />
+                                {{collegeEmail}}
+                            </td>
+
+
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+            <tr class="information">
+                <td colspan="2">
+                    <table>
+                        <tr>
+                            <td>
+                                <span class="bold">{{name}}</span><br />
+                                {{id}}<br />
+                                {{course}}<br />
+                                {{session}}
+                            </td>
+                            <td>
+                                Payment Receipt ID: {{paymentId}}<br />
+                                Transaction ID: {{transactionId}}<br />
+                                Created: {{date}}<br />
+                                <span class="bold">Due Amount: {{due}}</span><br />
+                                Payment Method: {{transactionMode}}
+                            </td>
+
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+            <!-- <tr class="heading">
+                <td>Payment Method</td>
+
+                <td>Check #</td>
+            </tr>
+
+            <tr class="details">
+                <td>Check</td>
+
+                <td>1000</td>
+            </tr> -->
+
+            <tr class="heading">
+                <td>Particulars</td>
+
+                <td>Amount</td>
+            </tr>
+
+            <tr class="item">
+                <td>{{purpose}}</td>
+
+                <td>{{amount}}</td>
+            </tr>
+            {{#isLateFee}}
+            <tr class="item">
+                <td>{{latefee}}</td>
+
+                <td>{{latefeeAmount}}</td>
+            </tr>
+            {{/isLateFee}}
+
+            <tr class="total">
+                <td>{{inWords}}</td>
+
+                <td>Total: {{total}}</td>
+            </tr>
+            <!-- Box for student signature and authority signature with SVG reactangle -->
+            <tr>
+                <td>
+                    <!-- <svg width="300" height="100" viewBox="0 0 300 100" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="0" y="0" width="100%" height="100%" fill="none" stroke="black"></rect>
+                        <text x="75" y="85" font-family="Verdana" font-size="15">Student's signature</text>
+
+                    </svg> -->
+                </td>
+                <td>
+                    <svg width="300" height="100" viewBox="0 0 300 100" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="0" y="0" width="100%" height="100%" fill="none" stroke="black"></rect>
+                        <text x="75" y="15" font-family="Verdana" font-size="15">For {{collegeShortName}}</text>
+                        <text x="75" y="85" font-family="Verdana" font-size="15">Authorised Signatory</text>
+                    </svg>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>Payment accepted by {{user}}</td>
+            </tr>
+        </table>
+    </div>
+
+</body>
+
+</html>

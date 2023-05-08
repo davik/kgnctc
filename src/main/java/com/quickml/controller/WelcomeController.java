@@ -64,16 +64,6 @@ import com.quickml.repository.NoticeRepository;
 import com.quickml.utils.Currency;
 import com.quickml.utils.SMS;
 
-import net.sf.jasperreports.engine.JREmptyDataSource;
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JasperCompileManager;
-import net.sf.jasperreports.engine.JasperExportManager;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.design.JasperDesign;
-import net.sf.jasperreports.engine.xml.JRXmlLoader;
-
 @Controller
 public class WelcomeController {
 
@@ -517,7 +507,7 @@ public class WelcomeController {
 	}
 
 	@RequestMapping(value = "/invoice", method = RequestMethod.GET)
-	void downloadInvoice(Map<String, Object> model, @RequestParam(name = "id") String studentId,
+	String downloadInvoice(Map<String, Object> model, @RequestParam(name = "id") String studentId,
 			@RequestParam(name = "paymentId") String paymentId, HttpServletResponse response,
 			HttpServletRequest request) throws IOException {
 		populateCommonPageFields(model, request);
@@ -525,7 +515,7 @@ public class WelcomeController {
 		if (!oStudent.isPresent()) {
 			model.put("alert", "alert alert-danger");
 			model.put("result", "Student not found!");
-			return;
+			return null;
 		}
 		Student student = oStudent.get();
 		Payment pt = null;
@@ -538,78 +528,48 @@ public class WelcomeController {
 		if (null == pt) {
 			model.put("alert", "alert alert-danger");
 			model.put("result", "Payment Info not found!");
-			return;
+			return null;
 		}
 		double paid = GetPaid(student);
 
-		Resource resource = new ClassPathResource("InvoiceA4.jrxml");
-		InputStream input = resource.getInputStream();
-		JasperDesign design = null;
-		try {
-			design = JRXmlLoader.load(input);
-		} catch (JRException e) {
-			e.printStackTrace();
+		// model.put("logoFile", collegeShortName.toLowerCase() + "_logo.jpeg");
+		model.put("collegeLongName", collegeLongName);
+		model.put("collegeShortName", collegeShortName);
+		model.put("collegeAddress1", collegeAddress1);
+		model.put("collegeAddress2", collegeAddress2);
+		model.put("collegeContact", collegeContact);
+		model.put("collegeEmail", collegeEmail);
+		model.put("name", student.name);
+		model.put("id", student.id);
+		model.put("course", student.course);
+		model.put("session", student.session);
+		model.put("paymentId", pt.paymentId);
+		model.put("transactionMode", pt.mode);
+		model.put("transactionId", pt.transactionId);
+		model.put("due", student.courseFee - paid);
+		model.put("purpose", pt.purpose);
+		model.put("amount", pt.amount);
+		model.put("total", pt.amount);
+		model.put("inWords", Currency.convertToIndianCurrency(pt.amount));
+		String date = pt.transactionDate.toString(dtfOut);
+		model.put("date", date);
+		User user = userRepo.findByUsername(pt.acceptedBy);
+		model.put("user", user.fullname);
+		model.put("isLateFee", false);
+		// Populate Late fee details
+		if (pt.lateFeeAmount != -1) {
+			model.put("isLateFee", true);
+			model.put("secondSerial", "2.");
+			model.put("latefee", "Late Fee");
+			model.put("latefeeAmount", pt.lateFeeAmount);
+			model.replace("total", pt.amount + pt.lateFeeAmount);
+			model.replace("inWords", Currency.convertToIndianCurrency(pt.amount + pt.lateFeeAmount));
 		}
-		JasperReport jasperReport = null;
-		try {
-			jasperReport = JasperCompileManager.compileReport(design);
-		} catch (JRException e) {
-			e.printStackTrace();
-		}
-		String outputFile = "C:\\Users\\avik\\" + "JasperReportExample.pdf";
-		OutputStream outputStream = new FileOutputStream(new File(outputFile));
-		try {
-			Map<String, Object> paramMap = new HashMap<String, Object>();
-			paramMap.put("logoFile", collegeShortName.toLowerCase() + "_logo.jpeg");
-			paramMap.put("collegeLongName", collegeLongName);
-			paramMap.put("collegeShortName", collegeShortName);
-			paramMap.put("collegeAddress1", collegeAddress1);
-			paramMap.put("collegeAddress2", collegeAddress2);
-			paramMap.put("collegeContact", collegeContact);
-			paramMap.put("collegeEmail", collegeEmail);
-			paramMap.put("name", student.name);
-			paramMap.put("id", student.id);
-			paramMap.put("course", student.course);
-			paramMap.put("session", student.session);
-			paramMap.put("paymentId", pt.paymentId);
-			paramMap.put("transactionMode", pt.mode);
-			paramMap.put("transactionId", pt.transactionId);
-			paramMap.put("due", student.courseFee - paid);
-			paramMap.put("purpose", pt.purpose);
-			paramMap.put("amount", pt.amount);
-			paramMap.put("total", pt.amount);
-			paramMap.put("inWords", Currency.convertToIndianCurrency(pt.amount));
-			String date = pt.transactionDate.toString(dtfOut);
-			paramMap.put("date", date);
-			User user = userRepo.findByUsername(pt.acceptedBy);
-			paramMap.put("user", user.fullname);
-			// Populate Late fee details
-			if (pt.lateFeeAmount != -1) {
-				paramMap.put("secondSerial", "2.");
-				paramMap.put("latefee", "Late Fee");
-				paramMap.put("latefeeAmount", pt.lateFeeAmount);
-				paramMap.replace("total", pt.amount + pt.lateFeeAmount);
-				paramMap.replace("inWords", Currency.convertToIndianCurrency(pt.amount + pt.lateFeeAmount));
-			}
-			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, paramMap, new JREmptyDataSource());
-			JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
-		} catch (JRException e) {
-			e.printStackTrace();
-		}
-		outputStream.flush();
-		outputStream.close();
-		// Download section
-		File invoiceFile = new File(outputFile);
-		String mimeType = "application/pdf";
-		response.setContentType(mimeType);
-		String invoiceFileName = student.id + "_" + pt.paymentId.substring(8) + ".pdf";
-		response.setHeader("Content-Disposition", String.format("inline; filename=\"" + invoiceFileName + "\""));
-		response.setContentLength((int) invoiceFile.length());
-		InputStream inputStream = new BufferedInputStream(new FileInputStream(invoiceFile));
 
-		FileCopyUtils.copy(inputStream, response.getOutputStream());
-		response.flushBuffer();
+		// Download section
+		return "invoice";
 	}
+
 
 	public int getFiscalYear(Calendar calendar) {
 		int month = calendar.get(Calendar.MONTH);
@@ -973,71 +933,6 @@ public class WelcomeController {
 		}
 
 		return "create";
-	}
-
-	@RequestMapping(value = "/icard", method = RequestMethod.GET)
-	void downloadICard(Map<String, Object> model, @RequestParam(name = "id") String studentId,
-			HttpServletResponse response, HttpServletRequest request) throws IOException {
-		populateCommonPageFields(model, request);
-		Optional<Student> oStudent = studRepo.findById(studentId);
-		if (!oStudent.isPresent()) {
-			model.put("alert", "alert alert-danger");
-			model.put("result", "Student not found!");
-			return;
-		}
-		Student student = oStudent.get();
-
-		Resource resource = new ClassPathResource("ICard.jrxml");
-		InputStream input = resource.getInputStream();
-		JasperDesign design = null;
-		try {
-			design = JRXmlLoader.load(input);
-		} catch (JRException e) {
-			e.printStackTrace();
-		}
-		JasperReport jasperReport = null;
-		try {
-			jasperReport = JasperCompileManager.compileReport(design);
-		} catch (JRException e) {
-			e.printStackTrace();
-		}
-		String outputFile = "C:\\Users\\avik\\" + "JasperReportExample.pdf";
-		OutputStream outputStream = new FileOutputStream(new File(outputFile));
-		try {
-			Map<String, Object> paramMap = new HashMap<String, Object>();
-			paramMap.put("logoFile", collegeShortName.toLowerCase() + "_logo.jpeg");
-			paramMap.put("collegeLongName", collegeLongName);
-			paramMap.put("collegeShortName", collegeShortName);
-			paramMap.put("collegeAddress1", collegeAddress1);
-			paramMap.put("collegeAddress2", collegeAddress2);
-			paramMap.put("collegeContact", collegeContact);
-			paramMap.put("collegeEmail", collegeEmail);
-			paramMap.put("name", student.name);
-			paramMap.put("id", student.id);
-			paramMap.put("course", student.course);
-			paramMap.put("session", student.session);
-			String dob = student.dob != null ? student.dob.toString(dtfOut) : "";
-			paramMap.put("dob", dob);
-			paramMap.put("blood", student.blood);
-			paramMap.put("address1", student.address1);
-			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, paramMap, new JREmptyDataSource());
-			JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
-		} catch (JRException e) {
-			e.printStackTrace();
-		}
-		outputStream.flush();
-		outputStream.close();
-		// Download section
-		File invoiceFile = new File(outputFile);
-		String mimeType = "application/pdf";
-		response.setContentType(mimeType);
-		String icard = student.id + ".pdf";
-		response.setHeader("Content-Disposition", String.format("inline; filename=\"" + icard + "\""));
-		response.setContentLength((int) invoiceFile.length());
-		InputStream inputStream = new BufferedInputStream(new FileInputStream(invoiceFile));
-
-		FileCopyUtils.copy(inputStream, response.getOutputStream());
-		response.flushBuffer();
 	}
 
 	@RequestMapping(value = "/sendSMS", method = RequestMethod.POST)

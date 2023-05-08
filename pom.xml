@@ -73,13 +73,7 @@
 			<artifactId>bootstrap</artifactId>
 			<version>5.0.1</version>
 		</dependency>
-		
-		<!-- For Jasper Reports -->
-		<dependency>
-    		<groupId>net.sf.jasperreports</groupId>
-    		<artifactId>jasperreports</artifactId>
-    		<version>LATEST</version>
-		</dependency>
+
 		
 		<!-- https://mvnrepository.com/artifact/joda-time/joda-time -->
 		<dependency>
