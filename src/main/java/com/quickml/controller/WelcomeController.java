@@ -302,7 +302,7 @@ public class WelcomeController {
 			@RequestParam(value = "session", defaultValue = "2018-20") String session) throws IOException {
 		populateCommonPageFields(model, request);
 
-		List<Student> students = studRepo.findAll();
+		List<Student> students = studRepo.findByStatus(Student.Status.ACTIVE);
 		model.put("students", students);
 		return "students";
 	}
@@ -582,6 +582,11 @@ public class WelcomeController {
 		model.put("message", collegeLongName);
 		model.put("collegeLongName", collegeLongName);
 		model.put("user", request.getRemoteUser());
+		if (request.getRemoteUser().equals("admin")) {
+			model.put("admin", true);
+		} else {
+			model.put("admin", false);
+		}
 	}
 
 	@RequestMapping(value = "/payDueReport", method = RequestMethod.GET)

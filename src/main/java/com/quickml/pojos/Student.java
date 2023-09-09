@@ -15,7 +15,8 @@ public class Student {
 	public enum Status {
 		ACTIVE,
 		GRADUATE,
-		DROPOUT
+		DROPOUT,
+		DELETE
 	}
 	@Id
 	public String id;
