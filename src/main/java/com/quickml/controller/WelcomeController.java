@@ -68,7 +68,8 @@ import com.quickml.utils.SMS;
 public class WelcomeController {
 
 	public WelcomeController(StudentRepository studRepo, CounterRepository counterRepo, UserRepository userRepo,
-			AttendanceRepository attendanceRepo, TeachingSchoolRepository teachingSchoolRepo, NoticeRepository noticeRepo) {
+			AttendanceRepository attendanceRepo, TeachingSchoolRepository teachingSchoolRepo,
+			NoticeRepository noticeRepo) {
 		super();
 		this.studRepo = studRepo;
 		this.counterRepo = counterRepo;
@@ -126,12 +127,15 @@ public class WelcomeController {
 		DateTime to = DateTime.now().withTimeAtStartOfDay().plusHours(24);
 		List<Student> students = studRepo.findByPaymentsTransactionDateBetween(from, to);
 
-		int bedInvoiceCount = 0, dedInvoiceCount = 0, prospectusCount = 0;
+		int sishuAnkurInvoiceCount = 0, kishalayaInvoiceCount = 0, patabaharInvoiceCount = 0, class1InvoiceCount = 0,
+				class2InvoiceCount = 0, class3InvoiceCount = 0, class4InvoiceCount = 0, prospectusCount = 0;
 		double propectusAmount = 0;
-		double bedAmount = 0, dedAmount = 0;
+		double sishuAnkurAmount = 0, kishalayaAmount = 0, patabaharAmount = 0, class1Amount = 0, class2Amount = 0,
+				class3Amount = 0, class4Amount = 0;
 		double cash = 0, cheque = 0, dd = 0, netBanking = 0, pos = 0, bankDeposit = 0;
 		for (Student st : students) {
-			boolean bed = false, ded = false;
+			boolean sishuAnkur = false, kishalaya = false, patabahar = false, class1 = false, class2 = false,
+					class3 = false, class4 = false;
 
 			for (Payment pt : st.payments) {
 				if (pt.transactionDate.isAfter(from) && pt.transactionDate.isBefore(to) && pt.isActive) {
@@ -148,18 +152,54 @@ public class WelcomeController {
 						continue;
 					}
 
-					if (st.course.equalsIgnoreCase("B.Ed")) {
-						bedInvoiceCount++;
-						bed = true;
-					} else if (st.course.equalsIgnoreCase("D.El.Ed")) {
-						dedInvoiceCount++;
-						ded = true;
+					switch (st.course) {
+						case "SishuAnkur":
+							sishuAnkurInvoiceCount++;
+							sishuAnkur = true;
+							break;
+						case "Kishlaya":
+							kishalayaInvoiceCount++;
+							kishalaya = true;
+							break;
+						case "Patabahar":
+							patabaharInvoiceCount++;
+							patabahar = true;
+							break;
+						case "Class1":
+							class1InvoiceCount++;
+							class1 = true;
+							break;
+						case "Class2":
+							class2InvoiceCount++;
+							class2 = true;
+							break;
+						case "Class3":
+							class3InvoiceCount++;
+							class3 = true;
+							break;
+						case "Class4":
+							class4InvoiceCount++;
+							class4 = true;
+							break;
+
+						default:
+							break;
 					}
 					double lateFeeAmount = pt.lateFeeAmount != -1 ? pt.lateFeeAmount : 0;
-					if (bed) {
-						bedAmount = bedAmount + amount + lateFeeAmount;
-					} else if (ded) {
-						dedAmount = dedAmount + amount + lateFeeAmount;
+					if (sishuAnkur) {
+						sishuAnkurAmount = sishuAnkurAmount + amount + lateFeeAmount;
+					} else if (kishalaya) {
+						kishalayaAmount = kishalayaAmount + amount + lateFeeAmount;
+					} else if (patabahar) {
+						patabaharAmount = patabaharAmount + amount + lateFeeAmount;
+					} else if (class1) {
+						class1Amount = class1Amount + amount + lateFeeAmount;
+					} else if (class2) {
+						class2Amount = class2Amount + amount + lateFeeAmount;
+					} else if (class3) {
+						class3Amount = class3Amount + amount + lateFeeAmount;
+					} else if (class1) {
+						class4Amount = class4Amount + amount + lateFeeAmount;
 					}
 
 					switch (pt.mode) {
@@ -185,14 +225,26 @@ public class WelcomeController {
 				}
 			}
 		}
-		model.put("bedAmount", bedAmount);
-		model.put("dedAmount", dedAmount);
+		model.put("sishuAnkurAmount", sishuAnkurAmount);
+		model.put("kishalayaAmount", kishalayaAmount);
+		model.put("patabaharAmount", patabaharAmount);
+		model.put("class1Amount", class1Amount);
+		model.put("class2Amount", class2Amount);
+		model.put("class3Amount", class2Amount);
+		model.put("class4Amount", class2Amount);
 		model.put("prospectusAmount", propectusAmount);
-		model.put("totalAmount", bedAmount + dedAmount + propectusAmount);
-		model.put("bedInvoiceCount", bedInvoiceCount);
-		model.put("dedInvoiceCount", dedInvoiceCount);
+		model.put("totalAmount", sishuAnkurAmount + kishalayaAmount + patabaharAmount + class1Amount + class2Amount
+				+ class3Amount + class4Amount + propectusAmount);
+		model.put("sishuAnkurInvoiceCount", sishuAnkurInvoiceCount);
+		model.put("kishalayaInvoiceCount", kishalayaInvoiceCount);
+		model.put("patabaharInvoiceCount", patabaharInvoiceCount);
+		model.put("class1InvoiceCount", class1InvoiceCount);
+		model.put("class2InvoiceCount", class2InvoiceCount);
+		model.put("class3InvoiceCount", class3InvoiceCount);
+		model.put("class4InvoiceCount", class4InvoiceCount);
 		model.put("prospectusCount", prospectusCount);
-		model.put("totalInvoiceCount", bedInvoiceCount + dedInvoiceCount + prospectusCount);
+		model.put("totalInvoiceCount", sishuAnkurInvoiceCount + kishalayaInvoiceCount + patabaharInvoiceCount
+				+ class1InvoiceCount + class2InvoiceCount + class3InvoiceCount + class4InvoiceCount + prospectusCount);
 
 		model.put("cash", cash);
 		model.put("cheque", cheque);
@@ -215,7 +267,7 @@ public class WelcomeController {
 			throws IOException {
 		populateCommonPageFields(model, request);
 
-		if (student.name.isEmpty() || student.mobile.isEmpty() || student.subject.isEmpty() || student.courseFee == 0) {
+		if (student.name.isEmpty() || student.mobile.isEmpty() || student.courseFee == 0) {
 			model.put("alert", "alert alert-danger");
 			model.put("result", "Please fill the mandatory fields!");
 			return "create";
@@ -233,11 +285,27 @@ public class WelcomeController {
 		// session and course
 		Counter ct = null;
 		Optional<Counter> oct = null;
-		if (student.course.equalsIgnoreCase("b.ed")) {
+		System.out.println(student.course);
+		if (student.course.equalsIgnoreCase("SishuAnkur")) {
 			id_prefix = id_prefix + "01";
 			oct = counterRepo.findById(id_prefix);
-		} else {
+		} else if (student.course.equalsIgnoreCase("Kishlaya")) {
 			id_prefix = id_prefix + "02";
+			oct = counterRepo.findById(id_prefix);
+		} else if (student.course.equalsIgnoreCase("Patabahar")) {
+			id_prefix = id_prefix + "03";
+			oct = counterRepo.findById(id_prefix);
+		} else if (student.course.equalsIgnoreCase("Class1")) {
+			id_prefix = id_prefix + "04";
+			oct = counterRepo.findById(id_prefix);
+		} else if (student.course.equalsIgnoreCase("Class2")) {
+			id_prefix = id_prefix + "05";
+			oct = counterRepo.findById(id_prefix);
+		} else if (student.course.equalsIgnoreCase("Class3")) {
+			id_prefix = id_prefix + "06";
+			oct = counterRepo.findById(id_prefix);
+		} else if (student.course.equalsIgnoreCase("Class4")) {
+			id_prefix = id_prefix + "07";
 			oct = counterRepo.findById(id_prefix);
 		}
 		// If counter config not exists, create one
@@ -245,7 +313,7 @@ public class WelcomeController {
 			ct = new Counter();
 			ct.id = id_prefix;
 			ct.nextId++;
-		} else{
+		} else {
 			ct = oct.get();
 		}
 		// Increment and save the counter config
@@ -298,7 +366,7 @@ public class WelcomeController {
 
 	@RequestMapping(value = "/students", method = RequestMethod.GET)
 	String getStudentsPage(Map<String, Object> model, HttpServletRequest request,
-			@RequestParam(value = "course", defaultValue = "B.Ed") String course,
+			@RequestParam(value = "course", defaultValue = "Class1") String course,
 			@RequestParam(value = "session", defaultValue = "2018-20") String session) throws IOException {
 		populateCommonPageFields(model, request);
 
@@ -417,7 +485,8 @@ public class WelcomeController {
 			Counter ct = null;
 			if (payment.purpose.equals("Miscellaneous Fee")) {
 				payment.purpose = payment.purpose + " (" + payment.transactionId + ")";
-				Optional<Counter> oct = counterRepo.findById("MISC/" + year + "-" + String.valueOf(year + 1).substring(2));
+				Optional<Counter> oct = counterRepo
+						.findById("MISC/" + year + "-" + String.valueOf(year + 1).substring(2));
 				if (!oct.isPresent()) {
 					ct = new Counter();
 					ct.id = "MISC/" + year + "-" + String.valueOf(year + 1).substring(2);
@@ -494,7 +563,8 @@ public class WelcomeController {
 	// Update Teaching School for a student
 	@RequestMapping(value = "/updateTeachingSchool", method = RequestMethod.POST)
 	@ResponseBody
-	String updateTeachingSchool(Map<String, Object> model, @RequestParam(name = "id") String studentId, @RequestParam(name = "schoolName") String schoolName) {
+	String updateTeachingSchool(Map<String, Object> model, @RequestParam(name = "id") String studentId,
+			@RequestParam(name = "schoolName") String schoolName) {
 		Optional<Student> oStudent = studRepo.findById(studentId);
 		if (!oStudent.isPresent()) {
 			return "Student not found!";
@@ -569,7 +639,6 @@ public class WelcomeController {
 		// Download section
 		return "invoice";
 	}
-
 
 	public int getFiscalYear(Calendar calendar) {
 		int month = calendar.get(Calendar.MONTH);
@@ -889,11 +958,26 @@ public class WelcomeController {
 			// session and course
 			Counter ct = null;
 			Optional<Counter> oct = null;
-			if (newStudent.course.equalsIgnoreCase("b.ed")) {
+			if (newStudent.course.equalsIgnoreCase("SishuAnkur")) {
 				id_prefix = id_prefix + "01";
 				oct = counterRepo.findById(id_prefix);
-			} else {
+			} else if (newStudent.course.equalsIgnoreCase("Kishlaya")) {
 				id_prefix = id_prefix + "02";
+				oct = counterRepo.findById(id_prefix);
+			} else if (newStudent.course.equalsIgnoreCase("Patabahar")) {
+				id_prefix = id_prefix + "03";
+				oct = counterRepo.findById(id_prefix);
+			} else if (newStudent.course.equalsIgnoreCase("Class1")) {
+				id_prefix = id_prefix + "04";
+				oct = counterRepo.findById(id_prefix);
+			} else if (newStudent.course.equalsIgnoreCase("Class2")) {
+				id_prefix = id_prefix + "05";
+				oct = counterRepo.findById(id_prefix);
+			} else if (newStudent.course.equalsIgnoreCase("Class3")) {
+				id_prefix = id_prefix + "06";
+				oct = counterRepo.findById(id_prefix);
+			} else if (newStudent.course.equalsIgnoreCase("Class4")) {
+				id_prefix = id_prefix + "07";
 				oct = counterRepo.findById(id_prefix);
 			}
 			// If counter config not exists, create one
@@ -1080,7 +1164,7 @@ public class WelcomeController {
 		if (null != ts) {
 			return "Teaching School details already exist!";
 		}
-		
+
 		teachingSchoolRepo.save(teachingSchool);
 		return "Teaching School details saved successfully!";
 	}
@@ -1110,7 +1194,7 @@ public class WelcomeController {
 			return "Notice details missing!";
 		}
 		notice.date = (DateTime) DateTime.now().withZone(DateTimeZone.forID("Asia/Kolkata"));
-		
+
 		noticeRepo.save(notice);
 		return "Notice details saved successfully!";
 	}
@@ -1140,7 +1224,7 @@ public class WelcomeController {
 	public Map<String, Object> getStudentDetails(@RequestParam(name = "id") String studentId) {
 		Student student = studRepo.findByEmail(studentId);
 		// Check if student exists
-		if(student == null) {
+		if (student == null) {
 			return null;
 		}
 		Map<String, Object> model = new HashMap<String, Object>();

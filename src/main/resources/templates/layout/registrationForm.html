@@ -9,21 +9,20 @@
 	<form id="studRegForm">
 		<fieldset class="form-group">
 			<div class="row">
-				<legend class="col-form-label col-sm-2 pt-0">Course</legend>
-				<div class="col-sm-10" id="course" data-course="{{course}}">
-					<div class="form-check form-check-inline">
-						<input class="form-check-input" type="radio" name="courseRadio" id="courseBed" value="B.Ed"
-							checked>
-						<label class="form-check-label" for="courseBed">
-							B.Ed
-						</label>
+				<legend class="col-form-label col-sm-2 pt-0">Class</legend>
+				<div class="input-group mb-3">
+					<div class="input-group-prepend">
+						<label class="input-group-text" for="course">Class</label>
 					</div>
-					<div class="form-check form-check-inline">
-						<input class="form-check-input" type="radio" name="courseRadio" id="courseDed" value="D.El.Ed">
-						<label class="form-check-label" for="courseDed">
-							D.El.Ed
-						</label>
-					</div>
+					<select class="custom-select" id="course" onchange="changeAncAttSess();" data-course="{{course}}">
+						<option value="SishuAnkur">Sishu Ankur</option>
+						<option value="Kishlaya">Kishlaya</option>
+						<option value="Patabahar">Patabahar</option>
+						<option value="Class1">Class 1</option>
+						<option value="Class2">Class 2</option>
+						<option value="Class3">Class 3</option>
+						<option value="Class4">Class 4</option>
+					</select>
 				</div>
 			</div>
 		</fieldset>
@@ -253,10 +252,6 @@
 				<input type="text" class="form-control clearit" id="regLast" value="{{lastRegNo}}">
 			</div>
 			{{/isModification}}
-			<div class="form-group col-md-6">
-				<label for="subject">Subject*</label>
-				<input type="text" class="form-control clearit" id="subject" value="{{subject}}">
-			</div>
 		</div>
 		{{#isModification}}
 		<div class="form-row">

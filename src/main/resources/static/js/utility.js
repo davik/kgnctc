@@ -277,7 +277,7 @@ function createStudent(e) {
     };
     academics[3] = pg;
     let student = {
-        course: coursen,
+        course: $("#course").val(),
         name: $("#name").val(),
         father: $("#father").val(),
         mother: $("#mother").val(),
@@ -298,7 +298,6 @@ function createStudent(e) {
         academics: academics,
         session: $('#sessionReg').val(),
         lastRegNo: $('#regLast').val(),
-        subject: $('#subject').val(),
         lastSchoolName: $('#schoolName').val(),
         referredBy: $('#referredBy').val(),
         courseFee: $('#courseFee').val(),
