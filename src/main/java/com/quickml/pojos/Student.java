@@ -59,7 +59,7 @@ public class Student {
 				dob != null ? dob.toString(WelcomeController.dtfOut) : "", gender, religion, category, mobile,
 				email, guardianContact, blood, language, nationality,
 				applicationType, aadhaar, address1, address2,
-				lastRegNo, subject, lastSchoolName, referredBy, session, Double.toString(courseFee),
+				lastRegNo, lastSchoolName, referredBy, session, Double.toString(courseFee),
 				status.toString()));
 		for (Academic ac : academics) {
 			double percentage = 0;

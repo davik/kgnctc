@@ -29,27 +29,27 @@ public class StudentDTO {
 	public String session = "";
 	public double courseFee;
 	public double familyIncome;
-	
+
 	public String mpboard = "";
 	public String mpyear = "";
 	public String mptotal = "";
 	public String mpmarks = "";
-	
+
 	public String hsboard = "";
 	public String hsyear = "";
 	public String hstotal = "";
 	public String hsmarks = "";
-	
+
 	public String gradboard = "";
 	public String gradyear = "";
 	public String gradtotal = "";
 	public String gradmarks = "";
-	
+
 	public String pgboard = "";
 	public String pgyear = "";
 	public String pgtotal = "";
 	public String pgmarks = "";
-	
+
 	public boolean isModification = false;
 
 	public StudentDTO replicate(Student st) {
@@ -75,13 +75,12 @@ public class StudentDTO {
 		this.address1 = st.address1;
 		this.address2 = st.address2;
 		this.lastRegNo = st.lastRegNo;
-		this.subject = st.subject;
 		this.lastSchoolName = st.lastSchoolName;
 		this.referredBy = st.referredBy;
 		this.session = st.session;
 		this.courseFee = st.courseFee;
 		this.familyIncome = st.familyIncome;
-		
+
 		if (null != st.academics) {
 			if (st.academics.get(0).board != null) {
 				this.mpboard = st.academics.get(0).board;
@@ -89,21 +88,21 @@ public class StudentDTO {
 				this.mptotal = st.academics.get(0).total;
 				this.mpmarks = st.academics.get(0).marks;
 			}
-			
+
 			if (st.academics.get(1).board != null) {
 				this.hsboard = st.academics.get(1).board;
 				this.hsyear = st.academics.get(1).year;
 				this.hstotal = st.academics.get(1).total;
 				this.hsmarks = st.academics.get(1).marks;
 			}
-			
+
 			if (st.academics.get(2).board != null) {
 				this.gradboard = st.academics.get(2).board;
 				this.gradyear = st.academics.get(2).year;
 				this.gradtotal = st.academics.get(2).total;
 				this.gradmarks = st.academics.get(2).marks;
 			}
-			
+
 			if (st.academics.get(3).board != null) {
 				this.pgboard = st.academics.get(3).board;
 				this.pgyear = st.academics.get(3).year;
