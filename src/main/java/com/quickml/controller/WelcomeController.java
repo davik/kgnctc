@@ -140,7 +140,7 @@ public class WelcomeController {
 			for (Payment pt : st.payments) {
 				if (pt.transactionDate.isAfter(from) && pt.transactionDate.isBefore(to) && pt.isActive) {
 					double amount = 0;
-					if (pt.purpose.contains("Course Fee Refund")) {
+					if (pt.purpose.contains("Tuition Fee Refund")) {
 						amount = -pt.amount;
 					} else {
 						amount = pt.amount;
@@ -506,7 +506,7 @@ public class WelcomeController {
 				}
 			}
 
-			if (payment.purpose.equals("Course Fee Refund")) {
+			if (payment.purpose.equals("Tuition Fee Refund")) {
 				// payment.amount = -payment.amount;
 			}
 
@@ -728,7 +728,7 @@ public class WelcomeController {
 			data.add(new String[] { "StudentID", "Course", "Name", "Father's Name", "Mother's Name", "Date of Birth",
 					"Gender", "Religion", "Category", "Mobile", "Email Address", "Guardian Contact", "Blood Group",
 					"Language", "Nationality", "Application Type", "Aadhaar Number", "Address", "Alternate Address",
-					"Last Registration Number", "Subject", "Last School Name", "Session", "Course Fee", "Status",
+					"Last Registration Number", "Subject", "Last School Name", "Session", "Tuition Fee", "Status",
 					"Degree", "Board", "Year", "Total Marks", "Marks Obtained", "Percentage", "Degree", "Board", "Year",
 					"Total Marks", "Marks Obtained", "Percentage", "Degree", "Board", "Year", "Total Marks",
 					"Marks Obtained", "Percentage", "Degree", "Board", "Year", "Total Marks", "Marks Obtained",
@@ -865,7 +865,7 @@ public class WelcomeController {
 									payment.purpose, payment.acceptedBy, Double.toString(payment.amount),
 									Double.toString(lateFeeAmount), Double.toString(lateFeeAmount + payment.amount) });
 
-							if (payment.purpose.contains("Course Fee Refund")) {
+							if (payment.purpose.contains("Tuition Fee Refund")) {
 								total -= lateFeeAmount + payment.amount;
 							} else {
 								total += lateFeeAmount + payment.amount;
@@ -1002,8 +1002,8 @@ public class WelcomeController {
 		newStudent.payments = new ArrayList<>(oldStudent.payments);
 		if (newStudent.courseFee != oldStudent.courseFee) {
 			model.put("alert", "alert alert-warning");
-			model.put("result", "Change in Course Fee, Incident will be reported!");
-			ch.message = "Course Fee Modified from " + oldStudent.courseFee + " to " + newStudent.courseFee;
+			model.put("result", "Change in Tuition Fee, Incident will be reported!");
+			ch.message = "Tuition Fee Modified from " + oldStudent.courseFee + " to " + newStudent.courseFee;
 		} else {
 			if (idChanged) {
 				model.put("alert", "alert alert-warning");
@@ -1133,15 +1133,15 @@ public class WelcomeController {
 				if (!payment.isActive) {
 					continue;
 				}
-				if (payment.purpose.equals("Examination Fee") || payment.purpose.equals("Registration Fee")
-						|| payment.purpose.equals("Concession") || payment.purpose.equals("Online Application Fee")
+				if (payment.purpose.equals("Excercise Book") || payment.purpose.equals("Book")
+						|| payment.purpose.equals("Day Boarding Fee") || payment.purpose.equals("Miscellaneous Fee")
 						|| payment.purpose.equals("Late Fee") || payment.purpose.equals("Prospectus Fee")) {
 					continue;
 				}
 				if (payment.purpose.contains("Miscellaneous Fee")) {
 					continue;
 				}
-				if (payment.purpose.contains("Course Fee Refund")) {
+				if (payment.purpose.contains("Tuition Fee Refund")) {
 					paid -= payment.amount;
 					continue;
 				}

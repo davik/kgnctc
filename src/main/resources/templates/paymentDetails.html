@@ -68,7 +68,7 @@
 		</h4>
 		<h5 class="card-title">
 			<span class="badge badge-warning">Due Amount: &#x20b9; {{due}}</span>
-			<span class="badge badge-primary">Course Fee: &#x20b9; {{courseFee}}</span>
+			<span class="badge badge-primary">Tuition Fee: &#x20b9; {{courseFee}}</span>
 		</h5>
 		<a href="tel:{{mobile}}" class="card-text">
 			<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-telephone-outbound-fill" fill="currentColor"
@@ -231,7 +231,7 @@
 	{{/payments}}
 </table>
 <div class="alert alert-warning alert-dismissible fade" role="alert">
-	<strong>Alert!</strong> Course Fee will be decreased by concession amount!
+	<strong>Alert!</strong> Tuition Fee will be decreased by concession amount!
 </div>
 <div class="col-md-12 border border-dark py-3 my-3" id="paymentForm">
 	<legend>Payment Form</legend>
@@ -240,26 +240,29 @@
 			<label for="purpose">Purpose</label>
 			<select id="purpose" class="form-control" onchange="onPaymentCh();">
 				<option>Admission Fee</option>
-				<option>Seat Booking Fee</option>
-				<option>Registration Fee</option>
-				<option>Course Fee</option>
-				<option>Examination Fee</option>
-				<option>Concession</option>
-				<option>Online Application Fee</option>
+				<option>Tuition Fee</option>
+				<option>Excercise Book</option>
+				<option>Book</option>
+				<option>Day Boarding Fee</option>
 				<option>Miscellaneous Fee</option>
-				<option>Course Fee Refund</option>
 				<option>Prospectus Fee</option>
 			</select>
 		</div>
 		<div class="form-group col-md-3">
 			<label for="mode">Mode</label>
 			<select id="mode" class="form-control">
-				<option>Cash</option>
-				<option>Cheque</option>
-				<option>DD</option>
-				<option>Net Banking</option>
-				<option>POS</option>
-				<option>Bank Deposit</option>
+				<option>January</option>
+				<option>February</option>
+				<option>March</option>
+				<option>April</option>
+				<option>May</option>
+				<option>June</option>
+				<option>July</option>
+				<option>August</option>
+				<option>September</option>
+				<option>October</option>
+				<option>November</option>
+				<option>December</option>
 			</select>
 		</div>
 		<div class="form-group col-md-3">
