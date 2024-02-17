@@ -128,14 +128,15 @@ public class WelcomeController {
 		List<Student> students = studRepo.findByPaymentsTransactionDateBetween(from, to);
 
 		int sishuAnkurInvoiceCount = 0, kishalayaInvoiceCount = 0, patabaharInvoiceCount = 0, class1InvoiceCount = 0,
-				class2InvoiceCount = 0, class3InvoiceCount = 0, class4InvoiceCount = 0, prospectusCount = 0;
+				class2InvoiceCount = 0, class3InvoiceCount = 0, class4InvoiceCount = 0, class5InvoiceCount = 0,
+				class6InvoiceCount = 0, prospectusCount = 0;
 		double propectusAmount = 0;
 		double sishuAnkurAmount = 0, kishalayaAmount = 0, patabaharAmount = 0, class1Amount = 0, class2Amount = 0,
-				class3Amount = 0, class4Amount = 0;
+				class3Amount = 0, class4Amount = 0, class5Amount = 0, class6Amount = 0;
 		double cash = 0, cheque = 0, dd = 0, netBanking = 0, pos = 0, bankDeposit = 0;
 		for (Student st : students) {
 			boolean sishuAnkur = false, kishalaya = false, patabahar = false, class1 = false, class2 = false,
-					class3 = false, class4 = false;
+					class3 = false, class4 = false, class5 = false, class6 = false;
 
 			for (Payment pt : st.payments) {
 				if (pt.transactionDate.isAfter(from) && pt.transactionDate.isBefore(to) && pt.isActive) {
@@ -165,21 +166,29 @@ public class WelcomeController {
 							patabaharInvoiceCount++;
 							patabahar = true;
 							break;
-						case "Class1":
+						case "Class I":
 							class1InvoiceCount++;
 							class1 = true;
 							break;
-						case "Class2":
+						case "Class II":
 							class2InvoiceCount++;
 							class2 = true;
 							break;
-						case "Class3":
+						case "Class III":
 							class3InvoiceCount++;
 							class3 = true;
 							break;
-						case "Class4":
+						case "Class IV":
 							class4InvoiceCount++;
 							class4 = true;
+							break;
+						case "Class V":
+							class5InvoiceCount++;
+							class5 = true;
+							break;
+						case "Class VI":
+							class6InvoiceCount++;
+							class6 = true;
 							break;
 
 						default:
@@ -198,8 +207,12 @@ public class WelcomeController {
 						class2Amount = class2Amount + amount + lateFeeAmount;
 					} else if (class3) {
 						class3Amount = class3Amount + amount + lateFeeAmount;
-					} else if (class1) {
+					} else if (class4) {
 						class4Amount = class4Amount + amount + lateFeeAmount;
+					} else if (class5) {
+						class5Amount = class5Amount + amount + lateFeeAmount;
+					} else if (class6) {
+						class6Amount = class6Amount + amount + lateFeeAmount;
 					}
 
 					switch (pt.mode) {
@@ -230,8 +243,10 @@ public class WelcomeController {
 		model.put("patabaharAmount", patabaharAmount);
 		model.put("class1Amount", class1Amount);
 		model.put("class2Amount", class2Amount);
-		model.put("class3Amount", class2Amount);
-		model.put("class4Amount", class2Amount);
+		model.put("class3Amount", class3Amount);
+		model.put("class4Amount", class4Amount);
+		model.put("class5Amount", class5Amount);
+		model.put("class6Amount", class6Amount);
 		model.put("prospectusAmount", propectusAmount);
 		model.put("totalAmount", sishuAnkurAmount + kishalayaAmount + patabaharAmount + class1Amount + class2Amount
 				+ class3Amount + class4Amount + propectusAmount);
@@ -242,6 +257,8 @@ public class WelcomeController {
 		model.put("class2InvoiceCount", class2InvoiceCount);
 		model.put("class3InvoiceCount", class3InvoiceCount);
 		model.put("class4InvoiceCount", class4InvoiceCount);
+		model.put("class5InvoiceCount", class5InvoiceCount);
+		model.put("class6InvoiceCount", class6InvoiceCount);
 		model.put("prospectusCount", prospectusCount);
 		model.put("totalInvoiceCount", sishuAnkurInvoiceCount + kishalayaInvoiceCount + patabaharInvoiceCount
 				+ class1InvoiceCount + class2InvoiceCount + class3InvoiceCount + class4InvoiceCount + prospectusCount);
