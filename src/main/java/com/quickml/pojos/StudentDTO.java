@@ -28,6 +28,8 @@ public class StudentDTO {
 	public String referredBy = "";
 	public String session = "";
 	public double courseFee;
+	public double convenienceFee;
+	public double dayBoardingFee;
 	public double familyIncome;
 
 	public String mpboard = "";
@@ -79,6 +81,8 @@ public class StudentDTO {
 		this.referredBy = st.referredBy;
 		this.session = st.session;
 		this.courseFee = st.courseFee;
+		this.convenienceFee = st.convenienceFee;
+		this.dayBoardingFee = st.dayBoardingFee;
 		this.familyIncome = st.familyIncome;
 
 		if (null != st.academics) {

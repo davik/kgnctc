@@ -462,7 +462,17 @@ public class WelcomeController {
 			model.put("result", "Student not found!");
 		} else {
 			Student student = oStudent.get();
+			double convenienceFeeDue = student.convenienceFee, dayBoardingFeeDue = student.dayBoardingFee;
+			for (Payment payment : student.payments) {
+				if (payment.purpose.equals("Convenience Fee")) {
+					convenienceFeeDue = convenienceFeeDue - payment.amount;
+				} else if (payment.purpose.equals("Day Boarding Fee")) {
+					dayBoardingFeeDue = dayBoardingFeeDue - payment.amount;
+				}
+			}
 			model.put("due", student.courseFee - GetPaid(student));
+			model.put("convenienceFeeDue", convenienceFeeDue);
+			model.put("dayBoardingFeeDue", dayBoardingFeeDue);
 			model.put("student", student);
 			model.put("schools", teachingSchoolRepo.findAll().stream().map(s -> s.name).collect(Collectors.toList()));
 		}
@@ -947,8 +957,8 @@ public class WelcomeController {
 			return "create";
 		}
 		Student oldStudent = oOldStudent.get();
-		if (newStudent.name.isEmpty() || newStudent.father.isEmpty() || newStudent.mother.isEmpty()
-				|| newStudent.mobile.isEmpty() || newStudent.email.isEmpty() || newStudent.aadhaar.isEmpty()
+		if (newStudent.name.isEmpty()
+				|| newStudent.mobile.isEmpty()
 				|| newStudent.courseFee == 0) {
 			model.put("alert", "alert alert-danger");
 			model.put("result", "Please fill the mandatory fields!");
@@ -1152,7 +1162,8 @@ public class WelcomeController {
 				}
 				if (payment.purpose.equals("Excercise Book") || payment.purpose.equals("Book")
 						|| payment.purpose.equals("Day Boarding Fee") || payment.purpose.equals("Miscellaneous Fee")
-						|| payment.purpose.equals("Late Fee") || payment.purpose.equals("Prospectus Fee")) {
+						|| payment.purpose.equals("Late Fee") || payment.purpose.equals("Prospectus Fee")
+						|| payment.purpose.equals("Convenience Fee") || payment.purpose.equals("Day Boarding Fee")) {
 					continue;
 				}
 				if (payment.purpose.contains("Miscellaneous Fee")) {

@@ -301,6 +301,8 @@ function createStudent(e) {
         lastSchoolName: $('#schoolName').val(),
         referredBy: $('#referredBy').val(),
         courseFee: $('#courseFee').val(),
+        convenienceFee: $('#convenienceFee').val(),
+        dayBoardingFee: $('#dayBoardingFee').val(),
         familyIncome: $('#familyIncome').val()
     };
 
@@ -406,7 +408,11 @@ $(document).ready(function () {
                 findString = 'option[value="' + $('#sessionReg').data('session') + '"]';
                 $('#sessionReg').find(findString).attr("selected", true);
                 // Select Course
-                $('input[value="' + $("#course").data("course") + '"]').attr("checked", true);
+                findString = 'option[value="' + $('#course').data('course') + '"]';
+                console.log(findString);
+                console.log($('#course').find(findString));
+                $('#course').find(findString).attr("selected", true);
+                // $('input[value="' + $("#course").data("course") + '"]').attr("checked", true);
                 // Listen to click event on the submit button
                 $('#button').click(createStudent);
             },

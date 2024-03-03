@@ -67,8 +67,16 @@
 			Status: <span class="badge" id="studentStatus">{{status}}</span>
 		</h4>
 		<h5 class="card-title">
-			<span class="badge badge-warning">Due Amount: &#x20b9; {{due}}</span>
+			<span class="badge badge-warning">Tuition Fee Due: &#x20b9; {{due}}</span>
 			<span class="badge badge-primary">Tuition Fee: &#x20b9; {{courseFee}}</span>
+		</h5>
+		<h5 class="card-title">
+			<span class="badge badge-warning">Convenience Fee Due: &#x20b9; {{convenienceFee}}</span>
+			<span class="badge badge-primary">Convenience Fee: &#x20b9; {{convenienceFeeDue}}</span>
+		</h5>
+		<h5 class="card-title">
+			<span class="badge badge-warning">Day Boarding Due: &#x20b9; {{dayBoardingFee}}</span>
+			<span class="badge badge-primary">Day Boarding Fee: &#x20b9; {{dayBoardingFeeDue}}</span>
 		</h5>
 		<a href="tel:{{mobile}}" class="card-text">
 			<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-telephone-outbound-fill" fill="currentColor"
@@ -243,6 +251,7 @@
 				<option>Tuition Fee</option>
 				<option>Excercise Book</option>
 				<option>Book</option>
+				<option>Convenience Fee</option>
 				<option>Day Boarding Fee</option>
 				<option>Miscellaneous Fee</option>
 				<option>Prospectus Fee</option>

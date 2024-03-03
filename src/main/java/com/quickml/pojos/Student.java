@@ -48,6 +48,8 @@ public class Student {
 	public String session = "";
 	public ArrayList<Payment> payments = new ArrayList<Payment>();
 	public double courseFee;
+	public double convenienceFee;
+	public double dayBoardingFee;
 	public double familyIncome;
 	public Status status = Status.ACTIVE;
 	public String teachingSchool = "";
