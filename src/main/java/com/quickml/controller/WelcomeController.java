@@ -312,17 +312,23 @@ public class WelcomeController {
 		} else if (student.course.equalsIgnoreCase("Patabahar")) {
 			id_prefix = id_prefix + "03";
 			oct = counterRepo.findById(id_prefix);
-		} else if (student.course.equalsIgnoreCase("Class1")) {
+		} else if (student.course.equalsIgnoreCase("Class I")) {
 			id_prefix = id_prefix + "04";
 			oct = counterRepo.findById(id_prefix);
-		} else if (student.course.equalsIgnoreCase("Class2")) {
+		} else if (student.course.equalsIgnoreCase("Class II")) {
 			id_prefix = id_prefix + "05";
 			oct = counterRepo.findById(id_prefix);
-		} else if (student.course.equalsIgnoreCase("Class3")) {
+		} else if (student.course.equalsIgnoreCase("Class III")) {
 			id_prefix = id_prefix + "06";
 			oct = counterRepo.findById(id_prefix);
-		} else if (student.course.equalsIgnoreCase("Class4")) {
+		} else if (student.course.equalsIgnoreCase("Class IV")) {
 			id_prefix = id_prefix + "07";
+			oct = counterRepo.findById(id_prefix);
+		} else if (student.course.equalsIgnoreCase("Class V")) {
+			id_prefix = id_prefix + "08";
+			oct = counterRepo.findById(id_prefix);
+		} else if (student.course.equalsIgnoreCase("Class VI")) {
+			id_prefix = id_prefix + "09";
 			oct = counterRepo.findById(id_prefix);
 		}
 		// If counter config not exists, create one
