@@ -12,16 +12,17 @@
 				<legend class="col-form-label col-sm-2 pt-0">Course</legend>
 				<div class="col-sm-10" id="course" data-course="{{course}}">
 					<div class="form-check form-check-inline">
-						<input class="form-check-input" type="radio" name="courseRadio" id="courseBed" value="B.Ed"
-							checked>
-						<label class="form-check-label" for="courseBed">
-							B.Ed
+						<input class="form-check-input" type="radio" name="courseRadio" id="coursebpharm"
+							value="B.Pharm" checked>
+						<label class="form-check-label" for="coursebpharm">
+							B.Pharm
 						</label>
 					</div>
 					<div class="form-check form-check-inline">
-						<input class="form-check-input" type="radio" name="courseRadio" id="courseDed" value="D.El.Ed">
-						<label class="form-check-label" for="courseDed">
-							D.El.Ed
+						<input class="form-check-input" type="radio" name="courseRadio" id="coursedpharm"
+							value="D.Pharm">
+						<label class="form-check-label" for="coursedpharm">
+							D.Pharm
 						</label>
 					</div>
 				</div>
@@ -178,13 +179,10 @@
 			 {{/isModification}}">
 				<label for="sessionReg">Academic Session</label>
 				<select id="sessionReg" class="form-control" data-session="{{session}}">
+					<option value="2026-28">2026-28</option>
+					<option value="2025-27">2025-27</option>
 					<option value="2024-26">2024-26</option>
 					<option value="2023-25">2023-25</option>
-					<option value="2022-24">2022-24</option>
-					<option value="2021-23">2021-23</option>
-					<option value="2020-22">2020-22</option>
-					<option value="2019-21">2019-21</option>
-					<option value="2018-20">2018-20</option>
 				</select>
 			</div>
 			{{#isModification}}

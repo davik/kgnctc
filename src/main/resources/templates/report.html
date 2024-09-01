@@ -18,7 +18,7 @@
 								role="tab" aria-controls="nav-home" aria-selected="true">Due Payment</a>
 							<a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile"
 								role="tab" aria-controls="nav-profile" aria-selected="false">Student List</a>
-							<a  class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact"
+							<a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact"
 								role="tab" aria-controls="nav-contact" aria-selected="false">Collection</a>
 						</div>
 					</nav>
@@ -32,13 +32,10 @@
 											<label class="input-group-text" for="session">Session</label>
 										</div>
 										<select class="custom-select" id="session" onchange="changeAncAttSess();">
-											<option value="2018-20">2018-20</option>
-											<option value="2019-21">2019-21</option>
-											<option value="2020-22">2020-22</option>
-											<option value="2021-23">2021-23</option>
-											<option value="2022-24">2022-24</option>
 											<option value="2023-25">2023-25</option>
 											<option value="2024-26">2024-26</option>
+											<option value="2025-27">2025-27</option>
+											<option value="2026-28">2026-28</option>
 										</select>
 									</div>
 								</div>
@@ -48,14 +45,14 @@
 											<label class="input-group-text" for="course">Course</label>
 										</div>
 										<select class="custom-select" id="course" onchange="changeAncAttSess();">
-											<option value="B.Ed">B.Ed</option>
-											<option value="D.El.Ed">D.El.Ed</option>
+											<option value="B.Pharm">B.Pharm</option>
+											<option value="D.Pharm">D.Pharm</option>
 										</select>
 									</div>
 								</div>
 								<div class="col-md-2">
 									<a class="btn btn-primary mb-3" id="paydue" target="_blank"
-										href="/payDueReport?course=B.Ed&session=2018-20">Generate Report</a>
+										href="/payDueReport?course=B.Pharm&session=2023-25">Generate Report</a>
 								</div>
 							</form>
 							<div id="msg" class="py-4"></div>
@@ -69,13 +66,10 @@
 										</div>
 										<select class="custom-select" id="r2session"
 											onchange="changeAncAttSessStudentDetails();">
-											<option value="2018-20">2018-20</option>
-											<option value="2019-21">2019-21</option>
-											<option value="2020-22">2020-22</option>
-											<option value="2021-23">2021-23</option>
-											<option value="2022-24">2022-24</option>
 											<option value="2023-25">2023-25</option>
 											<option value="2024-26">2024-26</option>
+											<option value="2025-27">2025-27</option>
+											<option value="2026-28">2026-28</option>
 										</select>
 									</div>
 								</div>
@@ -86,14 +80,14 @@
 										</div>
 										<select class="custom-select" id="r2course"
 											onchange="changeAncAttSessStudentDetails();">
-											<option value="B.Ed">B.Ed</option>
-											<option value="D.El.Ed">D.El.Ed</option>
+											<option value="B.Pharm">B.Pharm</option>
+											<option value="D.Pharm">D.Pharm</option>
 										</select>
 									</div>
 								</div>
 								<div class="col-md-2">
 									<a class="btn btn-primary mb-3" id="studentDetail" target="_blank"
-										href="/allStudents?course=B.Ed&session=2018-20">Download Students Detail</a>
+										href="/allStudents?course=B.Pharm&session=2023-25">Download Students Detail</a>
 								</div>
 							</form>
 						</div>

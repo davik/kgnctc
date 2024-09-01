@@ -241,8 +241,8 @@ function createStudent(e) {
 
     e.preventDefault();
 
-    let coursen = $("#courseBed").is(":checked") ?
-        $("#courseBed").val() : $("#courseDed").val();
+    let coursen = $("#coursebpharm").is(":checked") ?
+        $("#coursebpharm").val() : $("#coursedpharm").val();
     let academics = [];
     let mp = {
         name: "Madhyamik Pariksha/ 10th",

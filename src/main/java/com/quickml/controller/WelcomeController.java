@@ -68,7 +68,8 @@ import com.quickml.utils.SMS;
 public class WelcomeController {
 
 	public WelcomeController(StudentRepository studRepo, CounterRepository counterRepo, UserRepository userRepo,
-			AttendanceRepository attendanceRepo, TeachingSchoolRepository teachingSchoolRepo, NoticeRepository noticeRepo) {
+			AttendanceRepository attendanceRepo, TeachingSchoolRepository teachingSchoolRepo,
+			NoticeRepository noticeRepo) {
 		super();
 		this.studRepo = studRepo;
 		this.counterRepo = counterRepo;
@@ -126,12 +127,12 @@ public class WelcomeController {
 		DateTime to = DateTime.now().withTimeAtStartOfDay().plusHours(24);
 		List<Student> students = studRepo.findByPaymentsTransactionDateBetween(from, to);
 
-		int bedInvoiceCount = 0, dedInvoiceCount = 0, prospectusCount = 0;
+		int bpharmInvoiceCount = 0, dpharmInvoiceCount = 0, prospectusCount = 0;
 		double propectusAmount = 0;
-		double bedAmount = 0, dedAmount = 0;
+		double bpharmAmount = 0, dpharmAmount = 0;
 		double cash = 0, cheque = 0, dd = 0, netBanking = 0, pos = 0, bankDeposit = 0;
 		for (Student st : students) {
-			boolean bed = false, ded = false;
+			boolean bpharm = false, dpharm = false;
 
 			for (Payment pt : st.payments) {
 				if (pt.transactionDate.isAfter(from) && pt.transactionDate.isBefore(to) && pt.isActive) {
@@ -148,18 +149,18 @@ public class WelcomeController {
 						continue;
 					}
 
-					if (st.course.equalsIgnoreCase("B.Ed")) {
-						bedInvoiceCount++;
-						bed = true;
-					} else if (st.course.equalsIgnoreCase("D.El.Ed")) {
-						dedInvoiceCount++;
-						ded = true;
+					if (st.course.equalsIgnoreCase("B.Pharm")) {
+						bpharmInvoiceCount++;
+						bpharm = true;
+					} else if (st.course.equalsIgnoreCase("D.Pharm")) {
+						dpharmInvoiceCount++;
+						dpharm = true;
 					}
 					double lateFeeAmount = pt.lateFeeAmount != -1 ? pt.lateFeeAmount : 0;
-					if (bed) {
-						bedAmount = bedAmount + amount + lateFeeAmount;
-					} else if (ded) {
-						dedAmount = dedAmount + amount + lateFeeAmount;
+					if (bpharm) {
+						bpharmAmount = bpharmAmount + amount + lateFeeAmount;
+					} else if (dpharm) {
+						dpharmAmount = dpharmAmount + amount + lateFeeAmount;
 					}
 
 					switch (pt.mode) {
@@ -185,14 +186,14 @@ public class WelcomeController {
 				}
 			}
 		}
-		model.put("bedAmount", bedAmount);
-		model.put("dedAmount", dedAmount);
+		model.put("bpharmAmount", bpharmAmount);
+		model.put("dpharmAmount", dpharmAmount);
 		model.put("prospectusAmount", propectusAmount);
-		model.put("totalAmount", bedAmount + dedAmount + propectusAmount);
-		model.put("bedInvoiceCount", bedInvoiceCount);
-		model.put("dedInvoiceCount", dedInvoiceCount);
+		model.put("totalAmount", bpharmAmount + dpharmAmount + propectusAmount);
+		model.put("bpharmInvoiceCount", bpharmInvoiceCount);
+		model.put("dpharmInvoiceCount", dpharmInvoiceCount);
 		model.put("prospectusCount", prospectusCount);
-		model.put("totalInvoiceCount", bedInvoiceCount + dedInvoiceCount + prospectusCount);
+		model.put("totalInvoiceCount", bpharmInvoiceCount + dpharmInvoiceCount + prospectusCount);
 
 		model.put("cash", cash);
 		model.put("cheque", cheque);
@@ -233,7 +234,7 @@ public class WelcomeController {
 		// session and course
 		Counter ct = null;
 		Optional<Counter> oct = null;
-		if (student.course.equalsIgnoreCase("b.ed")) {
+		if (student.course.equalsIgnoreCase("B.Pharm")) {
 			id_prefix = id_prefix + "01";
 			oct = counterRepo.findById(id_prefix);
 		} else {
@@ -245,7 +246,7 @@ public class WelcomeController {
 			ct = new Counter();
 			ct.id = id_prefix;
 			ct.nextId++;
-		} else{
+		} else {
 			ct = oct.get();
 		}
 		// Increment and save the counter config
@@ -298,8 +299,8 @@ public class WelcomeController {
 
 	@RequestMapping(value = "/students", method = RequestMethod.GET)
 	String getStudentsPage(Map<String, Object> model, HttpServletRequest request,
-			@RequestParam(value = "course", defaultValue = "B.Ed") String course,
-			@RequestParam(value = "session", defaultValue = "2018-20") String session) throws IOException {
+			@RequestParam(value = "course", defaultValue = "B.Pharm") String course,
+			@RequestParam(value = "session", defaultValue = "2023-25") String session) throws IOException {
 		populateCommonPageFields(model, request);
 
 		List<Student> students = studRepo.findByStatus(Student.Status.ACTIVE);
@@ -417,7 +418,8 @@ public class WelcomeController {
 			Counter ct = null;
 			if (payment.purpose.equals("Miscellaneous Fee")) {
 				payment.purpose = payment.purpose + " (" + payment.transactionId + ")";
-				Optional<Counter> oct = counterRepo.findById("MISC/" + year + "-" + String.valueOf(year + 1).substring(2));
+				Optional<Counter> oct = counterRepo
+						.findById("MISC/" + year + "-" + String.valueOf(year + 1).substring(2));
 				if (!oct.isPresent()) {
 					ct = new Counter();
 					ct.id = "MISC/" + year + "-" + String.valueOf(year + 1).substring(2);
@@ -494,7 +496,8 @@ public class WelcomeController {
 	// Update Teaching School for a student
 	@RequestMapping(value = "/updateTeachingSchool", method = RequestMethod.POST)
 	@ResponseBody
-	String updateTeachingSchool(Map<String, Object> model, @RequestParam(name = "id") String studentId, @RequestParam(name = "schoolName") String schoolName) {
+	String updateTeachingSchool(Map<String, Object> model, @RequestParam(name = "id") String studentId,
+			@RequestParam(name = "schoolName") String schoolName) {
 		Optional<Student> oStudent = studRepo.findById(studentId);
 		if (!oStudent.isPresent()) {
 			return "Student not found!";
@@ -569,7 +572,6 @@ public class WelcomeController {
 		// Download section
 		return "invoice";
 	}
-
 
 	public int getFiscalYear(Calendar calendar) {
 		int month = calendar.get(Calendar.MONTH);
@@ -889,7 +891,7 @@ public class WelcomeController {
 			// session and course
 			Counter ct = null;
 			Optional<Counter> oct = null;
-			if (newStudent.course.equalsIgnoreCase("b.ed")) {
+			if (newStudent.course.equalsIgnoreCase("B.Pharm")) {
 				id_prefix = id_prefix + "01";
 				oct = counterRepo.findById(id_prefix);
 			} else {
@@ -1080,7 +1082,7 @@ public class WelcomeController {
 		if (null != ts) {
 			return "Teaching School details already exist!";
 		}
-		
+
 		teachingSchoolRepo.save(teachingSchool);
 		return "Teaching School details saved successfully!";
 	}
@@ -1110,7 +1112,7 @@ public class WelcomeController {
 			return "Notice details missing!";
 		}
 		notice.date = (DateTime) DateTime.now().withZone(DateTimeZone.forID("Asia/Kolkata"));
-		
+
 		noticeRepo.save(notice);
 		return "Notice details saved successfully!";
 	}
@@ -1140,7 +1142,7 @@ public class WelcomeController {
 	public Map<String, Object> getStudentDetails(@RequestParam(name = "id") String studentId) {
 		Student student = studRepo.findByEmail(studentId);
 		// Check if student exists
-		if(student == null) {
+		if (student == null) {
 			return null;
 		}
 		Map<String, Object> model = new HashMap<String, Object>();
