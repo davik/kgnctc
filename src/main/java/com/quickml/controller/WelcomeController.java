@@ -312,18 +312,28 @@ public class WelcomeController {
 		} else if (student.course.equalsIgnoreCase("Patabahar")) {
 			id_prefix = id_prefix + "03";
 			oct = counterRepo.findById(id_prefix);
-		} else if (student.course.equalsIgnoreCase("Class1")) {
+		} else if (student.course.equalsIgnoreCase("Class I")) {
 			id_prefix = id_prefix + "04";
 			oct = counterRepo.findById(id_prefix);
-		} else if (student.course.equalsIgnoreCase("Class2")) {
+		} else if (student.course.equalsIgnoreCase("Class II")) {
 			id_prefix = id_prefix + "05";
 			oct = counterRepo.findById(id_prefix);
-		} else if (student.course.equalsIgnoreCase("Class3")) {
+		} else if (student.course.equalsIgnoreCase("Class III")) {
 			id_prefix = id_prefix + "06";
 			oct = counterRepo.findById(id_prefix);
-		} else if (student.course.equalsIgnoreCase("Class4")) {
+		} else if (student.course.equalsIgnoreCase("Class IV")) {
 			id_prefix = id_prefix + "07";
 			oct = counterRepo.findById(id_prefix);
+		} else if (student.course.equalsIgnoreCase("Class V")) {
+			id_prefix = id_prefix + "08";
+			oct = counterRepo.findById(id_prefix);
+		} else if (student.course.equalsIgnoreCase("Class VI")) {
+			id_prefix = id_prefix + "09";
+			oct = counterRepo.findById(id_prefix);
+		} else {
+			model.put("alert", "alert alert-danger");
+			model.put("result", "Invalid Course!");
+			return "create";
 		}
 		// If counter config not exists, create one
 		if (!oct.isPresent()) {
@@ -383,7 +393,7 @@ public class WelcomeController {
 
 	@RequestMapping(value = "/students", method = RequestMethod.GET)
 	String getStudentsPage(Map<String, Object> model, HttpServletRequest request,
-			@RequestParam(value = "course", defaultValue = "Class1") String course,
+			@RequestParam(value = "course", defaultValue = "Class I") String course,
 			@RequestParam(value = "session", defaultValue = "2018-20") String session) throws IOException {
 		populateCommonPageFields(model, request);
 
@@ -994,18 +1004,28 @@ public class WelcomeController {
 			} else if (newStudent.course.equalsIgnoreCase("Patabahar")) {
 				id_prefix = id_prefix + "03";
 				oct = counterRepo.findById(id_prefix);
-			} else if (newStudent.course.equalsIgnoreCase("Class1")) {
+			} else if (newStudent.course.equalsIgnoreCase("Class I")) {
 				id_prefix = id_prefix + "04";
 				oct = counterRepo.findById(id_prefix);
-			} else if (newStudent.course.equalsIgnoreCase("Class2")) {
+			} else if (newStudent.course.equalsIgnoreCase("Class II")) {
 				id_prefix = id_prefix + "05";
 				oct = counterRepo.findById(id_prefix);
-			} else if (newStudent.course.equalsIgnoreCase("Class3")) {
+			} else if (newStudent.course.equalsIgnoreCase("Class III")) {
 				id_prefix = id_prefix + "06";
 				oct = counterRepo.findById(id_prefix);
-			} else if (newStudent.course.equalsIgnoreCase("Class4")) {
+			} else if (newStudent.course.equalsIgnoreCase("Class IV")) {
 				id_prefix = id_prefix + "07";
 				oct = counterRepo.findById(id_prefix);
+			} else if (newStudent.course.equalsIgnoreCase("Class V")) {
+				id_prefix = id_prefix + "08";
+				oct = counterRepo.findById(id_prefix);
+			} else if (newStudent.course.equalsIgnoreCase("Class VI")) {
+				id_prefix = id_prefix + "09";
+				oct = counterRepo.findById(id_prefix);
+			} else {
+				model.put("alert", "alert alert-danger");
+				model.put("result", "Invalid Course!");
+				return "create";
 			}
 			// If counter config not exists, create one
 			if (!oct.isPresent()) {

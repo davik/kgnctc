@@ -212,7 +212,7 @@ function changeAncAttDailyCollection() {
 
 function fetchStudents() {
     let url = '/studentList?' + $.param({
-        course: $('#course').val(),
+        course: $('#courseSearch').val(),
         session: $('#session').val()
     });
     $.ajax({
@@ -391,6 +391,7 @@ $(document).ready(function () {
                 $('#studentDetail').html(data);
                 // Select gender
                 let findString = 'option[value="' + $('#gender').data('gender') + '"]';
+                console.log(findString);
                 $('#gender').find(findString).attr("selected", true);
                 // Select Religion
                 findString = 'option[value="' + $('#religion').data('religion') + '"]';
@@ -409,6 +410,8 @@ $(document).ready(function () {
                 $('#sessionReg').find(findString).attr("selected", true);
                 // Select Course
                 findString = 'option[value="' + $('#course').data('course') + '"]';
+                // delete all the spaces from findString
+                // findString = findString.replace(/\s/g, '');
                 console.log(findString);
                 console.log($('#course').find(findString));
                 $('#course').find(findString).attr("selected", true);
