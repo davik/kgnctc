@@ -989,59 +989,59 @@ public class WelcomeController {
 			if (!newStudent.course.equals(oldStudent.course)) {
 				ch.message = "Course Modified from " + oldStudent.course + " to " + newStudent.course;
 			}
-			// Change in ID
-			String id_prefix = newStudent.session.substring(0, 4);
-			// Counter is used to get the next id to be assigned for a new student based on
-			// session and course
-			Counter ct = null;
-			Optional<Counter> oct = null;
-			if (newStudent.course.equalsIgnoreCase("SishuAnkur")) {
-				id_prefix = id_prefix + "01";
-				oct = counterRepo.findById(id_prefix);
-			} else if (newStudent.course.equalsIgnoreCase("Kishlaya")) {
-				id_prefix = id_prefix + "02";
-				oct = counterRepo.findById(id_prefix);
-			} else if (newStudent.course.equalsIgnoreCase("Patabahar")) {
-				id_prefix = id_prefix + "03";
-				oct = counterRepo.findById(id_prefix);
-			} else if (newStudent.course.equalsIgnoreCase("Class I")) {
-				id_prefix = id_prefix + "04";
-				oct = counterRepo.findById(id_prefix);
-			} else if (newStudent.course.equalsIgnoreCase("Class II")) {
-				id_prefix = id_prefix + "05";
-				oct = counterRepo.findById(id_prefix);
-			} else if (newStudent.course.equalsIgnoreCase("Class III")) {
-				id_prefix = id_prefix + "06";
-				oct = counterRepo.findById(id_prefix);
-			} else if (newStudent.course.equalsIgnoreCase("Class IV")) {
-				id_prefix = id_prefix + "07";
-				oct = counterRepo.findById(id_prefix);
-			} else if (newStudent.course.equalsIgnoreCase("Class V")) {
-				id_prefix = id_prefix + "08";
-				oct = counterRepo.findById(id_prefix);
-			} else if (newStudent.course.equalsIgnoreCase("Class VI")) {
-				id_prefix = id_prefix + "09";
-				oct = counterRepo.findById(id_prefix);
-			} else {
-				model.put("alert", "alert alert-danger");
-				model.put("result", "Invalid Course!");
-				return "create";
-			}
-			// If counter config not exists, create one
-			if (!oct.isPresent()) {
-				ct = new Counter();
-				ct.id = id_prefix;
-				ct.nextId++;
-			} else {
-				ct = oct.get();
-			}
-			// Increment and save the counter config
-			id_prefix = id_prefix + String.format("%03d", ct.nextId);
-			ct.nextId++;
-			counterRepo.save(ct);
+			// // Change in ID
+			// String id_prefix = newStudent.session.substring(0, 4);
+			// // Counter is used to get the next id to be assigned for a new student based
+			// on
+			// // session and course
+			// Counter ct = null;
+			// Optional<Counter> oct = null;
+			// if (newStudent.course.equalsIgnoreCase("SishuAnkur")) {
+			// id_prefix = id_prefix + "01";
+			// oct = counterRepo.findById(id_prefix);
+			// } else if (newStudent.course.equalsIgnoreCase("Kishlaya")) {
+			// id_prefix = id_prefix + "02";
+			// oct = counterRepo.findById(id_prefix);
+			// } else if (newStudent.course.equalsIgnoreCase("Patabahar")) {
+			// id_prefix = id_prefix + "03";
+			// oct = counterRepo.findById(id_prefix);
+			// } else if (newStudent.course.equalsIgnoreCase("Class I")) {
+			// id_prefix = id_prefix + "04";
+			// oct = counterRepo.findById(id_prefix);
+			// } else if (newStudent.course.equalsIgnoreCase("Class II")) {
+			// id_prefix = id_prefix + "05";
+			// oct = counterRepo.findById(id_prefix);
+			// } else if (newStudent.course.equalsIgnoreCase("Class III")) {
+			// id_prefix = id_prefix + "06";
+			// oct = counterRepo.findById(id_prefix);
+			// } else if (newStudent.course.equalsIgnoreCase("Class IV")) {
+			// id_prefix = id_prefix + "07";
+			// oct = counterRepo.findById(id_prefix);
+			// } else if (newStudent.course.equalsIgnoreCase("Class V")) {
+			// id_prefix = id_prefix + "08";
+			// oct = counterRepo.findById(id_prefix);
+			// } else if (newStudent.course.equalsIgnoreCase("Class VI")) {
+			// id_prefix = id_prefix + "09";
+			// oct = counterRepo.findById(id_prefix);
+			// } else {
+			// model.put("alert", "alert alert-danger");
+			// model.put("result", "Invalid Course!");
+			// return "create";
+			// }
+			// // If counter config not exists, create one
+			// if (!oct.isPresent()) {
+			// ct = new Counter();
+			// ct.id = id_prefix;
+			// ct.nextId++;
+			// } else {
+			// ct = oct.get();
+			// }
+			// // Increment and save the counter config
+			// id_prefix = id_prefix + String.format("%03d", ct.nextId);
+			// ct.nextId++;
+			// counterRepo.save(ct);
 
-			newStudent.id = id_prefix;
-			idChanged = true;
+			newStudent.id = oldStudent.id;
 		} else {
 			newStudent.id = oldStudent.id;
 		}
